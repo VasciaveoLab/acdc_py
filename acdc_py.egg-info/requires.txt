@@ -1,0 +1,12 @@
+scipy
+tqdm
+scanpy
+anndata
+pandas
+numpy
+joblib
+leidenalg
+scikit-learn
+matplotlib
+seaborn
+datetime

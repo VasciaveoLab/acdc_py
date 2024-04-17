@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: acdc-py
+Version: 1.0.0
+Summary: A package to quickly identify unbiased graph-based clusterings via parameter optimization in Python
+Home-page: https://github.com/alexanderlewis99/acdc_py
+Author: Alexander L.E. Wang
+Author-email: aw3436@cumc.columbia.edu
+License: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+This Scanpy-compatible package provides the ability to iterative compute clusterings using graph-based on combinations of resolution and KNN. At each point in this search space, a metric, such as silhouette score, is computed. The solution from this search space that maximizes the metric results in an optimal unbiased clustering solution. This process is sped up by our subsampling and diffusion feature that provides a near-identical solution in a much shorter time.
