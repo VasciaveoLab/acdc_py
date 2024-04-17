@@ -1,6 +1,7 @@
-# acdc_py
+# acdc_py 🤘
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**A**utomated **C**ommunity **D**etection of **C**ell Populations in Python 🤘 
+**A**utomated **C**ommunity **D**etection of **C**ell Populations in Python  
 
 This repo contains the current Python implementation of ACDC, an optimization-based framework to automatize clustering of cell populations from scRNA-seq data using community detection algorithms. 
 ```acdc_py``` is currently **under development** and new functionalities will be released, following completion and benchmarking. 
@@ -30,11 +31,11 @@ STAY TUNED FOR UPDATES AND NOVEL DEVELOPMENTS!🤘🏾
 
 
 # Installation 
-1. Start R
-2. Run the following commands
-```
-install.packages("devtools")
-devtools::install_github("califano-lab/acdc")
+### local
+```shell
+git clone https://github.com/califano-lab/acdc_py/
+cd acdc_py
+pip install -e .
 ```
 
 ... Start playing around! 🎸
