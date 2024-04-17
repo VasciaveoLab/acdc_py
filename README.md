@@ -31,6 +31,10 @@ STAY TUNED FOR UPDATES AND NOVEL DEVELOPMENTS!🤘🏾
 
 
 # Installation 
+### pypi
+```shell
+pip install acdc-py
+```
 ### local
 ```shell
 git clone https://github.com/califano-lab/acdc_py/
