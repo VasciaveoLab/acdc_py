@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="acdc_py",
-    version="1.0.0",
+    version="1.0.1",
     author="Alexander L.E. Wang & Luca Zanella & Alessandro Vasciaveo",
     author_email="aw3436@cumc.columbia.edu",
     packages=["acdc_py"],

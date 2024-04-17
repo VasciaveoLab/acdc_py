@@ -2,8 +2,8 @@ Metadata-Version: 2.1
 Name: acdc-py
 Version: 1.0.0
 Summary: A package to quickly identify unbiased graph-based clusterings via parameter optimization in Python
-Home-page: https://github.com/alexanderlewis99/acdc_py
-Author: Alexander L.E. Wang
+Home-page: https://github.com/califano-lab/acdc_py
+Author: Alexander L.E. Wang & Luca Zanella & Alessandro Vasciaveo
 Author-email: aw3436@cumc.columbia.edu
 License: MIT
 Requires-Python: >=3.8
