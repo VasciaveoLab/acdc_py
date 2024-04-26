@@ -1,7 +1,9 @@
 # acdc_py 🤘
 [![pipy](https://img.shields.io/pypi/v/acdc-py?color=informational)](https://pypi.org/project/acdc-py/1.0.1/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Downloads](https://static.pepy.tech/badge/acdc-py)](https://pepy.tech/project/acdc-py)
 [![Documentation Status](https://readthedocs.org/projects/acdc-py/badge/?version=latest)](https://readthedocs.org/projects/acdc-py/badge/?version=latest)
+
 
 
 
