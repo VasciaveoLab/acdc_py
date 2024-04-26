@@ -1,6 +1,9 @@
 # acdc_py 🤘
 [![pipy](https://img.shields.io/pypi/v/acdc-py?color=informational)](https://pypi.org/project/acdc-py/1.0.1/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Documentation Status](https://readthedocs.org/projects/acdc-py/badge/?version=latest)](https://readthedocs.org/projects/acdc-py/badge/?version=latest)
+
+
 
 **A**utomated **C**ommunity **D**etection of **C**ell Populations in Python  
 
