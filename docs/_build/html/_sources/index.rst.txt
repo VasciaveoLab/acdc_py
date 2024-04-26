@@ -5,11 +5,14 @@
 
 Welcome to ACDC's documentation!
 ================================
+.. include:: readme_link.md
+   :parser: myst_parser.sphinx_   
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
+   
+	
    modules
 
 Indices and tables
