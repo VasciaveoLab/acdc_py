@@ -1,4 +1,5 @@
 # acdc_py 🤘
+[![pipy](https://img.shields.io/pypi/v/acdc-py?color=informational)](https://pypi.org/project/acdc-py/1.0.1/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **A**utomated **C**ommunity **D**etection of **C**ell Populations in Python  
@@ -31,6 +32,10 @@ STAY TUNED FOR UPDATES AND NOVEL DEVELOPMENTS!🤘🏾
 
 
 # Installation 
+### pypi
+```shell
+pip install acdc-py
+```
 ### local
 ```shell
 git clone https://github.com/califano-lab/acdc_py/
