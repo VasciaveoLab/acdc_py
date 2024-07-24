@@ -1,0 +1,6 @@
+acdc_py.egg-info
+acdc_py/__pycache__
+.DS_Store
+acdc_py/.DS_Store
+.gitignore.swp
+
