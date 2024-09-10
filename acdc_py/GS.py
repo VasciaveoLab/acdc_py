@@ -38,7 +38,7 @@ def get_results_for_knn(
     curr_iter = np.where(np.isin(NN_vector, a_nn))[0][0] * len(res_vector)
     sil_df.index = np.arange(n_iters) + curr_iter
 
-    neighbors_graph(adata, n_neighbors = a_nn)
+    neighbors_graph(adata, n_neighbors = a_nn, verbose = False)
     for a_res in res_vector:
         adata = _cluster_adata(adata,
                                seed,#my_random_seed,
@@ -91,7 +91,7 @@ def get_gs_results_1core(
 
     if show_progress_bar: pbar = tqdm(desc = "GridSearch", total = n_iters, position=0, leave=True)
     for a_nn in NN_vector:
-        neighbors_graph(adata, n_neighbors = a_nn)
+        neighbors_graph(adata, n_neighbors = a_nn, verbose = False)
         for a_res in res_vector:
             adata = _cluster_adata(adata,
                                    seed,#my_random_seed,
@@ -323,56 +323,56 @@ def GS(
     adata
         An anndata object containing a gene expression signature in adata.X and
         gene expression counts in adata.raw.X.
-    res_vector (default: np.arange(0.1, 2, 0.2))
+    res_vector : default: np.arange(0.1, 2, 0.2)
          sequence of values of the resolution parameter.
-    NN_vector (default: np.arange(11, 102, 10))
+    NN_vector : default: np.arange(11, 102, 10)
          sequence of values for the number of nearest neighbors.
-    dist_slot (default: None)
+    dist_slot : default: None
         Slot in adata.obsp where a pre-generated distance matrix computed across
         all cells is stored in adata for use in construction of NN. (Default =
         None, i.e. distance matrix will be automatically computed as a
         correlation distance and stored in "corr_dist").
-    use_reduction (default: True)
+    use_reduction : default: True
         Whether to use a reduction (True) (highly recommended - accurate & much faster)
         or to use the direct matrix (False) for clustering.
-    reduction_slot (default: "X_pca")
+    reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
-    clust_alg (default: "Leiden")
+    clust_alg : default: "Leiden"
         Clustering algorithm. Choose among: "Leiden" (default) or  "Louvain".
-    metrics (default: "sil_mean")
+    metrics : default: "sil_mean"
         A metric or a list of metrics to be computed at each iteration of the
         GridSearch. Possible metrics to use include "sil_mean", "sil_mean_median",
         "tot_sil_neg", "lowest_sil_clust", "max_sil_clust", "ch" and "db".
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    SS_weights (default: "unitary")
+    SS_weights : default: "unitary"
         Negative silhouette scores can be given more weight by exponentiation ("exp").
         Otherwise, leave SS_weights as "unitary".
-    SS_exp_base (default: 2.718282.)
+    SS_exp_base : default: 2.718282.
         If SS_weights is set to "exp", then set the base for exponentiation.
-    n_subsamples (default=1)
+    n_subsamples : default: 1
         Number of subsamples per bootstrap.
-    subsamples_pct_cells (default: 100)
+    subsamples_pct_cells : default: 100
         Percentage of cells sample at each bootstrap iteration.
         i.e. when 100, 100%, all cells are used).
-    seed (default: 0)
+    seed : default: 0
         Random seed to use.
-    key_added (default: "clusters")
+    key_added : default: "clusters"
         Slot in obs to store the resulting clusters.
-    approx (default: {"run":False, "size":1000, "exact_size":True})
+    approx : default: {"run":False, "size":1000, "exact_size":True}
         A diciontary object containing three parameters to control subsampling and diffusion
             "run": True or False whether to use subsampling and diffusion. Default=False
             "size": the number of cells to use in the subsampling. Default=1000.
             "exact_size": whether to get the exact size "size" of subsampling (True) or
             be more inclusive during the representative subsampling (False, recommended).
-    verbose (default: True)
+    verbose : default: True
         Include additional output with True. Alternative = False.
-    show_progress_bar (default: True)
+    show_progress_bar : default: True
         Show a progress bar to visualize the progress of the algorithm.
-    njobs (default: 1)
+    njobs : default: 1
         Paralleization option that allows users to speed up runtime.
     Returns
     -------

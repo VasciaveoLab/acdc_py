@@ -76,7 +76,7 @@ def get_sa_results(adata,
         a_nn = int(np.floor(a_nn))
         global sil_df
         global curr_iter
-        neighbors_graph(adata, n_neighbors = a_nn)
+        neighbors_graph(adata, n_neighbors = a_nn, verbose = False)
         adata = _cluster_adata(adata,
                                seed,#my_random_seed,
                                a_res,
@@ -212,42 +212,42 @@ def SA(
     adata
         An anndata object containing a gene expression signature in adata.X and
         gene expression counts in adata.raw.X.
-    res_range (default: [0.1, 1.9])
+    res_range : default: [0.1, 1.9]
          edge values of the search space for the resolution parameter.
-    NN_range (default: [11, 101])
+    NN_range : default: [11, 101]
         edge values of the search space for the nearest neighbors parameter.
-    dist_slot (default: None)
+    dist_slot : default: None
         Slot in adata.obsp where a pre-generated distance matrix computed across
         all cells is stored in adata for use in construction of NN. (Default =
         None, i.e. distance matrix will be automatically computed as a
         correlation distance and stored in "corr_dist").
-    use_reduction (default: True)
+    use_reduction : default: True
         Whether to use a reduction (True) (highly recommended - accurate & much faster)
         or to use the direct matrix (False) for clustering.
-    reduction_slot (default: "X_pca")
+    reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
-    clust_alg (default: "Leiden")
+    clust_alg : default: "Leiden"
         Clustering algorithm. Choose among: "Leiden" (default) or  "Louvain".
-    metrics (default: "sil_mean")
+    metrics : default: "sil_mean"
         A metric or a list of metrics to be computed at each iteration of the
         GridSearch. Possible metrics to use include "sil_mean", "sil_mean_median",
         "tot_sil_neg", "lowest_sil_clust", "max_sil_clust", "ch" and "db".
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    SS_weights (default: "unitary")
+    SS_weights : default: "unitary"
         Negative silhouette scores can be given more weight by exponentiation ("exp").
         Otherwise, leave SS_weights as "unitary".
-    SS_exp_base (default: 2.718282.)
+    SS_exp_base : default: 2.718282.
         If SS_weights is set to "exp", then set the base for exponentiation.
-    n_subsamples (default=1)
+    n_subsamples : default: 1
         Number of subsamples per bootstrap.
-    subsamples_pct_cells (default: 100)
+    subsamples_pct_cells : default: 100
         Percentage of cells sample at each bootstrap iteration.
         i.e. when 100, 100%, all cells are used).
-    maxiter : (default: 20)
+    maxiter : : default: 20
         The maximum number of global search iterations. If None, value is 1000.
     minimizer_kwargs : dict, optional
         Extra keyword arguments to be passed to the local minimizer
@@ -277,21 +277,21 @@ def SA(
         algorithm is in the middle of a local search, this number will be
         exceeded, the algorithm will stop just after the local search is
         done. Default value is 1e7.
-    seed (default: 0)
+    seed : default: 0
         Random seed to use.
-    key_added (default: "clusters")
+    key_added : default: "clusters"
         Slot in obs to store the resulting clusters.
-    approx (default: {"run":False, "size":1000, "exact_size":True})
+    approx : default: {"run":False, "size":1000, "exact_size":True}
         A diciontary object containing three parameters to control subsampling and diffusion
             "run": True or False whether to use subsampling and diffusion. Default=False
             "size": the number of cells to use in the subsampling. Default=1000.
             "exact_size": whether to get the exact size "size" of subsampling (True) or
             be more inclusive during the representative subsampling (False, recommended).
-    verbose (default: True)
+    verbose : default: True
         Include additional output with True. Alternative = False.
-    show_progress_bar (default: True)
+    show_progress_bar : default: True
         Show a progress bar to visualize the progress of the algorithm.
-    njobs (default: 1)
+    njobs : default: 1
         Paralleization option that allows users to speed up runtime.
     Returns
     -------

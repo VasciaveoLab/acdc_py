@@ -39,43 +39,43 @@ def SA_clustering(
     ----------
     adata
         An anndata object containing a distance object in adata.obsp.
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    dist_slot (default: None)
+    dist_slot : default: None
         Slot in adata.obsp where a pre-generated distance matrix computed across
         all cells is stored in adata for use in construction of NN. (Default =
         None, i.e. distance matrix will be automatically computed as a
         correlation distance and stored in "corr_dist").
-    use_reduction (default: True)
+    use_reduction : default: True
         Whether to use a reduction (True) (highly recommended - accurate & much faster)
         or to use the direct matrix (False) for clustering.
-    reduction_slot (default: "X_pca")
+    reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
-    clust_alg (default: "Leiden")
+    clust_alg : default: "Leiden"
         Clustering algorithm. Choose among: "Leiden" (default) or  "Louvain".
-    n_clusts (default: None)
+    n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to compute the optimal clustering solution with
         this many clusters.
-    seed (default: 0)
+    seed : default: 0
         Random seed to use.
-    approx (default: {"run":False, "size":1000, "exact_size":True})
+    approx : default: {"run":False, "size":1000, "exact_size":True}
         A diciontary object containing three parameters to control subsampling and diffusion
             "run": True or False whether to use subsampling and diffusion. Default=True
             "size": the number of cells to use in the subsampling. Default=1000.
             "exact_size": whether to get the exact size "size" of subsampling (True) or
             be more inclusive during the representative subsampling (False, recommended).
-    key_added (default: "clusters")
+    key_added : default: "clusters"
         Slot in obs to store the resulting clusters.
-    knn_slot (default: "knn")
+    knn_slot : default: "knn"
         Slot in uns that stores the KNN array used to compute a neighbors graph
         (i.e. adata.obs['connectivities']).
-    verbose (default: True)
+    verbose : default: True
         Include additional output with True. Alternative = False.
-    njobs (default: 1)
+    njobs : default: 1
         Paralleization option that allows users to speed up runtime.
 
     Returns
@@ -117,12 +117,12 @@ def SA_params(
     adata
         An anndata object containing the results of the acdc.SA function in
         adata.uns['SA_results_dict'].
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    n_clusts (default: None)
+    n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to retrieve the parameters for optimal clustering
         with this many clusters.
@@ -156,12 +156,12 @@ def SA_metric_value(
     adata
         An anndata object containing the results of the acdc.SA function in
         adata.uns['SA_results_dict'].
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    n_clusts (default: None)
+    n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to retrieve the parameters for optimal clustering
         with this many clusters.
@@ -194,12 +194,12 @@ def SA_metric_search_data(
     adata
         An anndata object containing the results of the acdc.SA function in
         adata.uns['SA_results_dict'].
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    n_clusts (default: None)
+    n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to retrieve the parameters for optimal clustering
         with this many clusters.
@@ -246,43 +246,43 @@ def GS_clustering(
     ----------
     adata
         An anndata object containing a distance object in adata.obsp.
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    dist_slot (default: None)
+    dist_slot : default: None
         Slot in adata.obsp where a pre-generated distance matrix computed across
         all cells is stored in adata for use in construction of NN. (Default =
         None, i.e. distance matrix will be automatically computed as a
         correlation distance and stored in "corr_dist").
-    use_reduction (default: True)
+    use_reduction : default: True
         Whether to use a reduction (True) (highly recommended - accurate & much faster)
         or to use the direct matrix (False) for clustering.
-    reduction_slot (default: "X_pca")
+    reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
-    clust_alg (default: "Leiden")
+    clust_alg : default: "Leiden"
         Clustering algorithm. Choose among: "Leiden" (default) or  "Louvain".
-    n_clusts (default: None)
+    n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to compute the optimal clustering solution with
         this many clusters.
-    seed (default: 0)
+    seed : default: 0)
         Random seed to use.
-    approx (default: {"run":False, "size":1000, "exact_size":True})
+    approx : default: {"run":False, "size":1000, "exact_size":True}
         A diciontary object containing three parameters to control subsampling and diffusion
             "run": True or False whether to use subsampling and diffusion. Default=True
             "size": the number of cells to use in the subsampling. Default=1000.
             "exact_size": whether to get the exact size "size" of subsampling (True) or
             be more inclusive during the representative subsampling (False, recommended).
-    key_added (default: "clusters")
+    key_added : default: "clusters"
         Slot in obs to store the resulting clusters.
-    knn_slot (default: "knn")
+    knn_slot : default: "knn"
         Slot in uns that stores the KNN array used to compute a neighbors graph
         (i.e. adata.obs['connectivities']).
-    verbose (default: True)
+    verbose : default: True
         Include additional output with True. Alternative = False.
-    njobs (default: 1)
+    njobs : default: 1
         Paralleization option that allows users to speed up runtime.
 
     Returns
@@ -324,12 +324,12 @@ def GS_params(
     adata
         An anndata object containing the results of the acdc.GS function in
         adata.uns['GS_results_dict'].
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    n_clusts (default: None)
+    n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to retrieve the parameters for optimal clustering
         with this many clusters.
@@ -363,12 +363,12 @@ def GS_metric_value(
     adata
         An anndata object containing the results of the acdc.GS function in
         adata.uns['GS_results_dict'].
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    n_clusts (default: None)
+    n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to retrieve the parameters for optimal clustering
         with this many clusters.
@@ -401,12 +401,12 @@ def GS_metric_search_data(
     adata
         An anndata object containing the results of the acdc.SA function in
         adata.uns['GS_results_dict'].
-    opt_metric (default: "sil_mean")
+    opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir (default: "max")
+    opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    n_clusts (default: None)
+    n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to retrieve the parameters for optimal clustering
         with this many clusters.

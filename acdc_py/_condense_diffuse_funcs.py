@@ -25,7 +25,11 @@ def _representative_subsample_pca(pca_array, size, njobs = 1):
 
 def representative_subsample(dist_mat, size, njobs = 1):
     n_total_samples = dist_mat.shape[0]
-    NN_array = neighbors_knn(dist_mat, n_total_samples, njobs)
+    NN_array = neighbors_knn(
+        dist_mat,
+        n_total_samples,
+        njobs=njobs
+    )
 
     # If sample size is greater than half the number of samples, we take a
     # representative subsample of size (total # cells - sample size) and then
@@ -101,7 +105,7 @@ def condense_in_half(pca_array, metacell_indices_df, seed = 0, njobs = 1):
     dist_array = corr_distance(pca_array)
 
     # Slowest step
-    NN_array = neighbors_knn(dist_array, n_samples, njobs)
+    NN_array = neighbors_knn(dist_array, n_samples, njobs=njobs)
 
     n_half_samples = int(n_samples/2)
     sampled_indices_df = more_equal_sampling_with_nn(NN_array, size = n_half_samples, seed = seed)

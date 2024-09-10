@@ -2,9 +2,10 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import rankdata
-from scipy.sparse import csr_matrix
+import scipy.sparse as sp
 from joblib import Parallel, delayed
 from tqdm import tqdm
+
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -36,16 +37,16 @@ def _corr_distance_matrix_batch(data, batch_size=1000, verbose=True):
     if isinstance(data, pd.DataFrame):
         data = data.values
 
-    num_samples = data.shape[0]
-    sqrt_one_minus_corr_matrix = np.zeros((num_samples, num_samples))
+    n_samps = data.shape[0]
+    sqrt_one_minus_corr_matrix = np.zeros((n_samps, n_samps))
 
-    n_batches = int(np.ceil(num_samples/batch_size))
+    n_batches = int(np.ceil(n_samps/batch_size))
 
     for i in tqdm(range(n_batches)) if verbose else range(n_batches):
         # Determine the indices for the current batch
         batch_indices = np.arange(
             i*batch_size,
-            min((i+1)*batch_size, num_samples)
+            min((i+1)*batch_size, n_samps)
         )
         # Get the current batch of data
         batch_data = data[batch_indices, :]
@@ -142,38 +143,115 @@ def __get_top_n_indices(dist_array_ranked, knn, njobs = 1):
 
     return top_n_indices
 
-def _get_knn_array(dist_df, max_knn, njobs = 1):
+def __get_max_knn_sorted_indices_of_batch(batch_data, max_knn):
     # For each sample, sort neighbors by distance.
-    if njobs ==1:
-        dist_array_ranked = np.apply_along_axis(
-            __rank_column,
-            axis=1,
-            arr=np.array(dist_df)
-        )
-    else:
-        dist_array_ranked = np.array(Parallel(n_jobs=njobs)(
-            delayed(__rank_column)(column) for column in dist_df
-        ))
+    batch_dist_array_ranked = np.apply_along_axis(
+        __rank_column,
+        axis=1,
+        arr=np.array(batch_data)
+    )
+    return __get_top_n_indices(
+        batch_dist_array_ranked,
+        max_knn,
+        njobs=1
+    )
 
-    # Trim this ranking to MaxNN
-    max_knn_sorted_indices_array = __get_top_n_indices(dist_array_ranked, max_knn, njobs)
+def __get_max_knn_sorted_indices_1_core(
+    dist_df,
+    max_knn,
+    batch_size=1000,
+    verbose = False
+):
+    n_samps = dist_df.shape[0]
+    n_batches = int(np.ceil(n_samps/batch_size))
+    max_knn_sorted_indices_array = np.zeros([n_samps, max_knn], dtype=int)
+
+    for i in tqdm(range(n_batches)) if verbose else range(n_batches):
+        # Determine the indices for the current batch
+        batch_indices = np.arange(
+            i*batch_size,
+            min((i+1)*batch_size, n_samps)
+        )
+        # Get the current batch of data
+        batch_data = dist_df[batch_indices, :]
+
+        # Trim this ranking to MaxNN
+        max_knn_sorted_indices_array[batch_indices,:] = \
+            __get_max_knn_sorted_indices_of_batch(batch_data, max_knn)
 
     return max_knn_sorted_indices_array
+
+def __get_max_knn_sorted_indices_multicore(
+    dist_df,
+    max_knn,
+    batch_size=1000,
+    njobs=4
+):
+    n_samps = dist_df.shape[0]
+    n_batches = int(np.ceil(n_samps/batch_size))
+
+    results = Parallel(njobs)(
+        delayed(__get_max_knn_sorted_indices_of_batch)(
+            dist_df[
+                batch_i*batch_size:batch_i*batch_size+batch_size,:
+            ],
+            max_knn
+        ) for batch_i in range(n_batches)
+    )
+    max_knn_sorted_indices_array = np.concatenate(results, axis=0)
+
+    return max_knn_sorted_indices_array
+
+def _get_knn_array(
+    dist_df,
+    max_knn,
+    batch_size=1000,
+    verbose=False,
+    njobs=1
+):
+    if njobs==1:
+        return __get_max_knn_sorted_indices_1_core(
+            dist_df,
+            max_knn,
+            batch_size,
+            verbose
+        )
+    else:
+        return __get_max_knn_sorted_indices_multicore(
+            dist_df,
+            max_knn,
+            batch_size,
+            njobs
+        )
 
 # ------------------------------ ** HELPER FUNC ** -----------------------------
 def _neighbors_knn(adata,
                    max_knn=101,
                    dist_slot="corr_dist",
                    key_added="knn",
+                   batch_size = 1000,
+                   verbose = True,
                    njobs = 1):
     if isinstance(adata, np.ndarray) or isinstance(adata, pd.DataFrame):
-        return _get_knn_array(dist_df = adata, max_knn = max_knn, njobs = njobs)
+        return _get_knn_array(
+            adata,
+            max_knn,
+            batch_size,
+            verbose,
+            njobs
+        )
 
     # Get the distance DataFrame
     dist_df = adata.obsp[dist_slot]
 
     # Comptue the KNN array
-    max_knn_sorted_indices_array = _get_knn_array(dist_df, max_knn, njobs)
+    max_knn_sorted_indices_array = _get_knn_array(
+        dist_df,
+        max_knn,
+        batch_size,
+        verbose,
+        njobs
+    )
 
     # Add this to the adata
     adata.uns[key_added] = max_knn_sorted_indices_array
@@ -186,58 +264,66 @@ def _neighbors_knn(adata,
 
 # ------------------------------ ** HELPER FUNC ** -----------------------------
 
-def __get_connectivity_graph(max_knn_sorted_indices_array, knn):
+def __get_connectivity_graph(
+    max_knn_sorted_indices_array,
+    knn,
+    batch_size=1000,
+    verbose = False
+):
     num_rows = max_knn_sorted_indices_array.shape[0]
 
-    # Create a square array A filled with zeros
-    A = np.zeros((num_rows, num_rows), dtype=int)
+    # If no batch_size is provided, process the entire array at once
+    if batch_size is None: batch_size = num_rows
 
-    # Slice max_knn_sorted_indices_array to keep only the top knn columns
-    B = max_knn_sorted_indices_array[:, :knn]
+    # List to store each batch's A matrix
+    csr_batch_list = []
 
-    # Create row indices for indexing A
-    row_indices = np.arange(num_rows).reshape(-1, 1)
+    # Process in batches
+    for start in tqdm(range(0, num_rows, batch_size)) if verbose \
+    else range(0, num_rows, batch_size):
+        end = min(start + batch_size, num_rows)
 
-    # Broadcast row indices to match the shape of B
-    row_indices = np.tile(row_indices, (1, knn))
+        # Slice max_knn_sorted_indices_array to keep only the top knn columns for this batch
+        B_batch = max_knn_sorted_indices_array[start:end, :knn]
 
-    # Use advanced indexing to set the values in A to 1 based on indices from B
-    A[row_indices, B] = 1
+        # Create row indices for the current batch
+        row_indices = np.arange(start, end).reshape(-1, 1)
 
-    return A
+        # Broadcast row indices to match the shape of B_batch
+        row_indices = np.tile(row_indices, (1, knn))
+
+        # Create a zero matrix for this batch
+        A_batch = np.zeros((end - start, num_rows), dtype=int)
+
+        # Use advanced indexing to set the values in A_batch to 1 based on indices from B_batch
+        A_batch[np.arange(A_batch.shape[0]).reshape(-1, 1), B_batch] = 1
+
+        # Append the batch's A matrix as a DataFrame to the list
+        csr_batch_list.append(sp.csr_matrix(A_batch))
+
+    # Concatenate all batch results into one final DataFrame
+    return sp.vstack(csr_batch_list)
 
 # ------------------------------- ** MAIN FUNC ** ------------------------------
 def _neighbors_graph(adata,
                      n_neighbors=15,
-                     knn_slot='knn'):
-    """\
-    A tool for rapidly computing a k-nearest neighbor (knn) graph (i.e.
-    connectivities) that can then be used for clustering.
+                     knn_slot='knn',
+                     batch_size=1000,
+                     verbose = True):
 
-    graphs with acdc.pp.neighbors_graph for clustering.
-
-    Parameters
-    ----------
-    adata
-        An anndata object containing a distance object in adata.obsp.
-    n_neighbors (default: 15)
-        The number of nearest neighbors to use to build the connectivity graph.
-        This number must be less than the total number of knn in the knn array
-        stored in adata.uns[knn_slot].
-    knn_slot (default: 101)
-        The slot in adata.uns where the knn array is stored. One way of
-        generating this object is with acdc.pp.neighbors_knn.
-
-    Returns
-    -------
-    Adds fields to the input adata, such that it contains a knn graph stored in
-    adata.obsp['connectivities'] along with metadata in adata.uns["neighbors"].
-    """
     if isinstance(adata, np.ndarray) or isinstance(adata, pd.DataFrame):
-        return __get_connectivity_graph(adata, n_neighbors)
-
-    new_graph = __get_connectivity_graph(adata.uns[knn_slot], n_neighbors)
-    adata.obsp['connectivities'] = csr_matrix(new_graph)
+        return __get_connectivity_graph(
+            adata,
+            n_neighbors,
+            batch_size,
+            verbose
+        )
+    adata.obsp['connectivities'] =  __get_connectivity_graph(
+        adata.uns[knn_slot],
+        n_neighbors,
+        batch_size,
+        verbose
+    )
     # adata.uns["neighbors"] = {'connectivities':adata.obsp['connectivities']}
     adata.uns["neighbors"] = {
         'connectivities_key': 'connectivities',

@@ -28,10 +28,27 @@ def _cluster_final_internal(adata,
 
     if verbose is True: print("Computing neighbor graph with " + str(knn) + " neighbors...")
     if not (knn_slot in adata.uns.keys()):
-        _neighbors_knn(adata, max_knn=knn, dist_slot = dist_slot, key_added = knn_slot, njobs = njobs)
+        _neighbors_knn(
+            adata,
+            max_knn=knn,
+            dist_slot = dist_slot,
+            key_added = knn_slot,
+            njobs = njobs
+        )
     elif not (adata.uns[knn_slot].shape[1] >= knn):
-        _neighbors_knn(adata, max_knn=knn, dist_slot = dist_slot, key_added = knn_slot, njobs = njobs)
-    _neighbors_graph(adata, n_neighbors = knn, knn_slot = knn_slot)
+        _neighbors_knn(
+            adata,
+            max_knn=knn,
+            dist_slot = dist_slot,
+            key_added = knn_slot,
+            njobs = njobs
+        )
+    _neighbors_graph(
+        adata,
+        n_neighbors = knn,
+        knn_slot = knn_slot,
+        verbose = False
+    )
 
     if verbose is True: print("Clustering with resolution " + str(res) + " using " + str(clust_alg) + "...")
     adata = _cluster_adata(adata,
