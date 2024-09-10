@@ -51,7 +51,8 @@ def get_sa_results(adata,
         corr_distance(adata,
                       use_reduction,
                       reduction_slot,
-                      key_added=dist_slot)
+                      key_added=dist_slot,
+                      verbose=verbose)
     if use_reduction == True:
         n_pcs = adata.obsm[reduction_slot].shape[1]
     else:

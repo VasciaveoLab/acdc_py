@@ -80,7 +80,8 @@ def _cluster_final(adata,
         _corr_distance(adata,
                       use_reduction,
                       reduction_slot,
-                      key_added=dist_slot)
+                      key_added=dist_slot,
+                      verbose=verbose)
 
     adata = _cluster_final_internal(adata,
                                     res,

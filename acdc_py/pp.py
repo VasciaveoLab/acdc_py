@@ -12,7 +12,9 @@ __all__ = []
 def corr_distance(adata,
                   use_reduction=True,
                   reduction_slot="X_pca",
-                  key_added="corr_dist"):
+                  key_added="corr_dist",
+                  batch_size=1000,
+                  verbose=True):
     """\
     A tool for computing a distance matrix based on pearson correlation.
 
@@ -27,6 +29,10 @@ def corr_distance(adata,
         If reduction is TRUE, then specify which slot for the reduction to use.
     key_added (default: "corr_dist")
         Slot in obsp to store the resulting distance matrix.
+    batch_size (default: 1000)
+        Reduce total memory usage by running data in batches.
+    verbose (default: True)
+        Show a progress bar for each batch of data.
 
     Returns
     -------
@@ -34,7 +40,14 @@ def corr_distance(adata,
     stored in adata.obsp[key_added].
     """
     # returns if isinstance(adata, np.ndarray) or isinstance(adata, pd.DataFrame):
-    return _corr_distance(adata, use_reduction, reduction_slot, key_added)
+    return _corr_distance(
+        adata,
+        use_reduction,
+        reduction_slot,
+        key_added,
+        batch_size,
+        verbose
+    )
 
 # @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
 # ------------------------------------------------------------------------------
