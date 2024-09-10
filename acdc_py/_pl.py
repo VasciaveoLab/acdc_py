@@ -174,5 +174,3 @@ def _metric_vs_n_clusts(
     plt.ylabel(ylabel, fontsize=axis_fontsize)  # Y-axis label font size
     plt.xticks(fontsize=12)  # X-axis tick labels font size
     plt.yticks(fontsize=12)  # Y-axis tick labels font size
-
-metric_vs_n_clusts(adata)
