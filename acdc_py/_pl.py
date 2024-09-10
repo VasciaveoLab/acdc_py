@@ -139,3 +139,40 @@ def _SA_search_space(adata, plot_type = "sil_avg", plot_density = True):
         _create_countour_layer_for_sa_search_plot(ax, search_df)
     plt.close()
     return(fig)
+
+def _metric_vs_n_clusts(
+    adata,
+    metric = "sil_mean",
+    width = 5,
+    height = 5,
+    xlabel = 'number of clusters',
+    ylabel = None,
+    axis_fontsize = 14
+):
+    unique_n_clusts = np.unique(
+        adata.uns['GS_results_dict']['search_df']['n_clust'].astype(int)
+    )
+    ss = np.zeros(len(unique_n_clusts))
+
+    k = 0
+    for n_clusts in unique_n_clusts:
+        ss[k] = acdc.get_opt.GS_metric_value(
+                    adata,
+                    n_clusts=n_clusts
+        )
+        k+=1
+
+    df = pd.DataFrame({"n_clusts":unique_n_clusts,"ss":ss})
+
+    plt.figure(figsize=(width, height))
+    sns.scatterplot(x='n_clusts', y='ss', data=df, color='blue', s=100) # Scatter plot
+    plt.plot(df['n_clusts'], df['ss'], color='blue') # Line plot
+
+    if ylabel is None: ylabel = metric
+
+    plt.xlabel(xlabel, fontsize=axis_fontsize)  # X-axis label font size
+    plt.ylabel(ylabel, fontsize=axis_fontsize)  # Y-axis label font size
+    plt.xticks(fontsize=12)  # X-axis tick labels font size
+    plt.yticks(fontsize=12)  # Y-axis tick labels font size
+
+metric_vs_n_clusts(adata)
