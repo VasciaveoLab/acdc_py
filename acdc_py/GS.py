@@ -380,6 +380,9 @@ def GS(
     "clusters" in the .obs slot and a dictionary "GS_results_dict" with
     information on the run in the .uns slot.
     """
+    if isinstance(NN_vector, int): NN_vector = np.array([NN_vector])
+    if isinstance(res_vector, int): res_vector = np.array([res_vector])
+
     if opt_metric not in metrics:
         raise ValueError("opt_metric (" + str(opt_metric) + ") is missing from metrics.")
     n_max_cores = cpu_count()
