@@ -9,16 +9,12 @@ def cluster_final(adata,
                   dist_slot=None,
                   use_reduction=True,
                   reduction_slot="X_pca",
-                  clust_alg="Leiden",
                   seed=0,
-                  approx={
-                      "run": False,
-                      "size": 1000,
-                      "exact_size": False
-                  },
+                  approx_size=None,
                   key_added="clusters",
                   knn_slot='knn',
                   verbose=True,
+                  batch_size=1000,
                   njobs = 1):
     """\
     A tool for replicating the final optimization-based unsupervised clustering
@@ -46,8 +42,6 @@ def cluster_final(adata,
         or to use the direct matrix (False) for clustering.
     reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
-    clust_alg : default: "Leiden"
-        Clustering algorithm. Choose among: "Leiden" (default) or  "Louvain".
     seed : default: 0
         Random seed to use.
     key_added : default: "clusters"
@@ -55,12 +49,14 @@ def cluster_final(adata,
     knn_slot : default: "knn"
         Slot in uns that stores the KNN array used to compute a neighbors graph
         (i.e. adata.obs['connectivities']).
-    approx : default: {"run":False, "size":1000, "exact_size":False}
-        A diciontary object containing three parameters to control subsampling and diffusion
-            "run": True or False whether to use subsampling and diffusion. Default=False
-            "size": the number of cells to use in the subsampling. Default=1000.
-            "exact_size": whether to get the exact size "size" of subsampling (True) or
-            be more inclusive during the representative subsampling (False, recommended).
+    approx_size : default: None
+        When set to a positive integer, instead of running GS on the entire
+        dataset, perform GS on a subsample and diffuse those results. This will
+        lead to an approximation of the optimal solution for cases where the
+        dataset is too large to perform GS on due to time or memory constraints.
+    batch_size : default: 1000
+        The size of each batch. Larger batches result in more memory usage. If
+        None, use the whole dataset instead of batches.
     verbose : default: True
         Include additional output with True. Alternative = False.
 
@@ -76,12 +72,12 @@ def cluster_final(adata,
       dist_slot,
       use_reduction,
       reduction_slot,
-      clust_alg,
       seed,
-      approx,
+      approx_size,
       key_added,
       knn_slot,
       verbose,
+      batch_size,
       njobs
     )
 

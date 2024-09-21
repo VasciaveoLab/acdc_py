@@ -4,6 +4,7 @@ import pandas as pd
 from ._pp import _corr_distance, _neighbors_knn, _neighbors_graph
 from ._SA_GS_subfunctions import _cluster_adata
 from ._condense_diffuse_funcs import __diffuse_subsample_labels
+from .config import config
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -13,7 +14,7 @@ def _cluster_final_internal(adata,
                             res,
                             knn,
                             dist_slot = None,
-                            clust_alg="Leiden",
+                            clust_alg = "Leiden",
                             seed=0,
                             approx={
                                 "run": False,
@@ -23,8 +24,10 @@ def _cluster_final_internal(adata,
                             key_added="clusters",
                             knn_slot='knn',
                             verbose=True,
+                            batch_size=1000,
                             njobs = 1):
-    if approx["run"] is True: adata = get_approx_anndata(adata, approx, seed, verbose, njobs)
+    if approx["run"] is True:
+        adata = get_approx_anndata(adata, approx, seed, verbose, njobs)
 
     if verbose is True: print("Computing neighbor graph with " + str(knn) + " neighbors...")
     if not (knn_slot in adata.uns.keys()):
@@ -33,6 +36,8 @@ def _cluster_final_internal(adata,
             max_knn=knn,
             dist_slot = dist_slot,
             key_added = knn_slot,
+            verbose = verbose,
+            batch_size=batch_size,
             njobs = njobs
         )
     elif not (adata.uns[knn_slot].shape[1] >= knn):
@@ -41,13 +46,16 @@ def _cluster_final_internal(adata,
             max_knn=knn,
             dist_slot = dist_slot,
             key_added = knn_slot,
+            verbose = verbose,
+            batch_size=batch_size,
             njobs = njobs
         )
     _neighbors_graph(
         adata,
         n_neighbors = knn,
         knn_slot = knn_slot,
-        verbose = False
+        batch_size=batch_size,
+        verbose = verbose
     )
 
     if verbose is True: print("Clustering with resolution " + str(res) + " using " + str(clust_alg) + "...")
@@ -80,16 +88,12 @@ def _cluster_final(adata,
                   dist_slot=None,
                   use_reduction=True,
                   reduction_slot="X_pca",
-                  clust_alg="Leiden",
                   seed=0,
-                  approx={
-                      "run": False,
-                      "size": 1000,
-                      "exact_size": False
-                  },
+                  approx_size=None,
                   key_added="clusters",
                   knn_slot='knn',
                   verbose=True,
+                  batch_size=1000,
                   njobs = 1):
     if dist_slot is None:
         if verbose: print("Computing distance object...")
@@ -98,18 +102,24 @@ def _cluster_final(adata,
                       use_reduction,
                       reduction_slot,
                       key_added=dist_slot,
+                      batch_size=batch_size,
                       verbose=verbose)
+    if approx_size is None:
+      approx = {"run":False}
+    else:
+      approx = {"run":True, "size":approx_size, "exact_size":True}
 
     adata = _cluster_final_internal(adata,
                                     res,
                                     knn,
                                     dist_slot,
-                                    clust_alg,
+                                    config['clust_alg'],
                                     seed,
                                     approx,
                                     key_added,
                                     knn_slot,
                                     verbose,
+                                    batch_size,
                                     njobs)
     return adata
 

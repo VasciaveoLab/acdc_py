@@ -7,6 +7,7 @@ from .pp import corr_distance, neighbors_knn, neighbors_graph
 from ._condense_diffuse_funcs import __diffuse_subsample_labels
 from sys import maxsize
 from multiprocessing import cpu_count
+from .config import config
 
 ### ---------- EXPORT LIST ----------
 __all__ = ['SA']
@@ -40,6 +41,7 @@ def get_sa_results(adata,
                    maxfun = 1e7,
                    seed = 0,
                    key_added = "clusters",
+                   batch_size = 1000,
                    njobs = 1):
     # par_init = NULL,
     # control = NULL,
@@ -52,6 +54,7 @@ def get_sa_results(adata,
                       use_reduction,
                       reduction_slot,
                       key_added=dist_slot,
+                      batch_size=batch_size,
                       verbose=verbose)
     if use_reduction == True:
         n_pcs = adata.obsm[reduction_slot].shape[1]
@@ -59,7 +62,13 @@ def get_sa_results(adata,
         n_pcs = None
 
     if verbose: print("Computing neighbors...")
-    neighbors_knn(adata, max_knn=np.max(NN_range), dist_slot=dist_slot, njobs = njobs)
+    neighbors_knn(
+        adata,
+        max_knn=np.max(NN_range),
+        dist_slot=dist_slot,
+        batch_size=batch_size,
+        njobs = njobs
+    )
 
     # In order to use global inside a nested function, we have to declare a
         # variable with a global keyword inside a nested function
@@ -71,12 +80,18 @@ def get_sa_results(adata,
 
     def objective(v, adata, n_subsamples, subsamples_pct_cells,
                   n_pcs, clust_alg, SS_weights, SS_exp_base,
-                  metrics, opt_metric, opt_metric_dir, dist_slot):
+                  metrics, opt_metric, opt_metric_dir, dist_slot,
+                  batch_size):
         a_res, a_nn = v
         a_nn = int(np.floor(a_nn))
         global sil_df
         global curr_iter
-        neighbors_graph(adata, n_neighbors = a_nn, verbose = False)
+        neighbors_graph(
+            adata,
+            n_neighbors = a_nn,
+            batch_size=batch_size,
+            verbose = False
+        )
         adata = _cluster_adata(adata,
                                seed,#my_random_seed,
                                a_res,
@@ -130,7 +145,8 @@ def get_sa_results(adata,
                                         metrics,
                                         opt_metric,
                                         opt_metric_dir,
-                                        dist_slot),
+                                        dist_slot,
+                                        batch_size),
                                 maxiter = maxiter,
                                 initial_temp = initial_temp,
                                 restart_temp_ratio = restart_temp_ratio,
@@ -173,14 +189,14 @@ def SA(
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
-    clust_alg="Leiden",
+    # clust_alg="Leiden",
     metrics = "sil_mean", #["sil_mean", "sil_mean_median", "tot_sil_neg", "lowest_sil_clust","max_sil_clust"]
     opt_metric = "sil_mean",
     opt_metric_dir = "max",
-    SS_weights="unitary",
-    SS_exp_base=2.718282,
-    n_subsamples=1,
-    subsamples_pct_cells=100,
+    # SS_weights="unitary",
+    # SS_exp_base=2.718282,
+    # n_subsamples=1,
+    # subsamples_pct_cells=100,
     maxiter=20,#20,
     initial_temp=5230,
     restart_temp_ratio=2e-5,
@@ -189,14 +205,10 @@ def SA(
     maxfun=1e7,
     seed=0,
     key_added = "clusters",
-    approx = {
-        "run":False,
-        # "mode":"subsample", #subsample, metacell_standard,
-        "size":1000,
-        "exact_size":True
-    },
+    approx_size=None,
     verbose=True,
     show_progress_bar = True,
+    batch_size = 1000,
     njobs = 1
 ):
     """\
@@ -226,8 +238,6 @@ def SA(
         or to use the direct matrix (False) for clustering.
     reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
-    clust_alg : default: "Leiden"
-        Clustering algorithm. Choose among: "Leiden" (default) or  "Louvain".
     metrics : default: "sil_mean"
         A metric or a list of metrics to be computed at each iteration of the
         GridSearch. Possible metrics to use include "sil_mean", "sil_mean_median",
@@ -237,16 +247,6 @@ def SA(
     opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
-    SS_weights : default: "unitary"
-        Negative silhouette scores can be given more weight by exponentiation ("exp").
-        Otherwise, leave SS_weights as "unitary".
-    SS_exp_base : default: 2.718282.
-        If SS_weights is set to "exp", then set the base for exponentiation.
-    n_subsamples : default: 1
-        Number of subsamples per bootstrap.
-    subsamples_pct_cells : default: 100
-        Percentage of cells sample at each bootstrap iteration.
-        i.e. when 100, 100%, all cells are used).
     maxiter : : default: 20
         The maximum number of global search iterations. If None, value is 1000.
     minimizer_kwargs : dict, optional
@@ -281,16 +281,18 @@ def SA(
         Random seed to use.
     key_added : default: "clusters"
         Slot in obs to store the resulting clusters.
-    approx : default: {"run":False, "size":1000, "exact_size":True}
-        A diciontary object containing three parameters to control subsampling and diffusion
-            "run": True or False whether to use subsampling and diffusion. Default=False
-            "size": the number of cells to use in the subsampling. Default=1000.
-            "exact_size": whether to get the exact size "size" of subsampling (True) or
-            be more inclusive during the representative subsampling (False, recommended).
+    approx_size : default: None
+        When set to a positive integer, instead of running GS on the entire
+        dataset, perform GS on a subsample and diffuse those results. This will
+        lead to an approximation of the optimal solution for cases where the
+        dataset is too large to perform GS on due to time or memory constraints.
     verbose : default: True
         Include additional output with True. Alternative = False.
     show_progress_bar : default: True
         Show a progress bar to visualize the progress of the algorithm.
+    batch_size : default: 1000
+        The size of each batch. Larger batches result in more memory usage. If
+        None, use the whole dataset instead of batches.
     njobs : default: 1
         Paralleization option that allows users to speed up runtime.
     Returns
@@ -306,12 +308,12 @@ def SA(
         raise ValueError('njobs (' + str(njobs) + ') is larger than the ' +
                          'number of CPU cores (' + str(n_max_cores) + ').')
 
-    if approx is False: approx = {"run":False}
-    if approx is True: approx = {"run":False}
-    if "size" not in approx.keys(): approx["size"] = 1000
-    if "exact_size" not in approx.keys(): approx["exact_size"] = False
+    if approx_size is None:
+        approx = {"run":False}
+    else:
+        approx = {"run":True, "size":approx_size, "exact_size":True}
+        adata = get_approx_anndata(adata, approx, seed, verbose, njobs)
 
-    if approx["run"] is True: adata = get_approx_anndata(adata, approx, seed, verbose, njobs)
 
     adata = get_sa_results(adata,
                            res_range,
@@ -322,13 +324,13 @@ def SA(
                            metrics,
                            opt_metric,
                            opt_metric_dir,
-                           SS_weights,
-                           SS_exp_base,
+                           config['SS']['SS_weights'],
+                           config['SS']['SS_exp_base'],
                            verbose,
                            show_progress_bar,
-                           clust_alg,
-                           n_subsamples,
-                           subsamples_pct_cells,
+                           config['clust_alg'],
+                           config['SS']['n_subsamples'],
+                           config['SS']['subsamples_pct_cells'],
                            maxiter,
                            initial_temp,
                            restart_temp_ratio,
@@ -337,6 +339,7 @@ def SA(
                            maxfun,
                            seed,
                            key_added,
+                           batch_size,
                            njobs)
     sa_results = adata.uns["SA_results_dict"]
 
@@ -347,12 +350,13 @@ def SA(
         opt_res,
         opt_knn,
         dist_slot,
-        clust_alg,
+        config['clust_alg'],
         seed,
         approx = {"run":False},
         key_added = key_added,
         knn_slot = "knn",
         verbose = False,
+        batch_size = batch_size,
         njobs = njobs
     )
 
