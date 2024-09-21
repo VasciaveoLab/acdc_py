@@ -1,4 +1,4 @@
-from ._tl import _cluster_final
+from ._tl import _cluster_final, _extract_clusters, _merge
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -83,4 +83,64 @@ def cluster_final(adata,
       knn_slot,
       verbose,
       njobs
+    )
+
+def extract_clusters(adata, obs_column, clust_names):
+    """\
+    Extract clusters as a new AnnData object. Useful for subclustering.
+
+    Parameters
+    ----------
+    adata
+        An anndata object containing a gene expression signature in adata.X and
+        gene expression counts in adata.raw.X.
+    obs_column
+        A name of the column in adata.obs.
+    clust_names
+        Clusters in adata.obs[obs_column] to extract.
+    """
+    return _extract_clusters(adata, obs_column, clust_names)
+
+def merge(
+    adata,
+    obs_column,
+    clust_names,
+    merged_clust_name = None,
+    update_numbers = True,
+    key_added = "clusters",
+    return_as_series = False
+):
+    """\
+    Merge clusters together and, if desired, renumber the clusters based on
+    cluster size.
+
+    Parameters
+    ----------
+    adata
+        An anndata object containing a gene expression signature in adata.X and
+        gene expression counts in adata.raw.X.
+    obs_column
+        A name of the column in adata.obs.
+    clust_names
+        Clusters in adata.obs[obs_column] to extract.
+    merged_clust_name : default: None
+        The name of the new cluster. If None with digit clusters, the new
+        cluster will be named after the smallest of the merged. If None with
+        non-digit clusters, the new cluster will be named by joining the names
+        of the clusters.
+    update_numbers : default: True
+        If clusters are digits, renumber the clusters based on cluster size.
+    key_added : default: "clusters"
+        Store the new clustering in adata.obs[key_added].
+    return_as_series : default: False
+        Rather than storing the clusters, return them as a pd.Series object.
+    """
+    return _merge(
+        adata,
+        obs_column,
+        clust_names,
+        merged_clust_name,
+        update_numbers,
+        key_added,
+        return_as_series
     )
