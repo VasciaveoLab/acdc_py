@@ -1,4 +1,4 @@
-from ._pl import _GS_search_space, _SA_search_space
+from ._pl import _GS_search_space, _SA_search_space, _metric_vs_n_clusts, _silhouette_scores
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -80,3 +80,34 @@ def metric_vs_n_clusts(
         ylabel,
         axis_fontsize
     )
+
+def silhouette_scores(
+    adata,
+    obs_column,
+    dist_slot,
+    palette=None,
+    ylab = None,
+    show = True
+):
+    """\
+    Get a dot plot of the search space traversed by Simulated Annealing (SA).
+
+    Parameters
+    ----------
+    adata
+        An anndata object.
+    obs_column
+        A name of the column in adata.obs that contains the clustering that you
+        want to calculate silhouette scores for.
+    dist_slot
+        The slot in adata.obsp where the distance object that will be used to
+        calculate the silhouette score is stored.
+    palette : default: None
+        The name of a Matplotlib qualitative colormap. If None, use ACDC
+        default palette.
+    ylab : default: None
+        The label to put on the y-axis.
+    show : default: True
+        Whether to show the plot.
+    """
+    _silhouette_scores(adata, obs_column, dist_slot, palette, ylab, show)

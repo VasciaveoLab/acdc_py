@@ -1,6 +1,8 @@
 ### ---------- IMPORT DEPENDENCIES ----------
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+import matplotlib.cm as cm
+from sklearn.metrics import silhouette_samples, silhouette_score
 import seaborn as sns
 import pandas as pd
 import numpy as np
@@ -13,6 +15,39 @@ __all__ = []
 # --------------------------- ** HELPER FUNCTIONS ** ---------------------------
 # ------------------------------------------------------------------------------
 # @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
+def _get_vega_30():
+    vega_10_dark = ['#1f77b4',
+                   '#ff7f0e',
+                   '#2ca02c',
+                   '#d62728',
+                   '#9467bd',
+                   '#8c564b',
+                   '#e377c2',
+                   '#7f7f7f',
+                   '#bcbd22',
+                   '#17becf']
+    vega_10_light = ['#aec7e8',
+                    '#ffbb78',
+                    '#98df8a',
+                    '#ff9896',
+                    '#c5b0d5',
+                    '#c49c94',
+                    '#f7b6d2',
+                    '#c7c7c7',
+                    '#dbdb8d',
+                    '#9edae5']
+    vega_10_medium = ["#1f497d", # (medium dark blue)
+                      "#d2691e", # (medium dark orange)
+                      "#228b22", # (medium dark green)
+                      "#a52a2a", # (medium dark red/brown)
+                      "#483d8b", # (medium dark purple)
+                      "#7b7b7b", # (medium grey)
+                      "#ffd700", # (medium yellow/gold)
+                      "#008080", # (medium teal)
+                      "#da70d6", # (medium pink/purple)
+                      "#ffa07a"] # (medium salmon/orange))
+    vega_30_complete = vega_10_dark + vega_10_light + vega_10_medium
+    return vega_30_complete
 def _get_inferno_10():
     inferno_colors_10 = ["#000004FF",
                          "#1B0C42FF",
@@ -92,7 +127,7 @@ def _create_countour_layer_for_sa_search_plot(ax, search_df):
 
 # @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
 # ------------------------------------------------------------------------------
-# ---------------------------- ** PLOTTING FUNCS ** ----------------------------
+# ---------------------- ** SEARCHSPACE PLOTTING FUNCS ** ----------------------
 # ------------------------------------------------------------------------------
 # @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
 
@@ -174,3 +209,91 @@ def _metric_vs_n_clusts(
     plt.ylabel(ylabel, fontsize=axis_fontsize)  # Y-axis label font size
     plt.xticks(fontsize=12)  # X-axis tick labels font size
     plt.yticks(fontsize=12)  # Y-axis tick labels font size
+
+# @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
+# ------------------------------------------------------------------------------
+# --------------------------- ** SS PLOTTING FUNC ** ---------------------------
+# ------------------------------------------------------------------------------
+# @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
+
+
+def __plot_ss(X, cluster_labels, palette, ylab, show):
+    if palette is None:
+        my_colors = _get_vega_30()
+    else:
+        cmap = plt.colormaps[palette]
+        my_colors = [cmap(i) for i in range(cmap.N)]
+
+    n_clusters = len(np.unique(cluster_labels))
+
+    # Calculate silhouette scores
+    silhouette_avg = silhouette_score(X, cluster_labels)
+    sample_silhouette_values = silhouette_samples(X, cluster_labels)
+
+    # Create a subplot with 1 row and 1 column
+    fig, ax1 = plt.subplots(1, 1)
+    fig.set_size_inches(7, 7)
+
+    # Set the range of x-axis
+    ax1.set_xlim([-0.6, 1])
+
+    # Set the range of y-axis
+    ax1.set_ylim([0, len(X) + (n_clusters + 1) * 10])
+
+
+
+    y_lower = 10
+    for i in range(n_clusters):
+        clust_i_name = np.unique(cluster_labels)[i]
+
+        # Aggregate the silhouette scores for samples belonging to cluster i
+        ith_cluster_silhouette_values = sample_silhouette_values[cluster_labels == clust_i_name]
+
+        # Sort the silhouette scores
+        ith_cluster_silhouette_values.sort()
+
+        size_cluster_i = ith_cluster_silhouette_values.shape[0]
+        y_upper = y_lower + size_cluster_i
+
+        color = my_colors[i] #cm.nipy_spectral(float(i) / n_clusters)
+        ax1.fill_betweenx(np.arange(y_lower, y_upper),
+                          0, ith_cluster_silhouette_values,
+                          facecolor=color, edgecolor=color, alpha=0.7)
+
+        # Label the silhouette plots with their cluster numbers at the middle
+        #ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i))
+        ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, clust_i_name)
+
+        # Compute the new y_lower for next plot
+        y_lower = y_upper + 10  # 10 for the 0 samples
+
+    # Labeling the axes
+    ax1.set_title("Silhouette Scores For Clusters")
+    ax1.set_xlabel("The silhouette coefficient values")
+    ax1.set_ylabel(ylab)
+
+    # The vertical line for average silhouette score of all the values
+    ax1.axvline(x=silhouette_avg, color="red", linestyle="--")
+
+    # Clear the y-axis labels
+    ax1.set_yticks([])
+    ax1.set_xticks(np.arange(-0.6, 1.1, 0.1))
+
+    if show: plt.show()
+
+def _silhouette_scores(
+    adata,
+    obs_column,
+    dist_slot,
+    palette=None,
+    ylab = None,
+    show = True
+):
+    if ylab is None: ylab = obs_column
+    __plot_ss(
+        adata.obsp[dist_slot],
+        adata.obs[obs_column],
+        palette,
+        ylab,
+        show
+    )
