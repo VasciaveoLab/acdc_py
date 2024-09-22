@@ -1,3 +1,19 @@
+# config = {
+#     "n_cores": 1,
+#     "pval_threshold": 0.1,
+#     "null_iters": 100,
+#     "n_top_mrs": 25,
+#     "tcm_size": 50,
+#     "GS" : {
+#         'res_vector': [0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9],
+#         'NN_vector': [ 11,  21,  31,  41,  51,  61,  71,  81,  91, 101],
+#         'njobs':4,
+#         'metrics':['sil_mean', 'sil_mean_median'],
+#         'opt_metric':"sil_mean"#"sil_mean_median"
+#     }
+# }
+
+
 # from .GS import GS
 # import scanpy as sc
 # import pyviper
