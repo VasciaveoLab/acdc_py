@@ -40,22 +40,19 @@ def _generic_clustering(
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
-    clust_alg = "Leiden",
     n_clusts = None,
     seed = 0,
-    approx = {
-        "run":False,
-        "size":1000,
-        "exact_size":True
-    },
+    approx_size = None,
     key_added = "clusters",
     knn_slot = 'knn',
     verbose = True,
     njobs = 1,
     mode = "GS"
 ):
-    if "size" not in approx.keys(): approx["size"] = 1000
-    if "exact_size" not in approx.keys(): approx["exact_size"] = False
+    if approx_size is None:
+        approx = {"run":False}
+    else:
+        approx = {"run":True, "size":approx_size, "exact_size":True}
 
     if mode == "GS":
         opt_params = _GS_params(
@@ -72,7 +69,8 @@ def _generic_clustering(
             n_clusts
         )
 
-    if approx["run"] is True: adata = get_approx_anndata(adata, approx, seed, verbose, njobs)
+    if approx["run"] is True:
+        adata = get_approx_anndata(adata, approx, seed, verbose, njobs)
 
     adata = cluster_final(adata,
                           res = opt_params["opt_res"],
@@ -80,9 +78,8 @@ def _generic_clustering(
                           dist_slot = dist_slot,
                           use_reduction = use_reduction,
                           reduction_slot = reduction_slot,
-                          clust_alg = clust_alg,
                           seed = seed,
-                          approx = {"run":False},
+                          approx_size = approx_size,
                           key_added = key_added,
                           knn_slot = knn_slot,
                           verbose = verbose,
@@ -118,14 +115,9 @@ def _SA_clustering(
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
-    clust_alg = "Leiden",
     n_clusts = None,
     seed = 0,
-    approx = {
-        "run":False,
-        "size":1000,
-        "exact_size":True
-    },
+    approx_size = None,
     key_added = "clusters",
     knn_slot = 'knn',
     verbose = True,
@@ -138,10 +130,9 @@ def _SA_clustering(
         dist_slot,
         use_reduction,
         reduction_slot,
-        clust_alg,
         n_clusts,
         seed,
-        approx,
+        approx_size,
         key_added,
         knn_slot,
         verbose,
@@ -202,14 +193,9 @@ def _GS_clustering(
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
-    clust_alg = "Leiden",
     n_clusts = None,
     seed = 0,
-    approx = {
-        "run":False,
-        "size":1000,
-        "exact_size":True
-    },
+    approx_size = None,
     key_added = "clusters",
     knn_slot = 'knn',
     verbose = True,
@@ -222,10 +208,9 @@ def _GS_clustering(
         dist_slot,
         use_reduction,
         reduction_slot,
-        clust_alg,
         n_clusts,
         seed,
-        approx,
+        approx_size,
         key_added,
         knn_slot,
         verbose,

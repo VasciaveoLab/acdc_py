@@ -16,14 +16,9 @@ def SA_clustering(
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
-    clust_alg = "Leiden",
     n_clusts = None,
     seed = 0,
-    approx = {
-        "run":False,
-        "size":1000,
-        "exact_size":True
-    },
+    approx_size = None,
     key_added = "clusters",
     knn_slot = 'knn',
     verbose = True,
@@ -54,20 +49,17 @@ def SA_clustering(
         or to use the direct matrix (False) for clustering.
     reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
-    clust_alg : default: "Leiden"
-        Clustering algorithm. Choose among: "Leiden" (default) or  "Louvain".
     n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to compute the optimal clustering solution with
         this many clusters.
     seed : default: 0
         Random seed to use.
-    approx : default: {"run":False, "size":1000, "exact_size":True}
-        A diciontary object containing three parameters to control subsampling and diffusion
-            "run": True or False whether to use subsampling and diffusion. Default=True
-            "size": the number of cells to use in the subsampling. Default=1000.
-            "exact_size": whether to get the exact size "size" of subsampling (True) or
-            be more inclusive during the representative subsampling (False, recommended).
+    approx_size : default: None
+        When set to a positive integer, instead of running GS on the entire
+        dataset, perform GS on a subsample and diffuse those results. This will
+        lead to an approximation of the optimal solution for cases where the
+        dataset is too large to perform GS on due to time or memory constraints.
     key_added : default: "clusters"
         Slot in obs to store the resulting clusters.
     knn_slot : default: "knn"
@@ -90,10 +82,9 @@ def SA_clustering(
         dist_slot,
         use_reduction,
         reduction_slot,
-        clust_alg,
         n_clusts,
         seed,
-        approx,
+        approx_size,
         key_added,
         knn_slot,
         verbose,
@@ -223,14 +214,9 @@ def GS_clustering(
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
-    clust_alg = "Leiden",
     n_clusts = None,
     seed = 0,
-    approx = {
-        "run":False,
-        "size":1000,
-        "exact_size":True
-    },
+    approx_size = None,
     key_added = "clusters",
     knn_slot = 'knn',
     verbose = True,
@@ -261,20 +247,17 @@ def GS_clustering(
         or to use the direct matrix (False) for clustering.
     reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
-    clust_alg : default: "Leiden"
-        Clustering algorithm. Choose among: "Leiden" (default) or  "Louvain".
     n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to compute the optimal clustering solution with
         this many clusters.
     seed : default: 0)
         Random seed to use.
-    approx : default: {"run":False, "size":1000, "exact_size":True}
-        A diciontary object containing three parameters to control subsampling and diffusion
-            "run": True or False whether to use subsampling and diffusion. Default=True
-            "size": the number of cells to use in the subsampling. Default=1000.
-            "exact_size": whether to get the exact size "size" of subsampling (True) or
-            be more inclusive during the representative subsampling (False, recommended).
+    approx_size : default: None
+        When set to a positive integer, instead of running GS on the entire
+        dataset, perform GS on a subsample and diffuse those results. This will
+        lead to an approximation of the optimal solution for cases where the
+        dataset is too large to perform GS on due to time or memory constraints.
     key_added : default: "clusters"
         Slot in obs to store the resulting clusters.
     knn_slot : default: "knn"
@@ -297,10 +280,9 @@ def GS_clustering(
         dist_slot,
         use_reduction,
         reduction_slot,
-        clust_alg,
         n_clusts,
         seed,
-        approx,
+        approx_size,
         key_added,
         knn_slot,
         verbose,
