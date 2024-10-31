@@ -20,6 +20,10 @@ def GS_search_space(adata, plot_type = "sil_mean"):
     plot_type : default: "sil_mean"
          A column name in adata.uns["GS_results_dict"]["search_df"].
          Among other, options include "sil_mean" and "n_clust".
+
+    Returns
+    -------
+    A object of :class:~matplotlib.figure.Figure containing the plot.
     """
     return _GS_search_space(adata, plot_type)
 
@@ -38,6 +42,10 @@ def SA_search_space(adata, plot_type = "sil_mean", plot_density = True):
     plot_density : default: True
         Whether to plot density on the dotplot to identify regions that were
         highly traversed by SA.
+
+    Returns
+    -------
+    A object of :class:~matplotlib.figure.Figure containing the plot.
     """
     return _SA_search_space(adata, plot_type, plot_density)
 
