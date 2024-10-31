@@ -195,3 +195,102 @@ def get_approx_anndata(adata, approx, seed, verbose, njobs):
     else:
         raise ValueError('Unsupported approx["mode"]:' + str(approx['mode']))
     return adata
+
+# @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
+# ------------------------------------------------------------------------------
+# --------------- ** merge_subclusters_into_clusters: HELPERS ** ---------------
+# ------------------------------------------------------------------------------
+# @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
+
+def __rename_subcluster_labels_by_cluster_label_groups(
+    subcluster_labels,
+    cluster_labels,
+    clusters_to_subcluster
+):
+    # Imagine in cluster_labels you have clusters 0, 1, 2, 3, 4, 5.
+    # Imagine you subclustered clusters 1 and 2 (clusters_to_subcluster) in your cluster_labels
+    # Now you have subclusters of clusters 1 and 2 in your subcluster_labels that contain subclusters 0, 1, 2, 3
+    # You don't want the subcluster names to overlap with 0, 1, 2, 3, 4, 5.
+    # So we take the max of our cluster labels (5) + 1 and add it to our subcluster labels,
+        # so they become 6, 7, 8, 9
+    # However, we will be overwriting 1 and 2, so we take the subcluster labels with the "largest" names
+        # and assign 1 and 2 to them. So our subcluster labels have groups 6, 7, 1, 2.
+    # relabel_subcluster_labels_by_group_size will correct the order of these.
+
+    cluster_labels = cluster_labels.astype('int')
+    subcluster_labels = subcluster_labels.astype('int')
+    clusters_to_subcluster = clusters_to_subcluster.astype('int')
+
+    max_of_cluster_labels = np.max(cluster_labels)
+    subcluster_labels = subcluster_labels + max_of_cluster_labels + 1 #extra +1 due to starting at 0 for cluster names
+    j = 0
+    for i in np.flip(np.arange(len(clusters_to_subcluster))):
+        subcluster_labels[subcluster_labels == (max(subcluster_labels)-i)] = clusters_to_subcluster[j]
+        j = j + 1
+    return subcluster_labels.astype('str')
+
+# from acdc._tl import __relabel_subcluster_labels_by_group_size
+
+def __relabel_subcluster_labels_by_group_size(subcluster_labels):
+    subcluster_labels_groups_ordered_by_alphabet = \
+        np.sort(np.unique(subcluster_labels).astype(int)).astype('str')
+    subcluster_labels_groups_ordered_by_cluster_size = pd.DataFrame({
+        "names":np.unique(subcluster_labels, return_counts = True)[0],
+        "sizes":np.unique(subcluster_labels, return_counts = True)[1]
+    }).sort_values('sizes').iloc[::-1]['names'].values
+
+    subcluster_labels_orderedGroups = np.zeros(len(subcluster_labels)).astype('str')
+
+    for i in range(len(subcluster_labels_groups_ordered_by_alphabet)):
+        subcluster_labels_orderedGroups[subcluster_labels == \
+            subcluster_labels_groups_ordered_by_cluster_size[i]] = \
+            subcluster_labels_groups_ordered_by_alphabet[i]
+    subcluster_labels = subcluster_labels_orderedGroups
+    return subcluster_labels
+
+def __update_subcluster_label_group_names(
+    subcluster_labels,
+    cluster_labels,
+    clusters_to_subcluster
+):
+    if isinstance(clusters_to_subcluster, str):
+        clusters_to_subcluster = np.array([clusters_to_subcluster])
+
+    subcluster_labels = __rename_subcluster_labels_by_cluster_label_groups(
+        subcluster_labels,
+        cluster_labels,
+        clusters_to_subcluster
+    )
+    subcluster_labels = __relabel_subcluster_labels_by_group_size(subcluster_labels)
+    return subcluster_labels
+
+# @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
+# ------------------------------------------------------------------------------
+# ---------------- ** merge_subclusters_into_clusters: MAIN ** -----------------
+# ------------------------------------------------------------------------------
+# @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
+
+def __merge_subclusters_into_clusters(
+    cluster_labels,
+    subcluster_labels,
+    subcluster_name
+):
+    cluster_labels = cluster_labels.astype('str')
+    if subcluster_name.isdigit():
+        subcluster_labels = __update_subcluster_label_group_names(
+            subcluster_labels,
+            cluster_labels,
+            subcluster_name
+        )
+    else:
+        subcluster_labels = subcluster_labels.astype('str')
+        subcluster_labels = [subcluster_name + "_" + label for label in subcluster_labels]
+        max_len_str = np.max(
+            [np.max(np.vectorize(len)(subcluster_labels)),
+            np.max(np.vectorize(len)(cluster_labels))]
+        )
+        cluster_labels = cluster_labels.astype('<U'+str(max_len_str))
+
+    cluster_labels[cluster_labels == subcluster_name] = subcluster_labels
+
+    return cluster_labels

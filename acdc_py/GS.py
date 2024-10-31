@@ -1,8 +1,9 @@
 ### ---------- IMPORT DEPENDENCIES ----------
 from ._SA_GS_subfunctions import *
 from ._SA_GS_subfunctions import _cluster_adata
+from ._SA_GS_subfunctions import __merge_subclusters_into_clusters
 from ._condense_diffuse_funcs import __diffuse_subsample_labels
-from ._tl import _cluster_final_internal
+from ._tl import _cluster_final_internal, _extract_clusters
 from .pp import corr_distance, neighbors_knn, neighbors_graph
 from tqdm import tqdm
 from datetime import datetime
@@ -321,6 +322,8 @@ def GS(
     metrics = "sil_mean", #["sil_mean", "sil_mean_median", "tot_sil_neg", "lowest_sil_clust","max_sil_clust"]
     opt_metric = "sil_mean",
     opt_metric_dir = "max",
+    cluster_labels = None,
+    cluster_name = None,
     # SS_weights = "unitary",
     # SS_exp_base = 2.718282,
     # n_subsamples = 1,
@@ -369,6 +372,13 @@ def GS(
     opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
+    cluster_labels : default: None
+        A column in adata.obs with a set of cluster labels containing a
+        cluster to subcluster. Specify the cluster with the cluster_name
+        parameter.
+    cluster_name : default: None
+        A cluster from cluster_labels to subcluster. When None, cluster whole
+        dataset.
     seed : default: 0
         Random seed to use.
     key_added : default: "clusters"
@@ -402,6 +412,15 @@ def GS(
     if njobs > n_max_cores:
         raise ValueError('njobs (' + str(njobs) + ') is larger than the ' +
                          'number of CPU cores (' + str(n_max_cores) + ').')
+
+    if cluster_name is not None:
+        if cluster_labels is None:
+            raise ValueError("cluster_name provided but not cluster_labels.")
+        else:
+            adata_original = adata
+            adata = _extract_clusters(
+                adata_original, cluster_labels, cluster_name
+            )
 
     if approx_size is None:
         approx = {"run":False}
@@ -466,3 +485,11 @@ def GS(
             seed = seed,
             njobs = njobs
         )
+
+    if cluster_name is not None:
+        merged_clusters = __merge_subclusters_into_clusters(
+            cluster_labels = adata_original.obs[cluster_labels].values,
+            subcluster_labels = adata.obs[key_added].values,
+            subcluster_name = cluster_name
+        )
+        adata_original.obs[key_added] = merged_clusters
