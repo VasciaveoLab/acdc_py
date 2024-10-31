@@ -11,11 +11,11 @@ __all__ = []
 
 def SA_clustering(
     adata,
-    opt_metric = "sil_mean",
-    opt_metric_dir = "max",
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
+    opt_metric = "sil_mean",
+    opt_metric_dir = "max",
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -34,11 +34,6 @@ def SA_clustering(
     ----------
     adata
         An anndata object containing a distance object in adata.obsp.
-    opt_metric : default: "sil_mean"
-        A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir : default: "max"
-        Whether opt_metric is more optimal by maximizing ("max") or
-        by minimizing ("min").
     dist_slot : default: None
         Slot in adata.obsp where a pre-generated distance matrix computed across
         all cells is stored in adata for use in construction of NN. (Default =
@@ -49,6 +44,11 @@ def SA_clustering(
         or to use the direct matrix (False) for clustering.
     reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
+    opt_metric : default: "sil_mean"
+        A metric from metrics to use to optimize parameters for the clustering.
+    opt_metric_dir : default: "max"
+        Whether opt_metric is more optimal by maximizing ("max") or
+        by minimizing ("min").
     n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to compute the optimal clustering solution with
@@ -77,11 +77,11 @@ def SA_clustering(
     """
     _SA_clustering(
         adata,
-        opt_metric,
-        opt_metric_dir,
         dist_slot,
         use_reduction,
         reduction_slot,
+        opt_metric,
+        opt_metric_dir,
         n_clusts,
         seed,
         approx_size,
@@ -209,11 +209,11 @@ def SA_metric_search_data(
 
 def GS_clustering(
     adata,
-    opt_metric = "sil_mean",
-    opt_metric_dir = "max",
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
+    opt_metric = "sil_mean",
+    opt_metric_dir = "max",
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -232,11 +232,6 @@ def GS_clustering(
     ----------
     adata
         An anndata object containing a distance object in adata.obsp.
-    opt_metric : default: "sil_mean"
-        A metric from metrics to use to optimize parameters for the clustering.
-    opt_metric_dir : default: "max"
-        Whether opt_metric is more optimal by maximizing ("max") or
-        by minimizing ("min").
     dist_slot : default: None
         Slot in adata.obsp where a pre-generated distance matrix computed across
         all cells is stored in adata for use in construction of NN. (Default =
@@ -247,6 +242,11 @@ def GS_clustering(
         or to use the direct matrix (False) for clustering.
     reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
+    opt_metric : default: "sil_mean"
+        A metric from metrics to use to optimize parameters for the clustering.
+    opt_metric_dir : default: "max"
+        Whether opt_metric is more optimal by maximizing ("max") or
+        by minimizing ("min").
     n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to compute the optimal clustering solution with
@@ -275,11 +275,11 @@ def GS_clustering(
     """
     _GS_clustering(
         adata,
-        opt_metric,
-        opt_metric_dir,
         dist_slot,
         use_reduction,
         reduction_slot,
+        opt_metric,
+        opt_metric_dir,
         n_clusts,
         seed,
         approx_size,

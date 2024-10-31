@@ -35,11 +35,11 @@ def _results_metric_search_data(
 
 def _generic_clustering(
     adata,
-    opt_metric = "sil_mean",
-    opt_metric_dir = "max",
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
+    opt_metric = "sil_mean",
+    opt_metric_dir = "max",
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -110,11 +110,11 @@ def _generic_clustering(
 
 def _SA_clustering(
     adata,
-    opt_metric = "sil_mean",
-    opt_metric_dir = "max",
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
+    opt_metric = "sil_mean",
+    opt_metric_dir = "max",
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -125,11 +125,11 @@ def _SA_clustering(
 ):
     _generic_clustering(
         adata,
-        opt_metric,
-        opt_metric_dir,
         dist_slot,
         use_reduction,
         reduction_slot,
+        opt_metric,
+        opt_metric_dir,
         n_clusts,
         seed,
         approx_size,
@@ -188,11 +188,11 @@ def _SA_metric_search_data(
 
 def _GS_clustering(
     adata,
-    opt_metric = "sil_mean",
-    opt_metric_dir = "max",
     dist_slot=None,
     use_reduction=True,
     reduction_slot="X_pca",
+    opt_metric = "sil_mean",
+    opt_metric_dir = "max",
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -203,11 +203,11 @@ def _GS_clustering(
 ):
     _generic_clustering(
         adata,
-        opt_metric,
-        opt_metric_dir,
         dist_slot,
         use_reduction,
         reduction_slot,
+        opt_metric,
+        opt_metric_dir,
         n_clusts,
         seed,
         approx_size,
