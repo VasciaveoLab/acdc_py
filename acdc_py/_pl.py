@@ -6,6 +6,7 @@ from sklearn.metrics import silhouette_samples, silhouette_score
 import seaborn as sns
 import pandas as pd
 import numpy as np
+from ._get_opt import _GS_metric_value
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -191,10 +192,7 @@ def _metric_vs_n_clusts(
 
     k = 0
     for n_clusts in unique_n_clusts:
-        ss[k] = acdc.get_opt.GS_metric_value(
-                    adata,
-                    n_clusts=n_clusts
-        )
+        ss[k] = _GS_metric_value(adata, n_clusts=n_clusts)
         k+=1
 
     df = pd.DataFrame({"n_clusts":unique_n_clusts,"ss":ss})
