@@ -19,9 +19,7 @@ def cluster_final(adata,
     """\
     A tool for replicating the final optimization-based unsupervised clustering
     of large-scale data performed by the Grid Search (GS) or Simulated Annealing
-    (SA) functions. This includes replicating the approximation method we call
-    subsampling and diffusion that enables fast and accurate clustering of
-    hundreds of thousands of cells.
+    (SA) functions.
 
     Parameters
     ----------
@@ -81,7 +79,7 @@ def cluster_final(adata,
       njobs
     )
 
-def extract_clusters(adata, obs_column, clust_names):
+def extract(adata, obs_column, clust_names):
     """\
     Extract clusters as a new AnnData object. Useful for subclustering.
 
@@ -140,3 +138,16 @@ def merge(
         key_added,
         return_as_series
     )
+
+def rename(adata, obs_column, name_dict):
+    """\
+    Rename clusters within adata.obs[obs_column] using name_dict to specify
+    the mapping between old and new names.
+    """
+    # Check if the column exists in adata.obs
+    if obs_column not in adata.obs:
+        raise ValueError(f"Column '{obs_column}' not found in adata.obs")
+
+    # Get the current column values
+    adata.obs[obs_column] = adata.obs[obs_column].replace(name_dict)
+    
