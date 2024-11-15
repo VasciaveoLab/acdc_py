@@ -16,6 +16,8 @@ def SA_clustering(
     reduction_slot="X_pca",
     opt_metric = "sil_mean",
     opt_metric_dir = "max",
+    cluster_labels = None,
+    cluster_name = None,
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -49,6 +51,13 @@ def SA_clustering(
     opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
+    cluster_labels : default: None
+        A column in adata.obs with a set of cluster labels containing a
+        cluster to subcluster. Specify the cluster with the cluster_name
+        parameter.
+    cluster_name : default: None
+        A cluster from cluster_labels to subcluster. When None, cluster whole
+        dataset.
     n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to compute the optimal clustering solution with
@@ -82,6 +91,8 @@ def SA_clustering(
         reduction_slot,
         opt_metric,
         opt_metric_dir,
+        cluster_labels,
+        cluster_name,
         n_clusts,
         seed,
         approx_size,
@@ -214,6 +225,8 @@ def GS_clustering(
     reduction_slot="X_pca",
     opt_metric = "sil_mean",
     opt_metric_dir = "max",
+    cluster_labels = None,
+    cluster_name = None,
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -247,6 +260,13 @@ def GS_clustering(
     opt_metric_dir : default: "max"
         Whether opt_metric is more optimal by maximizing ("max") or
         by minimizing ("min").
+    cluster_labels : default: None
+        A column in adata.obs with a set of cluster labels containing a
+        cluster to subcluster. Specify the cluster with the cluster_name
+        parameter.
+    cluster_name : default: None
+        A cluster from cluster_labels to subcluster. When None, cluster whole
+        dataset.
     n_clusts : default: None
         If not None, restrict the search space to the number of clusters equal
         to n_clusts in order to compute the optimal clustering solution with
@@ -280,6 +300,8 @@ def GS_clustering(
         reduction_slot,
         opt_metric,
         opt_metric_dir,
+        cluster_labels,
+        cluster_name,
         n_clusts,
         seed,
         approx_size,

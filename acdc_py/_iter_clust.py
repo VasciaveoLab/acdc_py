@@ -484,7 +484,7 @@
 #         ChildClust_i_vpmat,
 #         pyviper.Interactome(ChildClust_i_name, ChildClust_i_net_table),
 #         min_targets=0,
-#         output_as_anndata=False,
+#         return_as_df=True,
 #         transfer_obs=False,
 #         store_input_data=False,
 #         verbose = False
@@ -541,7 +541,7 @@
 #         ParentClust_data,
 #         pyviper.Interactome(ChildClust_i_name + "_null", ChildClust_i_net_table_null),
 #         min_targets=0,
-#         output_as_anndata=False,
+#         return_as_df=True,
 #         transfer_obs=False,
 #         store_input_data=False,
 #         verbose = False

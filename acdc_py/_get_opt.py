@@ -1,7 +1,8 @@
 import numpy as np
-from .tl import cluster_final
+from ._tl import _extract_clusters, _cluster_final
 from ._SA_GS_subfunctions import get_approx_anndata
 from ._condense_diffuse_funcs import __diffuse_subsample_labels
+from ._SA_GS_subfunctions import __merge_subclusters_into_clusters
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -40,6 +41,8 @@ def _generic_clustering(
     reduction_slot="X_pca",
     opt_metric = "sil_mean",
     opt_metric_dir = "max",
+    cluster_labels = None,
+    cluster_name = None,
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -69,21 +72,32 @@ def _generic_clustering(
             n_clusts
         )
 
+    if cluster_name is not None:
+        if cluster_labels is None:
+            raise ValueError("cluster_name provided but not cluster_labels.")
+        else:
+            adata_original = adata
+            adata = _extract_clusters(
+                adata_original, cluster_labels, cluster_name
+            )
+
     if approx["run"] is True:
         adata = get_approx_anndata(adata, approx, seed, verbose, njobs)
 
-    adata = cluster_final(adata,
-                          res = opt_params["opt_res"],
-                          knn = opt_params["opt_knn"],
-                          dist_slot = dist_slot,
-                          use_reduction = use_reduction,
-                          reduction_slot = reduction_slot,
-                          seed = seed,
-                          approx_size = approx_size,
-                          key_added = key_added,
-                          knn_slot = knn_slot,
-                          verbose = verbose,
-                          njobs = njobs)
+    adata = _cluster_final(
+        adata,
+        res = opt_params["opt_res"],
+        knn = opt_params["opt_knn"],
+        dist_slot = dist_slot,
+        use_reduction = use_reduction,
+        reduction_slot = reduction_slot,
+        seed = seed,
+        approx_size = approx_size,
+        key_added = key_added,
+        knn_slot = knn_slot,
+        verbose = verbose,
+        njobs = njobs
+    )
     if dist_slot is None: dist_slot = "corr_dist"
 
     if approx["run"] is True:
@@ -99,8 +113,14 @@ def _generic_clustering(
             seed = seed,
             njobs = njobs
         )
-    return adata
 
+    if cluster_name is not None:
+        merged_clusters = __merge_subclusters_into_clusters(
+            cluster_labels = adata_original.obs[cluster_labels].values,
+            subcluster_labels = adata.obs[key_added].values,
+            subcluster_name = cluster_name
+        )
+        adata_original.obs[key_added] = merged_clusters
 
 # @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
 # ------------------------------------------------------------------------------
@@ -115,6 +135,8 @@ def _SA_clustering(
     reduction_slot="X_pca",
     opt_metric = "sil_mean",
     opt_metric_dir = "max",
+    cluster_labels = None,
+    cluster_name = None,
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -130,6 +152,8 @@ def _SA_clustering(
         reduction_slot,
         opt_metric,
         opt_metric_dir,
+        cluster_labels,
+        cluster_name,
         n_clusts,
         seed,
         approx_size,
@@ -193,6 +217,8 @@ def _GS_clustering(
     reduction_slot="X_pca",
     opt_metric = "sil_mean",
     opt_metric_dir = "max",
+    cluster_labels = None,
+    cluster_name = None,
     n_clusts = None,
     seed = 0,
     approx_size = None,
@@ -208,6 +234,8 @@ def _GS_clustering(
         reduction_slot,
         opt_metric,
         opt_metric_dir,
+        cluster_labels,
+        cluster_name,
         n_clusts,
         seed,
         approx_size,
