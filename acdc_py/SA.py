@@ -402,3 +402,4 @@ def SA(
             subcluster_name = cluster_name
         )
         adata_original.obs[key_added] = merged_clusters
+        adata_original.uns['SA_results_dict'] = adata.uns['SA_results_dict']
