@@ -281,16 +281,16 @@ def __plot_ss(X, cluster_labels, palette, ylab, show):
 
 def _silhouette_scores(
     adata,
-    obs_column,
+    groupby,
     dist_slot,
     palette=None,
     ylab = None,
     show = True
 ):
-    if ylab is None: ylab = obs_column
+    if ylab is None: ylab = groupby
     __plot_ss(
         adata.obsp[dist_slot],
-        adata.obs[obs_column],
+        adata.obs[groupby],
         palette,
         ylab,
         show

@@ -79,7 +79,7 @@ def cluster_final(adata,
       njobs
     )
 
-def extract(adata, obs_column, clust_names):
+def extract(adata, groupby, clusters):
     """\
     Extract clusters as a new AnnData object. Useful for subclustering.
 
@@ -88,18 +88,18 @@ def extract(adata, obs_column, clust_names):
     adata
         An anndata object containing a gene expression signature in adata.X and
         gene expression counts in adata.raw.X.
-    obs_column
+    groupby
         A name of the column in adata.obs.
-    clust_names
-        Clusters in adata.obs[obs_column] to extract.
+    clusters
+        Names of clusters in adata.obs[groupby] to extract.
     """
-    return _extract_clusters(adata, obs_column, clust_names)
+    return _extract_clusters(adata, groupby, clusters)
 
 def merge(
     adata,
-    obs_column,
-    clust_names,
-    merged_clust_name = None,
+    groupby,
+    clusters,
+    merged_name = None,
     update_numbers = True,
     key_added = "clusters",
     return_as_series = False
@@ -113,11 +113,11 @@ def merge(
     adata
         An anndata object containing a gene expression signature in adata.X and
         gene expression counts in adata.raw.X.
-    obs_column
+    groupby
         A name of the column in adata.obs.
-    clust_names
-        Clusters in adata.obs[obs_column] to extract.
-    merged_clust_name : default: None
+    clusters
+        Names of clusters in adata.obs[groupby] to extract.
+    merged_name : default: None
         The name of the new cluster. If None with digit clusters, the new
         cluster will be named after the smallest of the merged. If None with
         non-digit clusters, the new cluster will be named by joining the names
@@ -131,23 +131,22 @@ def merge(
     """
     return _merge(
         adata,
-        obs_column,
-        clust_names,
-        merged_clust_name,
+        groupby,
+        clusters,
+        merged_name,
         update_numbers,
         key_added,
         return_as_series
     )
 
-def rename(adata, obs_column, name_dict):
+def rename(adata, groupby, name_dict):
     """\
-    Rename clusters within adata.obs[obs_column] using name_dict to specify
+    Rename clusters within adata.obs[groupby] using name_dict to specify
     the mapping between old and new names.
     """
     # Check if the column exists in adata.obs
-    if obs_column not in adata.obs:
-        raise ValueError(f"Column '{obs_column}' not found in adata.obs")
+    if groupby not in adata.obs:
+        raise ValueError(f"Column '{groupby}' not found in adata.obs")
 
     # Get the current column values
-    adata.obs[obs_column] = adata.obs[obs_column].replace(name_dict)
-    
+    adata.obs[groupby] = adata.obs[groupby].replace(name_dict)

@@ -91,7 +91,7 @@ def metric_vs_n_clusts(
 
 def silhouette_scores(
     adata,
-    obs_column,
+    groupby,
     dist_slot,
     palette=None,
     ylab = None,
@@ -104,7 +104,7 @@ def silhouette_scores(
     ----------
     adata
         An anndata object.
-    obs_column
+    groupby
         A name of the column in adata.obs that contains the clustering that you
         want to calculate silhouette scores for.
     dist_slot
@@ -118,4 +118,4 @@ def silhouette_scores(
     show : default: True
         Whether to show the plot.
     """
-    _silhouette_scores(adata, obs_column, dist_slot, palette, ylab, show)
+    _silhouette_scores(adata, groupby, dist_slot, palette, ylab, show)
