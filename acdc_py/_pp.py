@@ -16,6 +16,47 @@ __all__ = []
 # ------------------------------------------------------------------------------
 # @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-
 # SA_GS_subfunctions.R
+def _rescale_array(arr):
+    # Rescale matrix from 0 to 1
+    arr_max = np.max(arr)
+    arr_min = np.min(arr)
+    arr_range = arr_max - arr_min
+    arr = (arr - arr_min)/arr_range
+    return arr
+
+def _convert_storage_type(arr, dtype=np.int16):
+    arr = _rescale_array(arr)
+
+    if dtype is np.int8\
+        or dtype is np.int16\
+        or dtype is np.int32\
+        or dtype is np.int64:
+
+        dtype_max = np.iinfo(dtype).max
+        arr = np.round(arr * dtype_max).astype(dtype)
+    elif dtype is np.float16:
+        arr = np.round(arr, 3).astype(dtype)
+
+    elif dtype is np.float32:
+        arr = np.round(arr, 6).astype(dtype)
+
+    elif dtype is np.float64:
+        arr = np.round(arr, 15).astype(dtype)
+
+    else:
+        raise ValueError(
+            "Type not accepted. Choose between :" \
+            + "\n\tnp.int8 : 2 digits" \
+            + "\n\tnp.int16 : 4 digits" \
+            + "\n\tnp.int32 : 9 digits" \
+            + "\n\tnp.int64 : 18 digits" \
+            + "\n\tnp.float16 : 3 digits" \
+            + "\n\tnp.float32 : 6 digits" \
+            "\n\tnp.float64 : 15 digits"
+        )
+
+    return arr
+
 def _2d_array_vs_2d_array_corr(matrix1, matrix2):
     # Standardize the matrices by subtracting mean and dividing by std (axis=1)
     matrix1_standardized = (matrix1 - matrix1.mean(axis=1, keepdims=True)) / matrix1.std(axis=1, keepdims=True)
@@ -33,12 +74,17 @@ def _2d_array_vs_2d_array_corr(matrix1, matrix2):
 
     return correlation_matrix
 
-def _corr_distance_matrix_batch(data, batch_size=1000, verbose=True):
+def _corr_distance_matrix_batch(
+    data,
+    batch_size=1000,
+    dtype = np.int16,
+    verbose=True
+):
     if isinstance(data, pd.DataFrame):
         data = data.values
 
     n_samps = data.shape[0]
-    sqrt_one_minus_corr_matrix = np.zeros((n_samps, n_samps))
+    corr_dist = np.zeros((n_samps, n_samps), dtype=dtype)
 
     n_batches = int(np.ceil(n_samps/batch_size))
 
@@ -65,31 +111,44 @@ def _corr_distance_matrix_batch(data, batch_size=1000, verbose=True):
         batch_dist[:,batch_indices]=submatrix
 
         # Store the result in the main distance matrix
-        sqrt_one_minus_corr_matrix[batch_indices, :] = batch_dist
+        corr_dist[batch_indices, :] = _convert_storage_type(batch_dist, dtype)
 
         # This ensures correct diagonal filling only where the row and column are from the same batch
         np.fill_diagonal(
-            sqrt_one_minus_corr_matrix[np.ix_(batch_indices, batch_indices)], 0
+            corr_dist[np.ix_(batch_indices, batch_indices)], 0
         )
 
-    return sqrt_one_minus_corr_matrix
+    return corr_dist
 
-def _corr_distance_matrix_whole(data):
+def _corr_distance_matrix_whole(data, dtype=np.int16):
     # Equivalent to the following in R: d = sqrt(1 - stats::corr(X))
     # Computing the correlation
     corr_matrix = np.corrcoef(data)
     # Calculating sqrt_one_minus_corr_matrix
     sqrt_one_minus_corr_matrix = np.sqrt(1 - corr_matrix)
+    corr_dist = sqrt_one_minus_corr_matrix
     # Ensuring diagonal contains 0 values
-    np.fill_diagonal(sqrt_one_minus_corr_matrix, 0)
-    return(sqrt_one_minus_corr_matrix)
+    np.fill_diagonal(corr_dist, 0)
+    # Convert type to storage memory efficiently
+    corr_dist = _convert_storage_type(corr_dist, dtype)
+    return corr_dist
 
-def _corr_distance_matrix(data, batch_size = 1000, verbose = True):
+def _corr_distance_matrix(
+    data,
+    batch_size = 1000,
+    dtype=np.int16,
+    verbose = True
+):
     n_samps = data.shape[0]
     if n_samps < batch_size:
-        return _corr_distance_matrix_whole(data)
+        return _corr_distance_matrix_whole(data, dtype)
     else:
-        return _corr_distance_matrix_batch(data, batch_size, verbose)
+        return _corr_distance_matrix_batch(
+            data,
+            batch_size,
+            dtype,
+            verbose
+        )
 
 def __add_row_column_names_to_dist_mat(dist_mat, adata):
     # Turn into a dataframe with row and column names
@@ -105,17 +164,18 @@ def _corr_distance(adata,
                    reduction_slot="X_pca",
                    key_added="corr_dist",
                    batch_size=1000,
+                   dtype=np.int16,
                    verbose=True):
     if isinstance(adata, np.ndarray) or isinstance(adata, pd.DataFrame):
         return _corr_distance_matrix(adata)
 
     if use_reduction == False:
         # use original features
-        d = _corr_distance_matrix(adata.X, batch_size, verbose)
+        d = _corr_distance_matrix(adata.X, batch_size, dtype, verbose)
     elif use_reduction == True:
         # use principal components
         X = adata.obsm[reduction_slot]
-        d = _corr_distance_matrix(X, batch_size, verbose)
+        d = _corr_distance_matrix(X, batch_size, dtype, verbose)
     else:
         raise ValueError("reduction must be logical.")
     d = __add_row_column_names_to_dist_mat(d, adata)

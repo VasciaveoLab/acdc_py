@@ -1,5 +1,6 @@
 ### ---------- IMPORT DEPENDENCIES ----------
 from ._pp import _corr_distance, _neighbors_knn, _neighbors_graph
+import numpy as np
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -14,6 +15,7 @@ def corr_distance(adata,
                   reduction_slot="X_pca",
                   key_added="corr_dist",
                   batch_size=1000,
+                  dtype=np.int16,
                   verbose=True):
     """\
     A tool for computing a distance matrix based on pearson correlation.
@@ -31,6 +33,10 @@ def corr_distance(adata,
         Slot in obsp to store the resulting distance matrix.
     batch_size : default: 1000
         Reduce total memory usage by running data in batches.
+    dtype : default: np.int16
+        Data type used to represent the distance values. np.int16 (default) is
+        a compromise between smaller memory size while not reducing information
+        so much as to affect clustering. dtypes include np.int8, np.int16 (default) np.int32, np.int64, np.float16, np.float32, and np.float64.
     verbose : default: True
         Show a progress bar for each batch of data.
 
@@ -46,6 +52,7 @@ def corr_distance(adata,
         reduction_slot,
         key_added,
         batch_size,
+        dtype,
         verbose
     )
 

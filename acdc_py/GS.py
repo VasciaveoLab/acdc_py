@@ -4,7 +4,7 @@ from ._SA_GS_subfunctions import _cluster_adata
 from ._SA_GS_subfunctions import __merge_subclusters_into_clusters
 from ._condense_diffuse_funcs import __diffuse_subsample_labels
 from ._tl import _cluster_final_internal, _extract_clusters
-from .pp import corr_distance, neighbors_knn, neighbors_graph
+from ._pp import _corr_distance, _neighbors_knn, _neighbors_graph
 from tqdm import tqdm
 from datetime import datetime
 from multiprocessing import cpu_count
@@ -41,7 +41,7 @@ def get_results_for_knn(
     curr_iter = np.where(np.isin(NN_vector, a_nn))[0][0] * len(res_vector)
     sil_df.index = np.arange(n_iters) + curr_iter
 
-    neighbors_graph(
+    _neighbors_graph(
         adata,
         n_neighbors = a_nn,
         batch_size=batch_size,
@@ -100,7 +100,7 @@ def get_gs_results_1core(
 
     if show_progress_bar: pbar = tqdm(desc = "GridSearch", total = n_iters, position=0, leave=True)
     for a_nn in NN_vector:
-        neighbors_graph(
+        _neighbors_graph(
             adata,
             n_neighbors = a_nn,
             batch_size=batch_size,
@@ -203,12 +203,12 @@ def get_gs_results(
     if dist_slot is None:
         if verbose: print("Computing distance object...")
         dist_slot = "corr_dist"
-        corr_distance(adata,
-                      use_reduction,
-                      reduction_slot,
-                      key_added=dist_slot,
-                      batch_size=batch_size,
-                      verbose=verbose)
+        _corr_distance(adata,
+                       use_reduction,
+                       reduction_slot,
+                       key_added=dist_slot,
+                       batch_size=batch_size,
+                       verbose=verbose)
 
     if use_reduction == True:
         n_pcs = adata.obsm[reduction_slot].shape[1]
@@ -217,7 +217,7 @@ def get_gs_results(
 
     # ---------------- SUBSAMPLING HERE ----------------
     if verbose: print("Computing neighbors...")
-    neighbors_knn(
+    _neighbors_knn(
         adata,
         max_knn=np.max(NN_vector),
         dist_slot=dist_slot,
@@ -359,14 +359,15 @@ def GS(
         None, i.e. distance matrix will be automatically computed as a
         correlation distance and stored in "corr_dist").
     use_reduction : default: True
-        Whether to use a reduction (True) (highly recommended - accurate & much faster)
-        or to use the direct matrix (False) for clustering.
+        Whether to use a reduction (True) (highly recommended - accurate & much
+        faster) or to use the direct matrix (False) for clustering.
     reduction_slot : default: "X_pca"
         If reduction is TRUE, then specify which slot for the reduction to use.
     metrics : default: "sil_mean"
         A metric or a list of metrics to be computed at each iteration of the
-        GridSearch. Possible metrics to use include "sil_mean", "sil_mean_median",
-        "tot_sil_neg", "lowest_sil_clust", "max_sil_clust", "ch" and "db".
+        GridSearch. Possible metrics to use include "sil_mean",
+        "sil_mean_median", "tot_sil_neg", "lowest_sil_clust", "max_sil_clust",
+        "ch" and "db".
     opt_metric : default: "sil_mean"
         A metric from metrics to use to optimize parameters for the clustering.
     opt_metric_dir : default: "max"

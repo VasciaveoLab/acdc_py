@@ -4,7 +4,7 @@ from ._SA_GS_subfunctions import _cluster_adata
 from ._SA_GS_subfunctions import __merge_subclusters_into_clusters
 from ._dual_annealing_with_progress_bar import *
 from ._tl import _cluster_final_internal, _extract_clusters
-from .pp import corr_distance, neighbors_knn, neighbors_graph
+from .pp import _corr_distance, _neighbors_knn, _neighbors_graph
 from ._condense_diffuse_funcs import __diffuse_subsample_labels
 from sys import maxsize
 from multiprocessing import cpu_count
@@ -51,19 +51,19 @@ def get_sa_results(adata,
     if dist_slot is None:
         if verbose: print("Computing distance object...")
         dist_slot = "corr_dist"
-        corr_distance(adata,
-                      use_reduction,
-                      reduction_slot,
-                      key_added=dist_slot,
-                      batch_size=batch_size,
-                      verbose=verbose)
+        _corr_distance(adata,
+                       use_reduction,
+                       reduction_slot,
+                       key_added=dist_slot,
+                       batch_size=batch_size,
+                       verbose=verbose)
     if use_reduction == True:
         n_pcs = adata.obsm[reduction_slot].shape[1]
     else:
         n_pcs = None
 
     if verbose: print("Computing neighbors...")
-    neighbors_knn(
+    _neighbors_knn(
         adata,
         max_knn=np.max(NN_range),
         dist_slot=dist_slot,
@@ -87,7 +87,7 @@ def get_sa_results(adata,
         a_nn = int(np.floor(a_nn))
         global sil_df
         global curr_iter
-        neighbors_graph(
+        _neighbors_graph(
             adata,
             n_neighbors = a_nn,
             batch_size=batch_size,
