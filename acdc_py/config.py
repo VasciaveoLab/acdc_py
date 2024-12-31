@@ -1,3 +1,5 @@
+import numpy as np
+
 config = {
     "clust_alg":"Leiden",
     "SS":{
@@ -5,7 +7,8 @@ config = {
         "SS_exp_base": 2.718282,
         "n_subsamples": 1,
         "subsamples_pct_cells": 100
-    }
+    },
+    "corr_distance_dtype":np.int16
 }
 
 def set_clust_alg(clust_alg = "Leiden"):
@@ -36,6 +39,15 @@ def set_SS_bootstraps(n_subsamples = 1, subsamples_pct_cells = 100):
     """
     config['SS']["n_subsamples"] = n_subsamples
     config['SS']["subsamples_pct_cells"] = subsamples_pct_cells
+
+def set_corr_distance_dtype(dtype=np.int16):
+    """\
+    dtype : default: np.int16
+        Data type used to represent the distance values. np.int16 (default) is
+        a compromise between smaller memory size while not reducing information
+        so much as to affect clustering. dtypes include np.int8, np.int16 (default) np.int32, np.int64, np.float16, np.float32, and np.float64.
+    """
+    config['corr_distance_dtype'] = dtype
 
 
 # def set_regulators_filepath(group, species, new_filepath):

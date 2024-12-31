@@ -208,6 +208,7 @@ def get_gs_results(
                        reduction_slot,
                        key_added=dist_slot,
                        batch_size=batch_size,
+                       dtype=config['corr_distance_dtype'],
                        verbose=verbose)
 
     if use_reduction == True:
