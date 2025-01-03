@@ -21,6 +21,17 @@ def _results_metric_search_data(
 ):
     search_df = results["search_df"]
     if n_clusts is not None:
+        n_clusts_unique = np.unique(search_df['n_clust'].values).astype(int)
+        if not np.isin(n_clusts, n_clusts_unique):
+            n_clusts_options = ", ".join(n_clusts_unique.astype('str'))
+            raise ValueError(
+                "A solution with " + \
+                str(n_clusts) + \
+                " is not available. " + \
+                "Choose from the following n_clusts:\n\t" + \
+                str(n_clusts_options) + \
+                "."
+            )
         search_df = search_df[search_df['n_clust'] == n_clusts]
 
     if(opt_metric_dir == "max"):
