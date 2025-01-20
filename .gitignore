@@ -3,4 +3,7 @@ acdc_py/__pycache__
 .DS_Store
 acdc_py/.DS_Store
 .gitignore.swp
+dist/
+docs/.DS_Store
+acdc_py/.DS_Store
 
