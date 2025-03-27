@@ -38,6 +38,7 @@ setuptools.setup(
         "scikit-learn",
         "matplotlib",
         "seaborn",
-        "datetime"
+        "datetime",
+        "nbsphinx"
     ]
 )
