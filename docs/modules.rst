@@ -1,6 +1,14 @@
 ACDC in Python
 ===============
 
+acdc_py
+================
+
+.. automodule:: acdc_py
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 acdc_py.GS
 ===============
 
