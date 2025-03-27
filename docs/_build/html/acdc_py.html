@@ -1,27 +1,25 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>acdc_py package &mdash; ACDC 1.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+  <title>acdc_py package &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=1ed6394b"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=fc837d61"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="acdc_py" href="modules.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,27 +42,19 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">acdc_py</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">acdc_py package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-acdc_py.GS">acdc_py.GS module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#acdc_py.GS.GS"><code class="docutils literal notranslate"><span class="pre">GS()</span></code></a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.config">acdc_py.config</a></li>
 </ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-acdc_py.SA">acdc_py.SA module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#acdc_py.SA.SA"><code class="docutils literal notranslate"><span class="pre">SA()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#module-acdc_py.get_opt">acdc_py.get_opt module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-acdc_py.pl">acdc_py.pl module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-acdc_py.pp">acdc_py.pp module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-acdc_py.tl">acdc_py.tl module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-acdc_py">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a></li>
 </ul>
 
         </div>
@@ -81,7 +71,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">acdc_py</a></li>
       <li class="breadcrumb-item active">acdc_py package</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/acdc_py.rst.txt" rel="nofollow"> View page source</a>
@@ -101,7 +90,7 @@
 <span id="acdc-py-gs-module"></span><h2>acdc_py.GS module<a class="headerlink" href="#module-acdc_py.GS" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="acdc_py.GS.GS">
-<span class="sig-prename descclassname"><span class="pre">acdc_py.GS.</span></span><span class="sig-name descname"><span class="pre">GS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.1,</span> <span class="pre">0.3,</span> <span class="pre">0.5,</span> <span class="pre">0.7,</span> <span class="pre">0.9,</span> <span class="pre">1.1,</span> <span class="pre">1.3,</span> <span class="pre">1.5,</span> <span class="pre">1.7,</span> <span class="pre">1.9])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NN_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([11,</span> <span class="pre">21,</span> <span class="pre">31,</span> <span class="pre">41,</span> <span class="pre">51,</span> <span class="pre">61,</span> <span class="pre">71,</span> <span class="pre">81,</span> <span class="pre">91,</span> <span class="pre">101])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_slot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_slot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X_pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clust_alg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Leiden'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sil_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sil_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_metric_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SS_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unitary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SS_exp_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.718282</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_subsamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsamples_pct_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'clusters'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'exact_size':</span> <span class="pre">True,</span> <span class="pre">'run':</span> <span class="pre">False,</span> <span class="pre">'size':</span> <span class="pre">1000}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acdc_py/GS.html#GS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#acdc_py.GS.GS" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">acdc_py.GS.</span></span><span class="sig-name descname"><span class="pre">GS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([0.1,</span> <span class="pre">0.3,</span> <span class="pre">0.5,</span> <span class="pre">0.7,</span> <span class="pre">0.9,</span> <span class="pre">1.1,</span> <span class="pre">1.3,</span> <span class="pre">1.5,</span> <span class="pre">1.7,</span> <span class="pre">1.9])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NN_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">array([11,</span> <span class="pre">21,</span> <span class="pre">31,</span> <span class="pre">41,</span> <span class="pre">51,</span> <span class="pre">61,</span> <span class="pre">71,</span> <span class="pre">81,</span> <span class="pre">91,</span> <span class="pre">101])</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_slot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_slot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X_pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sil_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sil_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_metric_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'clusters'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approx_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acdc_py/GS.html#GS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#acdc_py.GS.GS" title="Link to this definition"></a></dt>
 <dd><p>A tool for the optimization-based unsupervised clustering of large-scale
 data. Grid Search (GS) allows for deterministic optimization of several
 variables—Nearest Neighbors and resolution–with several objective
@@ -113,41 +102,38 @@ of thousands of cells.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>adata</strong> – An anndata object containing a gene expression signature in adata.X and
 gene expression counts in adata.raw.X.</p></li>
-<li><p><strong>(</strong><strong>default</strong> (<em>njobs</em>) – sequence of values of the resolution parameter.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – sequence of values for the number of nearest neighbors.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Slot in adata.obsp where a pre-generated distance matrix computed across
+<li><p><strong>res_vector</strong> (<em>default: np.arange</em><em>(</em><em>0.1</em><em>, </em><em>2</em><em>, </em><em>0.2</em><em>)</em>) – sequence of values of the resolution parameter.</p></li>
+<li><p><strong>NN_vector</strong> (<em>default: np.arange</em><em>(</em><em>11</em><em>, </em><em>102</em><em>, </em><em>10</em><em>)</em>) – sequence of values for the number of nearest neighbors.</p></li>
+<li><p><strong>dist_slot</strong> (<em>default: None</em>) – Slot in adata.obsp where a pre-generated distance matrix computed across
 all cells is stored in adata for use in construction of NN. (Default =
 None, i.e. distance matrix will be automatically computed as a
 correlation distance and stored in “corr_dist”).</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Whether to use a reduction (True) (highly recommended - accurate &amp; much faster)
-or to use the direct matrix (False) for clustering.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – If reduction is TRUE, then specify which slot for the reduction to use.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Clustering algorithm. Choose among: “Leiden” (default) or  “Louvain”.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – A metric or a list of metrics to be computed at each iteration of the
-GridSearch. Possible metrics to use include “sil_mean”, “sil_mean_median”,
-“tot_sil_neg”, “lowest_sil_clust”, “max_sil_clust”, “ch” and “db”.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – A metric from metrics to use to optimize parameters for the clustering.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Whether opt_metric is more optimal by maximizing (“max”) or
+<li><p><strong>use_reduction</strong> (<em>default: True</em>) – Whether to use a reduction (True) (highly recommended - accurate &amp; much
+faster) or to use the direct matrix (False) for clustering.</p></li>
+<li><p><strong>reduction_slot</strong> (<em>default: &quot;X_pca&quot;</em>) – If reduction is TRUE, then specify which slot for the reduction to use.</p></li>
+<li><p><strong>metrics</strong> (<em>default: &quot;sil_mean&quot;</em>) – A metric or a list of metrics to be computed at each iteration of the
+GridSearch. Possible metrics to use include “sil_mean”,
+“sil_mean_median”, “tot_sil_neg”, “lowest_sil_clust”, “max_sil_clust”,
+“ch” and “db”.</p></li>
+<li><p><strong>opt_metric</strong> (<em>default: &quot;sil_mean&quot;</em>) – A metric from metrics to use to optimize parameters for the clustering.</p></li>
+<li><p><strong>opt_metric_dir</strong> (<em>default: &quot;max&quot;</em>) – Whether opt_metric is more optimal by maximizing (“max”) or
 by minimizing (“min”).</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Negative silhouette scores can be given more weight by exponentiation (“exp”).
-Otherwise, leave SS_weights as “unitary”.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – If SS_weights is set to “exp”, then set the base for exponentiation.</p></li>
-<li><p><strong>(</strong><strong>default=1</strong><strong>)</strong> (<em>n_subsamples</em>) – Number of subsamples per bootstrap.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Percentage of cells sample at each bootstrap iteration.
-i.e. when 100, 100%, all cells are used).</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Random seed to use.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Slot in obs to store the resulting clusters.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – <dl class="simple">
-<dt>A diciontary object containing three parameters to control subsampling and diffusion</dt><dd><p>”run”: True or False whether to use subsampling and diffusion. Default=False
-“size”: the number of cells to use in the subsampling. Default=1000.
-“exact_size”: whether to get the exact size “size” of subsampling (True) or
-be more inclusive during the representative subsampling (False, recommended).</p>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Include additional output with True. Alternative = False.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Show a progress bar to visualize the progress of the algorithm.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Paralleization option that allows users to speed up runtime.</p></li>
+<li><p><strong>cluster_labels</strong> (<em>default: None</em>) – A column in adata.obs with a set of cluster labels containing a
+cluster to subcluster. Specify the cluster with the cluster_name
+parameter.</p></li>
+<li><p><strong>cluster_name</strong> (<em>default: None</em>) – A cluster from cluster_labels to subcluster. When None, cluster whole
+dataset.</p></li>
+<li><p><strong>seed</strong> (<em>default: 0</em>) – Random seed to use.</p></li>
+<li><p><strong>key_added</strong> (<em>default: &quot;clusters&quot;</em>) – Slot in obs to store the resulting clusters.</p></li>
+<li><p><strong>approx_size</strong> (<em>default: None</em>) – When set to a positive integer, instead of running GS on the entire
+dataset, perform GS on a subsample and diffuse those results. This will
+lead to an approximation of the optimal solution for cases where the
+dataset is too large to perform GS on due to time or memory constraints.</p></li>
+<li><p><strong>verbose</strong> (<em>default: True</em>) – Include additional output with True. Alternative = False.</p></li>
+<li><p><strong>show_progress_bar</strong> (<em>default: True</em>) – Show a progress bar to visualize the progress of the algorithm.</p></li>
+<li><p><strong>batch_size</strong> (<em>default: 1000</em>) – The size of each batch. Larger batches result in more memory usage. If
+None, use the whole dataset instead of batches.</p></li>
+<li><p><strong>njobs</strong> (<em>default: 1</em>) – Paralleization option that allows users to speed up runtime.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -166,7 +152,7 @@ be more inclusive during the representative subsampling (False, recommended).</p
 <span id="acdc-py-sa-module"></span><h2>acdc_py.SA module<a class="headerlink" href="#module-acdc_py.SA" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="acdc_py.SA.SA">
-<span class="sig-prename descclassname"><span class="pre">acdc_py.SA.</span></span><span class="sig-name descname"><span class="pre">SA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">1.9]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NN_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[11,</span> <span class="pre">101]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_slot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_slot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X_pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clust_alg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Leiden'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sil_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sil_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_metric_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SS_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unitary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SS_exp_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.718282</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_subsamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsamples_pct_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5230</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_temp_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.62</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'clusters'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'exact_size':</span> <span class="pre">True,</span> <span class="pre">'run':</span> <span class="pre">False,</span> <span class="pre">'size':</span> <span class="pre">1000}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acdc_py/SA.html#SA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#acdc_py.SA.SA" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">acdc_py.SA.</span></span><span class="sig-name descname"><span class="pre">SA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">1.9]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NN_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[11,</span> <span class="pre">101]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_slot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction_slot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X_pca'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sil_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sil_mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt_metric_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxiter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5230</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart_temp_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.62</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accept</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxfun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_added</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'clusters'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approx_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acdc_py/SA.html#SA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#acdc_py.SA.SA" title="Link to this definition"></a></dt>
 <dd><p>A tool for the optimization-based unsupervised clustering of large-scale
 data. Simulated Annealing (SA) allows for stochastic optimization of several
 variables—Nearest Neighbors and resolution–with several objective
@@ -178,29 +164,27 @@ of thousands of cells.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>adata</strong> – An anndata object containing a gene expression signature in adata.X and
 gene expression counts in adata.raw.X.</p></li>
-<li><p><strong>(</strong><strong>default</strong> (<em>njobs</em>) – edge values of the search space for the resolution parameter.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – edge values of the search space for the nearest neighbors parameter.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Slot in adata.obsp where a pre-generated distance matrix computed across
+<li><p><strong>res_range</strong> (<em>default:</em><em> [</em><em>0.1</em><em>, </em><em>1.9</em><em>]</em>) – edge values of the search space for the resolution parameter.</p></li>
+<li><p><strong>NN_range</strong> (<em>default:</em><em> [</em><em>11</em><em>, </em><em>101</em><em>]</em>) – edge values of the search space for the nearest neighbors parameter.</p></li>
+<li><p><strong>dist_slot</strong> (<em>default: None</em>) – Slot in adata.obsp where a pre-generated distance matrix computed across
 all cells is stored in adata for use in construction of NN. (Default =
 None, i.e. distance matrix will be automatically computed as a
 correlation distance and stored in “corr_dist”).</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Whether to use a reduction (True) (highly recommended - accurate &amp; much faster)
+<li><p><strong>use_reduction</strong> (<em>default: True</em>) – Whether to use a reduction (True) (highly recommended - accurate &amp; much faster)
 or to use the direct matrix (False) for clustering.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – If reduction is TRUE, then specify which slot for the reduction to use.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Clustering algorithm. Choose among: “Leiden” (default) or  “Louvain”.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – A metric or a list of metrics to be computed at each iteration of the
+<li><p><strong>reduction_slot</strong> (<em>default: &quot;X_pca&quot;</em>) – If reduction is TRUE, then specify which slot for the reduction to use.</p></li>
+<li><p><strong>metrics</strong> (<em>default: &quot;sil_mean&quot;</em>) – A metric or a list of metrics to be computed at each iteration of the
 GridSearch. Possible metrics to use include “sil_mean”, “sil_mean_median”,
 “tot_sil_neg”, “lowest_sil_clust”, “max_sil_clust”, “ch” and “db”.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – A metric from metrics to use to optimize parameters for the clustering.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Whether opt_metric is more optimal by maximizing (“max”) or
+<li><p><strong>opt_metric</strong> (<em>default: &quot;sil_mean&quot;</em>) – A metric from metrics to use to optimize parameters for the clustering.</p></li>
+<li><p><strong>opt_metric_dir</strong> (<em>default: &quot;max&quot;</em>) – Whether opt_metric is more optimal by maximizing (“max”) or
 by minimizing (“min”).</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Negative silhouette scores can be given more weight by exponentiation (“exp”).
-Otherwise, leave SS_weights as “unitary”.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – If SS_weights is set to “exp”, then set the base for exponentiation.</p></li>
-<li><p><strong>(</strong><strong>default=1</strong><strong>)</strong> (<em>n_subsamples</em>) – Number of subsamples per bootstrap.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Percentage of cells sample at each bootstrap iteration.
-i.e. when 100, 100%, all cells are used).</p></li>
-<li><p><strong>maxiter</strong> (<em>(</em><em>default: 20</em><em>)</em>) – The maximum number of global search iterations. If None, value is 1000.</p></li>
+<li><p><strong>cluster_labels</strong> (<em>default: None</em>) – A column in adata.obs with a set of cluster labels containing a
+cluster to subcluster. Specify the cluster with the cluster_name
+parameter.</p></li>
+<li><p><strong>cluster_name</strong> (<em>default: None</em>) – A cluster from cluster_labels to subcluster. When None, cluster whole
+dataset.</p></li>
+<li><p><strong>maxiter</strong> (<em>: default: 20</em>) – The maximum number of global search iterations. If None, value is 1000.</p></li>
 <li><p><strong>minimizer_kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Extra keyword arguments to be passed to the local minimizer
 (minimize). Some important options could be:
 method for the minimizer method to use and args for
@@ -223,19 +207,17 @@ a range (-1e4, -5].</p></li>
 algorithm is in the middle of a local search, this number will be
 exceeded, the algorithm will stop just after the local search is
 done. Default value is 1e7.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Random seed to use.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Slot in obs to store the resulting clusters.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – <dl class="simple">
-<dt>A diciontary object containing three parameters to control subsampling and diffusion</dt><dd><p>”run”: True or False whether to use subsampling and diffusion. Default=False
-“size”: the number of cells to use in the subsampling. Default=1000.
-“exact_size”: whether to get the exact size “size” of subsampling (True) or
-be more inclusive during the representative subsampling (False, recommended).</p>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Include additional output with True. Alternative = False.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Show a progress bar to visualize the progress of the algorithm.</p></li>
-<li><p><strong>(</strong><strong>default</strong> – Paralleization option that allows users to speed up runtime.</p></li>
+<li><p><strong>seed</strong> (<em>default: 0</em>) – Random seed to use.</p></li>
+<li><p><strong>key_added</strong> (<em>default: &quot;clusters&quot;</em>) – Slot in obs to store the resulting clusters.</p></li>
+<li><p><strong>approx_size</strong> (<em>default: None</em>) – When set to a positive integer, instead of running GS on the entire
+dataset, perform GS on a subsample and diffuse those results. This will
+lead to an approximation of the optimal solution for cases where the
+dataset is too large to perform GS on due to time or memory constraints.</p></li>
+<li><p><strong>verbose</strong> (<em>default: True</em>) – Include additional output with True. Alternative = False.</p></li>
+<li><p><strong>show_progress_bar</strong> (<em>default: True</em>) – Show a progress bar to visualize the progress of the algorithm.</p></li>
+<li><p><strong>batch_size</strong> (<em>default: 1000</em>) – The size of each batch. Larger batches result in more memory usage. If
+None, use the whole dataset instead of batches.</p></li>
+<li><p><strong>njobs</strong> (<em>default: 1</em>) – Paralleization option that allows users to speed up runtime.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -247,6 +229,49 @@ be more inclusive during the representative subsampling (False, recommended).</p
 </p>
 </dd>
 </dl>
+</dd></dl>
+
+</section>
+<section id="module-acdc_py.config">
+<span id="acdc-py-config-module"></span><h2>acdc_py.config module<a class="headerlink" href="#module-acdc_py.config" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="acdc_py.config.set_SS_bootstraps">
+<span class="sig-prename descclassname"><span class="pre">acdc_py.config.</span></span><span class="sig-name descname"><span class="pre">set_SS_bootstraps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_subsamples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsamples_pct_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acdc_py/config.html#set_SS_bootstraps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#acdc_py.config.set_SS_bootstraps" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>n_subsamples<span class="classifier">default: 1</span></dt><dd><p>Number of subsamples per bootstrap.</p>
+</dd>
+<dt>subsamples_pct_cells<span class="classifier">default: 100</span></dt><dd><p>Percentage of cells sample at each bootstrap iteration.
+i.e. when 100, 100%, all cells are used).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="acdc_py.config.set_SS_weights">
+<span class="sig-prename descclassname"><span class="pre">acdc_py.config.</span></span><span class="sig-name descname"><span class="pre">set_SS_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">SS_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'unitary'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SS_exp_base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.718282</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acdc_py/config.html#set_SS_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#acdc_py.config.set_SS_weights" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>SS_weights<span class="classifier">default: “unitary”</span></dt><dd><p>Negative silhouette scores can be given more weight by exponentiation
+(“exp”). Otherwise, leave SS_weights as “unitary”.</p>
+</dd>
+<dt>SS_exp_base<span class="classifier">default: 2.718282.</span></dt><dd><p>If SS_weights is set to “exp”, then set the base for exponentiation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="acdc_py.config.set_clust_alg">
+<span class="sig-prename descclassname"><span class="pre">acdc_py.config.</span></span><span class="sig-name descname"><span class="pre">set_clust_alg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clust_alg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Leiden'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acdc_py/config.html#set_clust_alg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#acdc_py.config.set_clust_alg" title="Link to this definition"></a></dt>
+<dd><p>clust_alg : default: “Leiden”
+Clustering algorithm. Choose among: “Leiden” (default) or “Louvain”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="acdc_py.config.set_corr_distance_dtype">
+<span class="sig-prename descclassname"><span class="pre">acdc_py.config.</span></span><span class="sig-name descname"><span class="pre">set_corr_distance_dtype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'numpy.int16'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/acdc_py/config.html#set_corr_distance_dtype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#acdc_py.config.set_corr_distance_dtype" title="Link to this definition"></a></dt>
+<dd><p>dtype : default: np.int16
+Data type used to represent the distance values. np.int16 (default) is
+a compromise between smaller memory size while not reducing information
+so much as to affect clustering. dtypes include np.int8, np.int16 (default) np.int32, np.int64, np.float16, np.float32, and np.float64.</p>
 </dd></dl>
 
 </section>
@@ -270,14 +295,12 @@ be more inclusive during the representative subsampling (False, recommended).</p
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-left" title="acdc_py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
+          <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Luca Zanella.</p>
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

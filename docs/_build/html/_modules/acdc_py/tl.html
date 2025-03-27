@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>acdc_py.tl &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ACDC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.config">acdc_py.config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ACDC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">acdc_py.tl</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for acdc_py.tl</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">._tl</span><span class="w"> </span><span class="kn">import</span> <span class="n">_cluster_final</span><span class="p">,</span> <span class="n">_extract_clusters</span><span class="p">,</span> <span class="n">_merge</span>
+
+<span class="c1">### ---------- EXPORT LIST ----------</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="cluster_final">
+<a class="viewcode-back" href="../../modules.html#acdc_py.tl.cluster_final">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">cluster_final</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
+                  <span class="n">res</span><span class="p">,</span>
+                  <span class="n">knn</span><span class="p">,</span>
+                  <span class="n">dist_slot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">use_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">reduction_slot</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">,</span>
+                  <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                  <span class="n">approx_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                  <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;clusters&quot;</span><span class="p">,</span>
+                  <span class="n">knn_slot</span><span class="o">=</span><span class="s1">&#39;knn&#39;</span><span class="p">,</span>
+                  <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                  <span class="n">njobs</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    A tool for replicating the final optimization-based unsupervised clustering</span>
+<span class="sd">    of large-scale data performed by the Grid Search (GS) or Simulated Annealing</span>
+<span class="sd">    (SA) functions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing a gene expression signature in adata.X and</span>
+<span class="sd">        gene expression counts in adata.raw.X.</span>
+<span class="sd">    res</span>
+<span class="sd">         sequence of values of the resolution parameter.</span>
+<span class="sd">    knn</span>
+<span class="sd">         sequence of values for the number of nearest neighbors.</span>
+<span class="sd">    dist_slot : default: None</span>
+<span class="sd">        Slot in adata.obsp where a pre-generated distance matrix computed across</span>
+<span class="sd">        all cells is stored in adata for use in construction of NN. (Default =</span>
+<span class="sd">        None, i.e. distance matrix will be automatically computed as a</span>
+<span class="sd">        correlation distance and stored in &quot;corr_dist&quot;).</span>
+<span class="sd">    use_reduction : default: True</span>
+<span class="sd">        Whether to use a reduction (True) (highly recommended - accurate &amp; much faster)</span>
+<span class="sd">        or to use the direct matrix (False) for clustering.</span>
+<span class="sd">    reduction_slot : default: &quot;X_pca&quot;</span>
+<span class="sd">        If reduction is TRUE, then specify which slot for the reduction to use.</span>
+<span class="sd">    seed : default: 0</span>
+<span class="sd">        Random seed to use.</span>
+<span class="sd">    key_added : default: &quot;clusters&quot;</span>
+<span class="sd">        Slot in obs to store the resulting clusters.</span>
+<span class="sd">    knn_slot : default: &quot;knn&quot;</span>
+<span class="sd">        Slot in uns that stores the KNN array used to compute a neighbors graph</span>
+<span class="sd">        (i.e. adata.obs[&#39;connectivities&#39;]).</span>
+<span class="sd">    approx_size : default: None</span>
+<span class="sd">        When set to a positive integer, instead of running GS on the entire</span>
+<span class="sd">        dataset, perform GS on a subsample and diffuse those results. This will</span>
+<span class="sd">        lead to an approximation of the optimal solution for cases where the</span>
+<span class="sd">        dataset is too large to perform GS on due to time or memory constraints.</span>
+<span class="sd">    batch_size : default: 1000</span>
+<span class="sd">        The size of each batch. Larger batches result in more memory usage. If</span>
+<span class="sd">        None, use the whole dataset instead of batches.</span>
+<span class="sd">    verbose : default: True</span>
+<span class="sd">        Include additional output with True. Alternative = False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A object of :class:~anndata.Anndata containing a clustering vector</span>
+<span class="sd">    &quot;clusters&quot; in the .obs slot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_cluster_final</span><span class="p">(</span>
+      <span class="n">adata</span><span class="p">,</span>
+      <span class="n">res</span><span class="p">,</span>
+      <span class="n">knn</span><span class="p">,</span>
+      <span class="n">dist_slot</span><span class="p">,</span>
+      <span class="n">use_reduction</span><span class="p">,</span>
+      <span class="n">reduction_slot</span><span class="p">,</span>
+      <span class="n">seed</span><span class="p">,</span>
+      <span class="n">approx_size</span><span class="p">,</span>
+      <span class="n">key_added</span><span class="p">,</span>
+      <span class="n">knn_slot</span><span class="p">,</span>
+      <span class="n">verbose</span><span class="p">,</span>
+      <span class="n">batch_size</span><span class="p">,</span>
+      <span class="n">njobs</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="extract">
+<a class="viewcode-back" href="../../modules.html#acdc_py.tl.extract">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Extract clusters as a new AnnData object. Useful for subclustering.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing a gene expression signature in adata.X and</span>
+<span class="sd">        gene expression counts in adata.raw.X.</span>
+<span class="sd">    groupby</span>
+<span class="sd">        A name of the column in adata.obs.</span>
+<span class="sd">    clusters</span>
+<span class="sd">        Names of clusters in adata.obs[groupby] to extract.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_extract_clusters</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="p">,</span> <span class="n">clusters</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="merge">
+<a class="viewcode-back" href="../../modules.html#acdc_py.tl.merge">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">merge</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="p">,</span>
+    <span class="n">clusters</span><span class="p">,</span>
+    <span class="n">merged_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">update_numbers</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">key_added</span> <span class="o">=</span> <span class="s2">&quot;clusters&quot;</span><span class="p">,</span>
+    <span class="n">return_as_series</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Merge clusters together and, if desired, renumber the clusters based on</span>
+<span class="sd">    cluster size.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing a gene expression signature in adata.X and</span>
+<span class="sd">        gene expression counts in adata.raw.X.</span>
+<span class="sd">    groupby</span>
+<span class="sd">        A name of the column in adata.obs.</span>
+<span class="sd">    clusters</span>
+<span class="sd">        Names of clusters in adata.obs[groupby] to extract.</span>
+<span class="sd">    merged_name : default: None</span>
+<span class="sd">        The name of the new cluster. If None with digit clusters, the new</span>
+<span class="sd">        cluster will be named after the smallest of the merged. If None with</span>
+<span class="sd">        non-digit clusters, the new cluster will be named by joining the names</span>
+<span class="sd">        of the clusters.</span>
+<span class="sd">    update_numbers : default: True</span>
+<span class="sd">        If clusters are digits, renumber the clusters based on cluster size.</span>
+<span class="sd">    key_added : default: &quot;clusters&quot;</span>
+<span class="sd">        Store the new clustering in adata.obs[key_added].</span>
+<span class="sd">    return_as_series : default: False</span>
+<span class="sd">        Rather than storing the clusters, return them as a pd.Series object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_merge</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">groupby</span><span class="p">,</span>
+        <span class="n">clusters</span><span class="p">,</span>
+        <span class="n">merged_name</span><span class="p">,</span>
+        <span class="n">update_numbers</span><span class="p">,</span>
+        <span class="n">key_added</span><span class="p">,</span>
+        <span class="n">return_as_series</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="rename">
+<a class="viewcode-back" href="../../modules.html#acdc_py.tl.rename">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="p">,</span> <span class="n">name_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Rename clusters within adata.obs[groupby] using name_dict to specify</span>
+<span class="sd">    the mapping between old and new names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check if the column exists in adata.obs</span>
+    <span class="k">if</span> <span class="n">groupby</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Column &#39;</span><span class="si">{</span><span class="n">groupby</span><span class="si">}</span><span class="s2">&#39; not found in adata.obs&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get the current column values</span>
+    <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">groupby</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">groupby</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">name_dict</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

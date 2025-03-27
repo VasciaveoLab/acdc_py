@@ -1,27 +1,28 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to ACDC’s documentation! &mdash; ACDC 1.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+  <title>ACDC documentation &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=1ed6394b"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=fc837d61"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="acdc_py" href="modules.html" /> 
+    <link rel="next" title="ACDC in Python" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,7 +46,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">acdc_py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.config">acdc_py.config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a></li>
 </ul>
 
         </div>
@@ -62,7 +74,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to ACDC’s documentation!</li>
+      <li class="breadcrumb-item active">ACDC documentation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -72,8 +84,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-acdc-s-documentation">
-<h1>Welcome to ACDC’s documentation!<a class="headerlink" href="#welcome-to-acdc-s-documentation" title="Link to this heading"></a></h1>
+  <section id="acdc-documentation">
+<h1>ACDC documentation<a class="headerlink" href="#acdc-documentation" title="Link to this heading"></a></h1>
+<p>Welcome to the ACDC documentation. This includes API references, tutorials, and guides.</p>
 <section id="acdc-py">
 <h2>acdc_py 🤘<a class="headerlink" href="#acdc-py" title="Link to this heading"></a></h2>
 <p><a class="reference external" href="https://pypi.org/project/acdc-py/1.0.2/"><img alt="pipy" src="https://img.shields.io/pypi/v/acdc-py?color=informational" /></a>
@@ -86,7 +99,7 @@
 <code class="docutils literal notranslate"><span class="pre">acdc_py</span></code> is deployed as a Python package and fully compatible with <code class="docutils literal notranslate"><span class="pre">Scanpy</span></code>.</p>
 <div align="center">
   <img width="240" alt="image" src="https://github.com/califano-lab/acdc-beta/assets/92543296/09feabaf-d868-48d7-b830-933210db6005">
-  <img width="240" alt="image" src="https://github.com/califano-lab/acdc-beta/assets/92543296/28952fc8-841e-4d3a-80bd-d1a3a92c5a07"> 
+  <img width="240" alt="image" src="https://github.com/califano-lab/acdc-beta/assets/92543296/28952fc8-841e-4d3a-80bd-d1a3a92c5a07">
   <img width="240" alt="image" src="https://github.com/califano-lab/acdc-beta/assets/92543296/41678fd3-c583-4b7b-939e-dbd443d44c97">
 </div>
 <ul class="simple">
@@ -139,8 +152,64 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">acdc_py</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="acdc_py.html">acdc_py package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.get_opt.SA_clustering"><code class="docutils literal notranslate"><span class="pre">SA_clustering()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.get_opt.SA_params"><code class="docutils literal notranslate"><span class="pre">SA_params()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.get_opt.SA_metric_value"><code class="docutils literal notranslate"><span class="pre">SA_metric_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.get_opt.SA_metric_search_data"><code class="docutils literal notranslate"><span class="pre">SA_metric_search_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.get_opt.GS_clustering"><code class="docutils literal notranslate"><span class="pre">GS_clustering()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.get_opt.GS_params"><code class="docutils literal notranslate"><span class="pre">GS_params()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.get_opt.GS_metric_value"><code class="docutils literal notranslate"><span class="pre">GS_metric_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.get_opt.GS_metric_search_data"><code class="docutils literal notranslate"><span class="pre">GS_metric_search_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.pp">acdc_py.pp</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.pp.corr_distance"><code class="docutils literal notranslate"><span class="pre">corr_distance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.pp.neighbors_knn"><code class="docutils literal notranslate"><span class="pre">neighbors_knn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.pp.neighbors_graph"><code class="docutils literal notranslate"><span class="pre">neighbors_graph()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.pl">acdc_py.pl</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.pl.GS_search_space"><code class="docutils literal notranslate"><span class="pre">GS_search_space()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.pl.SA_search_space"><code class="docutils literal notranslate"><span class="pre">SA_search_space()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.pl.metric_vs_n_clusts"><code class="docutils literal notranslate"><span class="pre">metric_vs_n_clusts()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.pl.silhouette_scores"><code class="docutils literal notranslate"><span class="pre">silhouette_scores()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.tl">acdc_py.tl</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.tl.cluster_final"><code class="docutils literal notranslate"><span class="pre">cluster_final()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.tl.extract"><code class="docutils literal notranslate"><span class="pre">extract()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.tl.merge"><code class="docutils literal notranslate"><span class="pre">merge()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.tl.rename"><code class="docutils literal notranslate"><span class="pre">rename()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.config">acdc_py.config</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.config.set_SS_bootstraps"><code class="docutils literal notranslate"><span class="pre">set_SS_bootstraps()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.config.set_SS_weights"><code class="docutils literal notranslate"><span class="pre">set_SS_weights()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.config.set_clust_alg"><code class="docutils literal notranslate"><span class="pre">set_clust_alg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#acdc_py.config.set_corr_distance_dtype"><code class="docutils literal notranslate"><span class="pre">set_corr_distance_dtype()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Steps-1-2:-Install-ACDC-and-its-dependencies">Steps 1-2: Install ACDC and its dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-3.-Import-necessary-Python-packages">Step 3. Import necessary Python packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-4:-Load-the-expression-matrix-and-regulatory-network-using-Pandas-and-pyVIPER">Step 4: Load the expression matrix and regulatory network using Pandas and pyVIPER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-5:-Preprocessing-Data">Step 5: Preprocessing Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-6.-Compute-VIPER-(Virtual-Inference-of-Proteins-by-Enriched-Regulon-analysis)">Step 6. Compute VIPER (Virtual Inference of Proteins by Enriched Regulon analysis)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-7.-Identify-clusters-of-cells-with-ACDC">Step 7. Identify clusters of cells with ACDC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-8.-Compare-clusters-vs-SS">Step 8. Compare clusters vs SS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-9.-Compute-best-solution-with-4-clusters">Step 9. Compute best solution with 4 clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-10.-Classify-the-major-lineages-of-the-clusters.">Step 10. Classify the major lineages of the clusters.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-11.-Identify-remaining-subclusters">Step 11. Identify remaining subclusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ACDC_ICS_Jupyter_Notebook_Tutorial.html#Step-12.-Compute-the-differentiation-velocity">Step 12. Compute the differentiation velocity</a></li>
 </ul>
 </li>
 </ul>
@@ -159,13 +228,13 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-right" title="acdc_py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="ACDC in Python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Luca Zanella.</p>
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

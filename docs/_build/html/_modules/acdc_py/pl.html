@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>acdc_py.pl &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ACDC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.config">acdc_py.config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ACDC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">acdc_py.pl</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for acdc_py.pl</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">._pl</span><span class="w"> </span><span class="kn">import</span> <span class="n">_GS_search_space</span><span class="p">,</span> <span class="n">_SA_search_space</span><span class="p">,</span> <span class="n">_metric_vs_n_clusts</span><span class="p">,</span> <span class="n">_silhouette_scores</span>
+
+<span class="c1">### ---------- EXPORT LIST ----------</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># ---------------------------- ** PLOTTING FUNCS ** ----------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+
+<div class="viewcode-block" id="GS_search_space">
+<a class="viewcode-back" href="../../modules.html#acdc_py.pl.GS_search_space">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GS_search_space</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">plot_type</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get a heatmap of the search space traversed by Grid Search (GS).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object that was previously given to GS</span>
+<span class="sd">    plot_type : default: &quot;sil_mean&quot;</span>
+<span class="sd">         A column name in adata.uns[&quot;GS_results_dict&quot;][&quot;search_df&quot;].</span>
+<span class="sd">         Among other, options include &quot;sil_mean&quot; and &quot;n_clust&quot;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A object of :class:~matplotlib.figure.Figure containing the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_GS_search_space</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SA_search_space">
+<a class="viewcode-back" href="../../modules.html#acdc_py.pl.SA_search_space">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">SA_search_space</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">plot_type</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span> <span class="n">plot_density</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="c1"># https://stackoverflow.com/questions/16834861/create-own-colormap-using-matplotlib-and-plot-color-scale</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get a dot plot of the search space traversed by Simulated Annealing (SA).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object that was previously given to GS</span>
+<span class="sd">    plot_type : default: &quot;sil_mean&quot;</span>
+<span class="sd">         A column name in adata.uns[&quot;GS_results_dict&quot;][&quot;search_df&quot;].</span>
+<span class="sd">         Among other, options include &quot;sil_mean&quot; and &quot;n_clust&quot;.</span>
+<span class="sd">    plot_density : default: True</span>
+<span class="sd">        Whether to plot density on the dotplot to identify regions that were</span>
+<span class="sd">        highly traversed by SA.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A object of :class:~matplotlib.figure.Figure containing the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_SA_search_space</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">,</span> <span class="n">plot_density</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="metric_vs_n_clusts">
+<a class="viewcode-back" href="../../modules.html#acdc_py.pl.metric_vs_n_clusts">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">metric_vs_n_clusts</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">&#39;number of clusters&#39;</span><span class="p">,</span>
+    <span class="n">ylabel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">axis_fontsize</span> <span class="o">=</span> <span class="mi">14</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get a dot plot of the search space traversed by Simulated Annealing (SA).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object that was previously given to GS</span>
+<span class="sd">    metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">         A column name in adata.uns[&quot;GS_results_dict&quot;][&quot;search_df&quot;].</span>
+<span class="sd">         Among other, options include &quot;sil_mean&quot;.</span>
+<span class="sd">    width : default: 5</span>
+<span class="sd">        Figure width (inches)</span>
+<span class="sd">    height : default: 5</span>
+<span class="sd">        Figure height (inches)</span>
+<span class="sd">    xlabel : default: &#39;number of clusters&#39;</span>
+<span class="sd">        x-axis label</span>
+<span class="sd">    ylabel : default: None</span>
+<span class="sd">        When None, ylabel will be metric.</span>
+<span class="sd">    axis_fontsize : default: 14</span>
+<span class="sd">        Fontsize for xlabel and ylabel.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_metric_vs_n_clusts</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">metric</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="p">,</span>
+        <span class="n">axis_fontsize</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="silhouette_scores">
+<a class="viewcode-back" href="../../modules.html#acdc_py.pl.silhouette_scores">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">silhouette_scores</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">groupby</span><span class="p">,</span>
+    <span class="n">dist_slot</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ylab</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">show</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get a dot plot of the search space traversed by Simulated Annealing (SA).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object.</span>
+<span class="sd">    groupby</span>
+<span class="sd">        A name of the column in adata.obs that contains the clustering that you</span>
+<span class="sd">        want to calculate silhouette scores for.</span>
+<span class="sd">    dist_slot</span>
+<span class="sd">        The slot in adata.obsp where the distance object that will be used to</span>
+<span class="sd">        calculate the silhouette score is stored.</span>
+<span class="sd">    palette : default: None</span>
+<span class="sd">        The name of a Matplotlib qualitative colormap. If None, use ACDC</span>
+<span class="sd">        default palette.</span>
+<span class="sd">    ylab : default: None</span>
+<span class="sd">        The label to put on the y-axis.</span>
+<span class="sd">    show : default: True</span>
+<span class="sd">        Whether to show the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_silhouette_scores</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">groupby</span><span class="p">,</span> <span class="n">dist_slot</span><span class="p">,</span> <span class="n">palette</span><span class="p">,</span> <span class="n">ylab</span><span class="p">,</span> <span class="n">show</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

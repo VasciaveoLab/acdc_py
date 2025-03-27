@@ -20,6 +20,14 @@ acdc\_py.SA module
    :undoc-members:
    :show-inheritance:
 
+acdc\_py.config module
+----------------------
+
+.. automodule:: acdc_py.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 acdc\_py.get\_opt module
 ------------------------
 

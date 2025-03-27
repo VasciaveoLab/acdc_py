@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>acdc_py.pp &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ACDC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.config">acdc_py.config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ACDC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">acdc_py.pp</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for acdc_py.pp</h1><div class="highlight"><pre>
+<span></span><span class="c1">### ---------- IMPORT DEPENDENCIES ----------</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._pp</span><span class="w"> </span><span class="kn">import</span> <span class="n">_corr_distance</span><span class="p">,</span> <span class="n">_neighbors_knn</span><span class="p">,</span> <span class="n">_neighbors_graph</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1">### ---------- EXPORT LIST ----------</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># ---------------------------- ** DISTANCE FUNCS ** ----------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+<div class="viewcode-block" id="corr_distance">
+<a class="viewcode-back" href="../../modules.html#acdc_py.pp.corr_distance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">corr_distance</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
+                  <span class="n">use_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">reduction_slot</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">,</span>
+                  <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;corr_dist&quot;</span><span class="p">,</span>
+                  <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                  <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">,</span>
+                  <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    A tool for computing a distance matrix based on pearson correlation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing a signature in adata.X</span>
+<span class="sd">    use_reduction : default: True</span>
+<span class="sd">        Whether to use a reduction (True) (highly recommended - accurate &amp; much faster)</span>
+<span class="sd">        or to use the direct matrix (False) for computing distance.</span>
+<span class="sd">    reduction_slot : default: &quot;X_pca&quot;</span>
+<span class="sd">        If reduction is TRUE, then specify which slot for the reduction to use.</span>
+<span class="sd">    key_added : default: &quot;corr_dist&quot;</span>
+<span class="sd">        Slot in obsp to store the resulting distance matrix.</span>
+<span class="sd">    batch_size : default: 1000</span>
+<span class="sd">        Reduce total memory usage by running data in batches.</span>
+<span class="sd">    dtype : default: np.int16</span>
+<span class="sd">        Data type used to represent the distance values. np.int16 (default) is</span>
+<span class="sd">        a compromise between smaller memory size while not reducing information</span>
+<span class="sd">        so much as to affect clustering. dtypes include np.int8, np.int16 (default) np.int32, np.int64, np.float16, np.float32, and np.float64.</span>
+<span class="sd">    verbose : default: True</span>
+<span class="sd">        Show a progress bar for each batch of data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Adds fields to the input adata, such that it contains a distance matrix</span>
+<span class="sd">    stored in adata.obsp[key_added].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># returns if isinstance(adata, np.ndarray) or isinstance(adata, pd.DataFrame):</span>
+    <span class="k">return</span> <span class="n">_corr_distance</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">use_reduction</span><span class="p">,</span>
+        <span class="n">reduction_slot</span><span class="p">,</span>
+        <span class="n">key_added</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">,</span>
+        <span class="n">verbose</span>
+    <span class="p">)</span></div>
+
+
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># ---------------------------- ** KNN ARRAY FUNC ** ----------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+<div class="viewcode-block" id="neighbors_knn">
+<a class="viewcode-back" href="../../modules.html#acdc_py.pp.neighbors_knn">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">neighbors_knn</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
+                  <span class="n">max_knn</span><span class="o">=</span><span class="mi">101</span><span class="p">,</span>
+                  <span class="n">dist_slot</span><span class="o">=</span><span class="s2">&quot;corr_dist&quot;</span><span class="p">,</span>
+                  <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;knn&quot;</span><span class="p">,</span>
+                  <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+                  <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                  <span class="n">njobs</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    A tool for computing a KNN array used to then rapidly generate connectivity</span>
+<span class="sd">    graphs with acdc.pp.neighbors_graph for clustering.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing a distance object in adata.obsp.</span>
+<span class="sd">    max_knn : default: 101</span>
+<span class="sd">        The maximum number of k-nearest neighbors (knn) to include in this array.</span>
+<span class="sd">        acdc.pp.neighbors_graph will only be able to compute KNN graphs with</span>
+<span class="sd">        knn &lt;= max_knn.</span>
+<span class="sd">    dist_slot : default: &quot;corr_dist&quot;</span>
+<span class="sd">        The slot in adata.obsp where the distance object is stored. One way of</span>
+<span class="sd">        generating this object is with adata.pp.corr_distance.</span>
+<span class="sd">    key_added : default: &quot;knn&quot;</span>
+<span class="sd">        Slot in uns to store the resulting knn array.</span>
+<span class="sd">    batch-size : default: 1000</span>
+<span class="sd">        Size of the batches used to reduce memory usage.</span>
+<span class="sd">    verbose : default: True</span>
+<span class="sd">        Whether to display a progress bar of the batches completed.</span>
+<span class="sd">    njobs : default: 1</span>
+<span class="sd">        Paralleization option that allows users to speed up runtime.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Adds fields to the input adata, such that it contains a knn array stored in</span>
+<span class="sd">    adata.uns[key_added].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># returns if isinstance(adata, np.ndarray) or isinstance(adata, pd.DataFrame):</span>
+    <span class="k">return</span> <span class="n">_neighbors_knn</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">max_knn</span><span class="p">,</span>
+        <span class="n">dist_slot</span><span class="p">,</span>
+        <span class="n">key_added</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">,</span>
+        <span class="n">njobs</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------- ** NEIGHBOR GRAPH FUNC ** -------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+<div class="viewcode-block" id="neighbors_graph">
+<a class="viewcode-back" href="../../modules.html#acdc_py.pp.neighbors_graph">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">neighbors_graph</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
+                    <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+                    <span class="n">knn_slot</span><span class="o">=</span><span class="s1">&#39;knn&#39;</span><span class="p">,</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                    <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    A tool for rapidly computing a k-nearest neighbor (knn) graph (i.e.</span>
+<span class="sd">    connectivities) that can then be used for clustering.</span>
+
+<span class="sd">    graphs with acdc.pp.neighbors_graph for clustering.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing a distance object in adata.obsp.</span>
+<span class="sd">    n_neighbors : default: 15</span>
+<span class="sd">        The number of nearest neighbors to use to build the connectivity graph.</span>
+<span class="sd">        This number must be less than the total number of knn in the knn array</span>
+<span class="sd">        stored in adata.uns[knn_slot].</span>
+<span class="sd">    knn_slot : default: 101</span>
+<span class="sd">        The slot in adata.uns where the knn array is stored. One way of</span>
+<span class="sd">        generating this object is with acdc.pp.neighbors_knn.</span>
+<span class="sd">    batch-size : default: 1000</span>
+<span class="sd">        Size of the batches used to reduce memory usage.</span>
+<span class="sd">    verbose : default: True</span>
+<span class="sd">        Whether to display a progress bar of the batches completed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Adds fields to the input adata, such that it contains a knn graph stored in</span>
+<span class="sd">    adata.obsp[&#39;connectivities&#39;] along with metadata in adata.uns[&quot;neighbors&quot;].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># returns if isinstance(adata, np.ndarray) or isinstance(adata, pd.DataFrame):</span>
+    <span class="k">return</span> <span class="n">_neighbors_graph</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">n_neighbors</span><span class="p">,</span>
+        <span class="n">knn_slot</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">verbose</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

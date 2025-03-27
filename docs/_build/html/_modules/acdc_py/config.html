@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>acdc_py.config &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ACDC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.config">acdc_py.config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ACDC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">acdc_py.config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for acdc_py.config</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;clust_alg&quot;</span><span class="p">:</span><span class="s2">&quot;Leiden&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SS&quot;</span><span class="p">:{</span>
+        <span class="s2">&quot;SS_weights&quot;</span><span class="p">:</span> <span class="s2">&quot;unitary&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SS_exp_base&quot;</span><span class="p">:</span> <span class="mf">2.718282</span><span class="p">,</span>
+        <span class="s2">&quot;n_subsamples&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;subsamples_pct_cells&quot;</span><span class="p">:</span> <span class="mi">100</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;corr_distance_dtype&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span>
+<span class="p">}</span>
+
+<div class="viewcode-block" id="set_clust_alg">
+<a class="viewcode-back" href="../../modules.html#acdc_py.config.set_clust_alg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_clust_alg</span><span class="p">(</span><span class="n">clust_alg</span> <span class="o">=</span> <span class="s2">&quot;Leiden&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    clust_alg : default: &quot;Leiden&quot;</span>
+<span class="sd">    Clustering algorithm. Choose among: &quot;Leiden&quot; (default) or &quot;Louvain&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;clust_alg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clust_alg</span></div>
+
+
+<div class="viewcode-block" id="set_SS_weights">
+<a class="viewcode-back" href="../../modules.html#acdc_py.config.set_SS_weights">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_SS_weights</span><span class="p">(</span><span class="n">SS_weights</span> <span class="o">=</span> <span class="s2">&quot;unitary&quot;</span><span class="p">,</span> <span class="n">SS_exp_base</span> <span class="o">=</span> <span class="mf">2.718282</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    SS_weights : default: &quot;unitary&quot;</span>
+<span class="sd">        Negative silhouette scores can be given more weight by exponentiation</span>
+<span class="sd">        (&quot;exp&quot;). Otherwise, leave SS_weights as &quot;unitary&quot;.</span>
+<span class="sd">    SS_exp_base : default: 2.718282.</span>
+<span class="sd">        If SS_weights is set to &quot;exp&quot;, then set the base for exponentiation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SS&#39;</span><span class="p">][</span><span class="s2">&quot;SS_weights&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SS_weights</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SS&#39;</span><span class="p">][</span><span class="s2">&quot;SS_exp_base&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">SS_exp_base</span></div>
+
+
+<div class="viewcode-block" id="set_SS_bootstraps">
+<a class="viewcode-back" href="../../modules.html#acdc_py.config.set_SS_bootstraps">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_SS_bootstraps</span><span class="p">(</span><span class="n">n_subsamples</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">subsamples_pct_cells</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    n_subsamples : default: 1</span>
+<span class="sd">        Number of subsamples per bootstrap.</span>
+<span class="sd">    subsamples_pct_cells : default: 100</span>
+<span class="sd">        Percentage of cells sample at each bootstrap iteration.</span>
+<span class="sd">        i.e. when 100, 100%, all cells are used).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SS&#39;</span><span class="p">][</span><span class="s2">&quot;n_subsamples&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_subsamples</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SS&#39;</span><span class="p">][</span><span class="s2">&quot;subsamples_pct_cells&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subsamples_pct_cells</span></div>
+
+
+<div class="viewcode-block" id="set_corr_distance_dtype">
+<a class="viewcode-back" href="../../modules.html#acdc_py.config.set_corr_distance_dtype">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_corr_distance_dtype</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    dtype : default: np.int16</span>
+<span class="sd">        Data type used to represent the distance values. np.int16 (default) is</span>
+<span class="sd">        a compromise between smaller memory size while not reducing information</span>
+<span class="sd">        so much as to affect clustering. dtypes include np.int8, np.int16 (default) np.int32, np.int64, np.float16, np.float32, and np.float64.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span><span class="p">[</span><span class="s1">&#39;corr_distance_dtype&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtype</span></div>
+
+
+
+<span class="c1"># def set_regulators_filepath(group, species, new_filepath):</span>
+<span class="c1">#     &quot;&quot;&quot;\</span>
+<span class="c1">#     Allows the user to use a custom list of regulatory proteins instead of the</span>
+<span class="c1">#     default ones within pyVIPER&#39;s data folder.</span>
+<span class="c1">#</span>
+<span class="c1">#     Parameters</span>
+<span class="c1">#     ----------</span>
+<span class="c1">#     group</span>
+<span class="c1">#         A group of regulatory proteins of either: &quot;tfs&quot;, &quot;cotfs&quot;, &quot;sig&quot; or &quot;surf&quot;.</span>
+<span class="c1">#     species</span>
+<span class="c1">#         The species to which the group of proteins belongs to: &quot;human&quot; or &quot;mouse&quot;.</span>
+<span class="c1">#     new_filepath</span>
+<span class="c1">#         The new filepath that should be used to retrieve these sets of proteins.</span>
+<span class="c1">#</span>
+<span class="c1">#     Returns</span>
+<span class="c1">#     -------</span>
+<span class="c1">#     None</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     if not species in [&quot;human&quot;, &quot;mouse&quot;]:</span>
+<span class="c1">#         raise ValueError(&quot;Unsupported species: &quot; + str(species))</span>
+<span class="c1">#     if not group in [&quot;tfs&quot;, &quot;cotfs&quot;, &quot;sig&quot;, &quot;surf&quot;]:</span>
+<span class="c1">#         raise ValueError(&quot;Unsupported species: &quot; + str(group))</span>
+<span class="c1">#     config[&#39;regulators_filepaths&#39;][species][group] = new_filepath</span>
+<span class="c1">#</span>
+<span class="c1"># def set_regulators_species_to_use(species):</span>
+<span class="c1">#     &quot;&quot;&quot;\</span>
+<span class="c1">#     Allows the user to specify which species they are currently studying, so the</span>
+<span class="c1">#     correct sets of regulatory proteins will be used during analysis.</span>
+<span class="c1">#</span>
+<span class="c1">#     Parameters</span>
+<span class="c1">#     ----------</span>
+<span class="c1">#     species</span>
+<span class="c1">#         The species to which the group of proteins belongs to: &quot;human&quot; or &quot;mouse&quot;.</span>
+<span class="c1">#</span>
+<span class="c1">#     Returns</span>
+<span class="c1">#     -------</span>
+<span class="c1">#     None</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     if not species in [&quot;human&quot;, &quot;mouse&quot;]:</span>
+<span class="c1">#         raise ValueError(&quot;Unsupported species: &quot; + str(species))</span>
+<span class="c1">#     config[&#39;regulators_species&#39;] = species</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1398 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clustering human single-cell RNA seq data with ACDC &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=fc837d61"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ACDC in Python" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ACDC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html#module-acdc_py.config">acdc_py.config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Clustering human single-cell RNA seq data with ACDC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Steps-1-2:-Install-ACDC-and-its-dependencies">Steps 1-2: Install ACDC and its dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-3.-Import-necessary-Python-packages">Step 3. Import necessary Python packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-4:-Load-the-expression-matrix-and-regulatory-network-using-Pandas-and-pyVIPER">Step 4: Load the expression matrix and regulatory network using Pandas and pyVIPER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-5:-Preprocessing-Data">Step 5: Preprocessing Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#5.a-Compute-CytoTRACE">5.a Compute CytoTRACE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#5.b-Filter,-normalize,-log-transform-and-scale-the-data">5.b Filter, normalize, log-transform and scale the data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#5.c.-Prepare-the-network">5.c. Prepare the network</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-6.-Compute-VIPER-(Virtual-Inference-of-Proteins-by-Enriched-Regulon-analysis)">Step 6. Compute VIPER (Virtual Inference of Proteins by Enriched Regulon analysis)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-7.-Identify-clusters-of-cells-with-ACDC">Step 7. Identify clusters of cells with ACDC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#7.a.-Perform-principal-components-analysis-(PCA)">7.a. Perform principal components analysis (PCA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#7.b.-Run-ACDC">7.b. Run ACDC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#7.c.-Visualize-clusters">7.c. Visualize clusters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-8.-Compare-clusters-vs-SS">Step 8. Compare clusters vs SS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-9.-Compute-best-solution-with-4-clusters">Step 9. Compute best solution with 4 clusters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#9.a.-Have-ACDC-use-the-existing-search-data-to-compute-the-optimal-4-cluster-solution">9.a. Have ACDC use the existing search data to compute the optimal 4-cluster solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#9.b.-Visualize-the-4-cluster-solution">9.b. Visualize the 4-cluster solution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#9.c.-Visualize-the-silhouette-scores-of-this-solution">9.c. Visualize the silhouette scores of this solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-10.-Classify-the-major-lineages-of-the-clusters.">Step 10. Classify the major lineages of the clusters.</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#10.a.-Plot-the-CytoTRACE-score-to-identify-stem-clusters">10.a. Plot the CytoTRACE score to identify stem clusters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#10.b.-Plot-markers-to-identify-stem-vs-absorptive-vs-secretory">10.b. Plot markers to identify stem vs absorptive vs secretory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-11.-Identify-remaining-subclusters">Step 11. Identify remaining subclusters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#11.a.-Subcluster-the-absorptive-cells">11.a. Subcluster the absorptive cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#11.b.-Subcluster-the-secretory-cells">11.b. Subcluster the secretory cells</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#11.c.-Visualize-the-final-clusters">11.c. Visualize the final clusters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#11.d.-Visualize-the-silhouette-scores-of-this-solution">11.d. Visualize the silhouette scores of this solution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Step-12.-Compute-the-differentiation-velocity">Step 12. Compute the differentiation velocity</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ACDC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Clustering human single-cell RNA seq data with ACDC</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ACDC_ICS_Jupyter_Notebook_Tutorial.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Clustering-human-single-cell-RNA-seq-data-with-ACDC">
+<h1>Clustering human single-cell RNA seq data with ACDC<a class="headerlink" href="#Clustering-human-single-cell-RNA-seq-data-with-ACDC" title="Link to this heading"></a></h1>
+<p>This Jupyter notebook implements the STAR Protocol for using ACDC to cluster human single-cell RNA-seq data.</p>
+<section id="Steps-1-2:-Install-ACDC-and-its-dependencies">
+<h2>Steps 1-2: Install ACDC and its dependencies<a class="headerlink" href="#Steps-1-2:-Install-ACDC-and-its-dependencies" title="Link to this heading"></a></h2>
+<p>Steps 1-2 entail installing ACDC, its dependencies and verifying that they are installed correctly. We will install CellO within an Anaconda environment. Make sure that Anaconda is installed, and then run the following commands:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>CONDA_SUBDIR=osx-arm64 conda create -n acdc_env python=3.10.12 anaconda
+conda activate acdc_env
+pip install jax==0.4.23 jaxlib==0.4.23
+pip install scanpy==1.9.6
+pip install cellrank==2.0.6
+pip install viper-in-python==1.0.9
+pip install louvain==0.8.2
+pip install acdc-py==1.1.0
+pip install viperkernel==1.0.0
+</pre></div>
+</div>
+</section>
+<section id="Step-3.-Import-necessary-Python-packages">
+<h2>Step 3. Import necessary Python packages<a class="headerlink" href="#Step-3.-Import-necessary-Python-packages" title="Link to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import pyviper
+import pandas as pd
+import numpy as np
+import scanpy as sc
+import acdc_py as acdc
+import anndata
+
+from cellrank.kernels import CytoTRACEKernel
+import scvelo as scv
+
+from viperkernel import VIPERKernel
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/anndata/utils.py:429: FutureWarning: Importing read_csv from `anndata` is deprecated. Import anndata.io.read_csv instead.
+  warnings.warn(msg, FutureWarning)
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/anndata/utils.py:429: FutureWarning: Importing read_text from `anndata` is deprecated. Import anndata.io.read_text instead.
+  warnings.warn(msg, FutureWarning)
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/anndata/utils.py:429: FutureWarning: Importing read_excel from `anndata` is deprecated. Import anndata.io.read_excel instead.
+  warnings.warn(msg, FutureWarning)
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/anndata/utils.py:429: FutureWarning: Importing read_mtx from `anndata` is deprecated. Import anndata.io.read_mtx instead.
+  warnings.warn(msg, FutureWarning)
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/anndata/utils.py:429: FutureWarning: Importing read_loom from `anndata` is deprecated. Import anndata.io.read_loom instead.
+  warnings.warn(msg, FutureWarning)
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/anndata/utils.py:429: FutureWarning: Importing read_hdf from `anndata` is deprecated. Import anndata.io.read_hdf instead.
+  warnings.warn(msg, FutureWarning)
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/anndata/utils.py:429: FutureWarning: Importing read_umi_tools from `anndata` is deprecated. Import anndata.io.read_umi_tools instead.
+  warnings.warn(msg, FutureWarning)
+</pre></div></div>
+</div>
+</section>
+<section id="Step-4:-Load-the-expression-matrix-and-regulatory-network-using-Pandas-and-pyVIPER">
+<h2>Step 4: Load the expression matrix and regulatory network using Pandas and pyVIPER<a class="headerlink" href="#Step-4:-Load-the-expression-matrix-and-regulatory-network-using-Pandas-and-pyVIPER" title="Link to this heading"></a></h2>
+<p>Here we load intestinal stem cell data from:</p>
+<p>Malagola, E., Vasciaveo, A., Ochiai, Y., Kim, W., Zheng, B., Zanella, L., … &amp; Wang, T. C. (2024). Isthmus progenitor cells contribute to homeostatic cellular turnover and support regeneration following intestinal injury. <em>Cell</em>, 187(12), 3056-3071.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>data_folder = &#39;https://raw.githubusercontent.com/califano-lab/acdc_py_data/main/&#39;
+
+gex_df = pd.read_parquet(data_folder + &#39;TE001_counts.parquet.gzip&#39;)
+gex_data = anndata.AnnData(gex_df)
+
+TE001_net_table = pd.read_parquet(data_folder + &#39;TE001_mc_unPruned.parquet.gzip&#39;)
+TE001_net = pyviper.Interactome(&quot;TE001&quot;, TE001_net_table)
+
+umap_coordinates = pd.read_parquet(data_folder + &#39;TE001_umap.parquet.gzip&#39;)
+</pre></div>
+</div>
+</div>
+<p>gex_data contains the counts for the TE001 dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>gex_data
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AnnData object with n_obs × n_vars = 3656 × 15385
+</pre></div></div>
+</div>
+<p>TE001_net is our ARACNe regulatory network for the TE001 dataset. ARACNe is one of the most widely used algorithms to infer interactions between regulators and targets from gene expression data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(TE001_net)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Object of class Interactome:
+        Name: TE001
+        Number of regulons: 3783
+        Median average targets per regulon: 125.0
+        Median average abs(mor) per regulon: 0.7404698408289692
+        Median average likelihood per regulon: 0.2122653236662364
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>TE001_net.net_table
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>regulator</th>
+      <th>target</th>
+      <th>mor</th>
+      <th>likelihood</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1700019D03Rik</td>
+      <td>Cox6c</td>
+      <td>-0.999663</td>
+      <td>0.339867</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1700019D03Rik</td>
+      <td>Slc25a3</td>
+      <td>-0.998794</td>
+      <td>0.332123</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1700019D03Rik</td>
+      <td>Prap1</td>
+      <td>-0.998398</td>
+      <td>0.335595</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1700019D03Rik</td>
+      <td>Dbi</td>
+      <td>-0.999244</td>
+      <td>0.332498</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1700019D03Rik</td>
+      <td>Mtch2</td>
+      <td>-0.998960</td>
+      <td>0.329374</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>914823</th>
+      <td>Zzz3</td>
+      <td>Vmp1</td>
+      <td>-0.999891</td>
+      <td>0.301922</td>
+    </tr>
+    <tr>
+      <th>914824</th>
+      <td>Zzz3</td>
+      <td>Dbi</td>
+      <td>-0.993341</td>
+      <td>0.297528</td>
+    </tr>
+    <tr>
+      <th>914825</th>
+      <td>Zzz3</td>
+      <td>Ahctf1</td>
+      <td>0.999916</td>
+      <td>0.260867</td>
+    </tr>
+    <tr>
+      <th>914826</th>
+      <td>Zzz3</td>
+      <td>Set</td>
+      <td>0.999908</td>
+      <td>0.282083</td>
+    </tr>
+    <tr>
+      <th>914827</th>
+      <td>Zzz3</td>
+      <td>Hmgb1</td>
+      <td>0.999883</td>
+      <td>0.299041</td>
+    </tr>
+  </tbody>
+</table>
+<p>914828 rows × 4 columns</p>
+</div></div>
+</div>
+</section>
+<section id="Step-5:-Preprocessing-Data">
+<h2>Step 5: Preprocessing Data<a class="headerlink" href="#Step-5:-Preprocessing-Data" title="Link to this heading"></a></h2>
+<section id="5.a-Compute-CytoTRACE">
+<h3>5.a Compute CytoTRACE<a class="headerlink" href="#5.a-Compute-CytoTRACE" title="Link to this heading"></a></h3>
+<p>CytoTRACE by default uses imputed data - a simple way to compute k-NN imputed data is to use scVelo’s moments function. However, note that this function expects <code class="docutils literal notranslate"><span class="pre">spliced</span></code> counts because it’s designed for RNA velocity, so we’re using a simple hack here:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>if &#39;spliced&#39; not in gex_data.layers or &#39;unspliced&#39; not in gex_data.layers:
+    gex_data.layers[&#39;spliced&#39;] = gex_data.X
+    gex_data.layers[&#39;unspliced&#39;] = gex_data.X
+scv.pp.moments(gex_data) # hack for CytoTRACEkernel
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: Did not normalize spliced as it looks processed already. To enforce normalization, set `enforce=True`.
+WARNING: Did not normalize unspliced as it looks processed already. To enforce normalization, set `enforce=True`.
+Normalized count data: X.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/var/folders/l_/wl8wsy81535frxdvqj0ltm280000gn/T/ipykernel_70891/3394800788.py:4: DeprecationWarning: Automatic neighbor calculation is deprecated since scvelo==0.4.0 and will be removed in a future version of scVelo. Please compute neighbors first with Scanpy.
+  scv.pp.moments(gex_data) # hack for CytoTRACEkernel
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scvelo/preprocessing/moments.py:71: DeprecationWarning: `neighbors` is deprecated since scvelo==0.4.0 and will be removed in a future version of scVelo. Please compute neighbors with Scanpy.
+  neighbors(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scvelo/preprocessing/neighbors.py:233: DeprecationWarning: Automatic computation of PCA is deprecated since scvelo==0.4.0 and will be removed in a future version of scVelo. Please compute PCA with Scanpy first.
+  _set_pca(adata=adata, n_pcs=n_pcs, use_highly_variable=use_highly_variable)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+computing neighbors
+    finished (0:00:04) --&gt; added
+    &#39;distances&#39; and &#39;connectivities&#39;, weighted adjacency matrices (adata.obsp)
+computing moments based on connectivities
+    finished (0:00:08) --&gt; added
+    &#39;Ms&#39; and &#39;Mu&#39;, moments of un/spliced abundances (adata.layers)
+</pre></div></div>
+</div>
+<p>We can then use the CellRank CytoTRACE kernel to compute the stemness index <code class="docutils literal notranslate"><span class="pre">ct_score</span></code></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ctk = CytoTRACEKernel(gex_data) # initialize the CellRank2 kernel
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ctk = ctk.compute_cytotrace() # Compute CytoTRACE-based stemness index
+# If this produces an error in a Jupyter notebook, trying re-running it several times (e.g. 5X).
+</pre></div>
+</div>
+</div>
+</section>
+<section id="5.b-Filter,-normalize,-log-transform-and-scale-the-data">
+<h3>5.b Filter, normalize, log-transform and scale the data<a class="headerlink" href="#5.b-Filter,-normalize,-log-transform-and-scale-the-data" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pp.filter_genes(gex_data, min_cells=3)
+sc.pp.normalize_total(gex_data, target_sum=1e4)
+sc.pp.log1p(gex_data)
+sc.pp.scale(gex_data, max_value=10)
+</pre></div>
+</div>
+</div>
+</section>
+<section id="5.c.-Prepare-the-network">
+<h3>5.c. Prepare the network<a class="headerlink" href="#5.c.-Prepare-the-network" title="Link to this heading"></a></h3>
+<p>If regulator A has more targets than regulator B, this inflates its NES, creating bias towards A appearing more activated than B. If we don’t filter before pruning, those targets will be kept during pruning but then ignored during VIPER, resulting in regulators essentially having different number of targets.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>TE001_net.filter_targets(gex_data.var_names)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Removed 11 targets.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/algorithms.py:522: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  common = np.find_common_type([values.dtype, comps_array.dtype], [])
+</pre></div></div>
+</div>
+<p>Prune the network so that every regulator has exactly 50 targets.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>TE001_net.prune()
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Removed 755417 targets.
+Removed 595 regulators.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/algorithms.py:522: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  common = np.find_common_type([values.dtype, comps_array.dtype], [])
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(TE001_net)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Object of class Interactome:
+        Name: TE001
+        Number of regulons: 3188
+        Median average targets per regulon: 50.0
+        Median average abs(mor) per regulon: 0.7825995206922147
+        Median average likelihood per regulon: 0.24828297542408723
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Step-6.-Compute-VIPER-(Virtual-Inference-of-Proteins-by-Enriched-Regulon-analysis)">
+<h2>Step 6. Compute VIPER (Virtual Inference of Proteins by Enriched Regulon analysis)<a class="headerlink" href="#Step-6.-Compute-VIPER-(Virtual-Inference-of-Proteins-by-Enriched-Regulon-analysis)" title="Link to this heading"></a></h2>
+<p>VIPER uses the expression of regulatory targets of a given protein, such as the targets of a transcription factor (TF), as an accurate reporter of its activity. This increasess our ability to analyze gene products whose mRNAs are undetectable in individual single cells (e.g. dropout effect).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pax_data = pyviper.viper(gex_data, TE001_net)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/algorithms.py:522: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  common = np.find_common_type([values.dtype, comps_array.dtype], [])
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/algorithms.py:522: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  common = np.find_common_type([values.dtype, comps_array.dtype], [])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Preparing the association scores
+Computing regulons enrichment with aREA
+Rank transforming the data
+Preparing the 1-tailed / 2-tailed matrices
+Computing the likelihood matrix
+Computing the modes matrix
+Computing 2-tail enrichment
+Computing 1-tail enrichment
+Integrating enrichment
+</pre></div></div>
+</div>
+<p>We captured the activity of 3188 regulatory proteins from our single cell gene expression profiles.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pax_data
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+AnnData object with n_obs × n_vars = 3656 × 3188
+    obs: &#39;n_counts&#39;, &#39;ct_score&#39;, &#39;ct_pseudotime&#39;, &#39;ct_num_exp_genes&#39;
+    uns: &#39;gex_data&#39;
+</pre></div></div>
+</div>
+</section>
+<section id="Step-7.-Identify-clusters-of-cells-with-ACDC">
+<h2>Step 7. Identify clusters of cells with ACDC<a class="headerlink" href="#Step-7.-Identify-clusters-of-cells-with-ACDC" title="Link to this heading"></a></h2>
+<section id="7.a.-Perform-principal-components-analysis-(PCA)">
+<h3>7.a. Perform principal components analysis (PCA)<a class="headerlink" href="#7.a.-Perform-principal-components-analysis-(PCA)" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.tl.pca(pax_data, n_comps = 30)
+</pre></div>
+</div>
+</div>
+</section>
+<section id="7.b.-Run-ACDC">
+<h3>7.b. Run ACDC<a class="headerlink" href="#7.b.-Run-ACDC" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.config.set_clust_alg(clust_alg=&#39;Louvain&#39;)
+acdc.config.set_corr_distance_dtype(dtype=np.float64)
+acdc.GS(
+    pax_data,
+    reduction_slot=&quot;X_pca&quot;,
+    metrics=[&#39;sil_mean&#39;, &#39;sil_mean_median&#39;],
+    opt_metric=&quot;sil_mean_median&quot;,
+    njobs=1,
+    NN_vector=[15],
+    res_vector=np.arange(0.05, 2.0, step=0.05),
+    dist_slot=None,
+    key_added=&quot;clusters&quot;
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Computing distance object...
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|█████████████████████████████████████████████| 4/4 [00:00&lt;00:00, 25.16it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Computing neighbors...
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|█████████████████████████████████████████████| 4/4 [00:01&lt;00:00,  2.62it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Beginning GridSearch clustering...
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+GridSearch: 100%|███████████████████████████████| 39/39 [00:05&lt;00:00,  7.74it/s]
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/dtypes/cast.py:1641: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  return np.find_common_type(types, [])
+</pre></div></div>
+</div>
+</section>
+<section id="7.c.-Visualize-clusters">
+<h3>7.c. Visualize clusters<a class="headerlink" href="#7.c.-Visualize-clusters" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pax_data.obsm[&quot;X_umap&quot;] = umap_coordinates.values
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(pax_data, color = &quot;clusters&quot;, add_outline = True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:371: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:381: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_42_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_42_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Step-8.-Compare-clusters-vs-SS">
+<h2>Step 8. Compare clusters vs SS<a class="headerlink" href="#Step-8.-Compare-clusters-vs-SS" title="Link to this heading"></a></h2>
+<p>Because here we see that 4 clusters has a similar silhouette score as 2 clusters. Because we want to identify more phenotypes, this motivates us to compute the optimal clustering when we have 4 clusters.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.pl.metric_vs_n_clusts(pax_data)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/dtypes/cast.py:1641: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  return np.find_common_type(types, [])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_45_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_45_1.png" />
+</div>
+</div>
+</section>
+<section id="Step-9.-Compute-best-solution-with-4-clusters">
+<h2>Step 9. Compute best solution with 4 clusters<a class="headerlink" href="#Step-9.-Compute-best-solution-with-4-clusters" title="Link to this heading"></a></h2>
+<section id="9.a.-Have-ACDC-use-the-existing-search-data-to-compute-the-optimal-4-cluster-solution">
+<h3>9.a. Have ACDC use the existing search data to compute the optimal 4-cluster solution<a class="headerlink" href="#9.a.-Have-ACDC-use-the-existing-search-data-to-compute-the-optimal-4-cluster-solution" title="Link to this heading"></a></h3>
+<p>ACDC uses the existing GridSearch data from our previous run to identify the optimal parameters when we have a preset number of clusters.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.get_opt.GS_metric_search_data(
+    pax_data,
+    opt_metric=&#39;sil_mean&#39;,
+    n_clusts=4
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/dtypes/cast.py:1641: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  return np.find_common_type(types, [])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+iter                    1.0
+n_pcs                  30.0
+resolution              0.1
+knn                    15.0
+n_clust                 4.0
+subsamp_iter            1.0
+seed                    1.0
+sil_mean           0.383708
+sil_mean_median    0.485878
+Name: 1, dtype: object
+</pre></div></div>
+</div>
+<p>ACDC can use this to compute the optimal clustering when n_clusts=4.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.get_opt.GS_clustering(
+    pax_data,
+    opt_metric=&#39;sil_mean_median&#39;,
+    n_clusts=4
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Computing distance object...
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|█████████████████████████████████████████████| 4/4 [00:00&lt;00:00, 51.59it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Computing neighbor graph with 15 neighbors...
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|█████████████████████████████████████████████| 4/4 [00:00&lt;00:00, 68.65it/s]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Clustering with resolution 0.1 using Louvain...
+</pre></div></div>
+</div>
+</section>
+<section id="9.b.-Visualize-the-4-cluster-solution">
+<h3>9.b. Visualize the 4-cluster solution<a class="headerlink" href="#9.b.-Visualize-the-4-cluster-solution" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(pax_data, color = &#39;clusters&#39;, add_outline = True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:371: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:381: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_53_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_53_1.png" />
+</div>
+</div>
+</section>
+<section id="9.c.-Visualize-the-silhouette-scores-of-this-solution">
+<h3>9.c. Visualize the silhouette scores of this solution<a class="headerlink" href="#9.c.-Visualize-the-silhouette-scores-of-this-solution" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.pl.silhouette_scores(pax_data, groupby = &quot;clusters&quot;, dist_slot = &quot;corr_dist&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_55_0.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_55_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Step-10.-Classify-the-major-lineages-of-the-clusters.">
+<h2>Step 10. Classify the major lineages of the clusters.<a class="headerlink" href="#Step-10.-Classify-the-major-lineages-of-the-clusters." title="Link to this heading"></a></h2>
+<section id="10.a.-Plot-the-CytoTRACE-score-to-identify-stem-clusters">
+<h3>10.a. Plot the CytoTRACE score to identify stem clusters<a class="headerlink" href="#10.a.-Plot-the-CytoTRACE-score-to-identify-stem-clusters" title="Link to this heading"></a></h3>
+<p>This shows clusters 0 and 1 as stem cell clusters, while 2 and 3 are differentiated.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(pax_data, color = &#39;ct_score&#39;, add_outline = True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:371: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39;, &#39;norm&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:381: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39;, &#39;norm&#39; will be ignored
+  ax.scatter(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_59_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_59_1.png" />
+</div>
+</div>
+</section>
+<section id="10.b.-Plot-markers-to-identify-stem-vs-absorptive-vs-secretory">
+<h3>10.b. Plot markers to identify stem vs absorptive vs secretory<a class="headerlink" href="#10.b.-Plot-markers-to-identify-stem-vs-absorptive-vs-secretory" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>markers = {
+    &quot;stem&quot; : [&quot;Smarca5&quot;, &quot;Rbbp7&quot;, &quot;Dek&quot;],
+    &#39;absorptive&#39;: [&quot;Alpi&quot;, &quot;Sis&quot;, &quot;Fabp1&quot;],
+    &#39;secretory&#39; : [&#39;Muc2&#39;, &#39;Mmp7&#39;, &quot;Dclk1&quot;]
+}
+
+pax_data.uns[&#39;gex_data&#39;].obs[&#39;clusters&#39;] = pax_data.obs[&#39;clusters&#39;]
+pyviper.pl.dotplot(
+    pax_data,
+    groupby = &quot;clusters&quot;,
+    var_names = markers,
+    plot_stored_pax_data = False,
+    plot_stored_gex_data = True,
+    cmap = &quot;Greens&quot;
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_dotplot.py:747: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39;, &#39;norm&#39; will be ignored
+  dot_ax.scatter(x, y, **kwds)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_61_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_61_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.tl.rename(pax_data, groupby = &quot;clusters&quot;, name_dict = {
+    &#39;0&#39;: &#39;stem_0&#39;,
+    &#39;1&#39;: &#39;stem_1&#39;,
+    &#39;2&#39;: &#39;absorptive&#39;,
+    &#39;3&#39;: &#39;secretory&#39;
+})
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(pax_data, color = &quot;clusters&quot;, add_outline = True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:371: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:381: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_63_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_63_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Step-11.-Identify-remaining-subclusters">
+<h2>Step 11. Identify remaining subclusters<a class="headerlink" href="#Step-11.-Identify-remaining-subclusters" title="Link to this heading"></a></h2>
+<p>We identified subclusters of the stem lineage, but still need to do the same for absorptive and secretory cells. ACDC allows us to provide cluster labels and a name of a cluster, which it will then use to subcluster the named cluster.</p>
+<section id="11.a.-Subcluster-the-absorptive-cells">
+<h3>11.a. Subcluster the absorptive cells<a class="headerlink" href="#11.a.-Subcluster-the-absorptive-cells" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.GS(
+    pax_data,
+    cluster_labels = &#39;clusters&#39;,
+    cluster_name = &#39;absorptive&#39;,
+    key_added = &#39;subclusters&#39;
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Computing distance object...
+Computing neighbors...
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|█████████████████████████████████████████████| 1/1 [00:00&lt;00:00,  9.09it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Beginning GridSearch clustering...
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+GridSearch: 100%|█████████████████████████████| 100/100 [00:05&lt;00:00, 18.20it/s]
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/dtypes/cast.py:1641: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  return np.find_common_type(types, [])
+</pre></div></div>
+</div>
+<p>We have the ability to visualize the search space when subclustering, showing where more optimal solutions are found (higher ave sil score) and where the number of clusters increases.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.pl.GS_search_space(pax_data, plot_type=&#39;sil_mean&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_69_0.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_69_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.pl.GS_search_space(pax_data, plot_type=&#39;n_clust&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_70_0.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_70_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(pax_data, color=[&#39;clusters&#39;, &#39;subclusters&#39;], wspace=0.25, add_outline=True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:371: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:381: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:371: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:381: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_71_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_71_1.png" />
+</div>
+</div>
+</section>
+<section id="11.b.-Subcluster-the-secretory-cells">
+<h3>11.b. Subcluster the secretory cells<a class="headerlink" href="#11.b.-Subcluster-the-secretory-cells" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.GS(
+    pax_data,
+    cluster_labels = &#39;subclusters&#39;,
+    cluster_name = &#39;secretory&#39;,
+    key_added = &#39;subclusters&#39;
+)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Computing distance object...
+Computing neighbors...
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|█████████████████████████████████████████████| 1/1 [00:00&lt;00:00, 63.32it/s]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Beginning GridSearch clustering...
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+GridSearch: 100%|████████████████████████████| 100/100 [00:00&lt;00:00, 114.58it/s]
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/dtypes/cast.py:1641: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  return np.find_common_type(types, [])
+</pre></div></div>
+</div>
+</section>
+<section id="11.c.-Visualize-the-final-clusters">
+<h3>11.c. Visualize the final clusters<a class="headerlink" href="#11.c.-Visualize-the-final-clusters" title="Link to this heading"></a></h3>
+<p>We can see the 2 stem subclusters, 2 absorptive subclusters and 3 secretory subclusters.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>sc.pl.umap(pax_data, color = &#39;subclusters&#39;, add_outline = True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:371: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:381: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  ax.scatter(
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/scanpy/plotting/_tools/scatterplots.py:394: UserWarning: No data for colormapping provided via &#39;c&#39;. Parameters &#39;cmap&#39; will be ignored
+  cax = scatter(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_76_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_76_1.png" />
+</div>
+</div>
+</section>
+<section id="11.d.-Visualize-the-silhouette-scores-of-this-solution">
+<h3>11.d. Visualize the silhouette scores of this solution<a class="headerlink" href="#11.d.-Visualize-the-silhouette-scores-of-this-solution" title="Link to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>acdc.pl.silhouette_scores(pax_data, groupby = &quot;subclusters&quot;, dist_slot = &quot;corr_dist&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_78_0.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_78_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Step-12.-Compute-the-differentiation-velocity">
+<h2>Step 12. Compute the differentiation velocity<a class="headerlink" href="#Step-12.-Compute-the-differentiation-velocity" title="Link to this heading"></a></h2>
+<p>CellRank allows us to a transition matrix, where each cell has probabilities of differentiating into its neighbors. By doing so, we can compute velocity. The CytoTRACE stemness score can be used to predict differentiation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ctk = ctk.compute_transition_matrix(threshold_scheme=&quot;soft&quot;,nu=0.5)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e652edffcff04c82af0801657e81dd00", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Transfer
+ctk.adata.obsm[&quot;X_umap&quot;] = pax_data.obsm[&quot;X_umap&quot;]
+ctk.adata.obs[&quot;subclusters&quot;] = pax_data.obs[&quot;subclusters&quot;]
+</pre></div>
+</div>
+</div>
+<p>The CytoTRACE velocity shows the stem cells differentiating into absorptive and secretory cells.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ctk.plot_projection(basis=&quot;umap&quot;, color=&quot;subclusters&quot;, legend_loc=&quot;right&quot;, show=True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/algorithms.py:522: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  common = np.find_common_type([values.dtype, comps_array.dtype], [])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_84_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_84_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>ctk.plot_projection(basis=&quot;umap&quot;, color=&quot;ct_score&quot;, legend_loc=&quot;right&quot;, show=True, cmap = &quot;viridis&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_85_0.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_85_0.png" />
+</div>
+</div>
+<p>A VIPER-based velocity approach shows a similar result to CytoTRACE, thereby supporting the results of the previous velocity approach. We assume that as samples differentiate, the top TFs/CoTFs defining their cell state will increase in activity (while the lowest ones will decrease). Velocity is computed by identifying the top 50 and bottom 50 top regulators of each sample from its VIPER activity, along with its 15 nearest neighbors (NN) using Scanpy. NN with greater increases of the top
+regulators and greater decreases of bottom regulators receive a higher score. These scores are converted into probabilities, giving us a transition matrix.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>vpk = VIPERKernel(pax_data)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|█████████████████████████████████████| 3656/3656 [00:01&lt;00:00, 1852.09it/s]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>vpk.plot_projection(basis=&quot;umap&quot;, color=&quot;subclusters&quot;, legend_loc=&quot;right&quot;, show=True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/AlexanderWang/opt/miniconda3/envs/acdc_py_env_v5/lib/python3.10/site-packages/pandas/core/algorithms.py:522: DeprecationWarning: np.find_common_type is deprecated.  Please use `np.result_type` or `np.promote_types`.
+See https://numpy.org/devdocs/release/1.25.0-notes.html and the docs for more information.  (Deprecated NumPy 1.25)
+  common = np.find_common_type([values.dtype, comps_array.dtype], [])
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_88_1.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_88_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>vpk.plot_projection(basis=&quot;umap&quot;, color=&quot;ct_score&quot;, legend_loc=&quot;right&quot;, show=True, cmap = &quot;viridis&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_89_0.png" src="_images/ACDC_ICS_Jupyter_Notebook_Tutorial_89_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="ACDC in Python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

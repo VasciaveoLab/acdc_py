@@ -1,22 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>acdc_py.SA &mdash; ACDC 1.0.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+  <title>acdc_py.SA &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -43,7 +42,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">acdc_py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.config">acdc_py.config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a></li>
 </ul>
 
         </div>
@@ -72,14 +82,16 @@
              
   <h1>Source code for acdc_py.SA</h1><div class="highlight"><pre>
 <span></span><span class="c1">### ---------- IMPORT DEPENDENCIES ----------</span>
-<span class="kn">from</span> <span class="nn">._SA_GS_subfunctions</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">._SA_GS_subfunctions</span> <span class="kn">import</span> <span class="n">_cluster_adata</span>
-<span class="kn">from</span> <span class="nn">._dual_annealing_with_progress_bar</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">._tl</span> <span class="kn">import</span> <span class="n">_cluster_final_internal</span>
-<span class="kn">from</span> <span class="nn">.pp</span> <span class="kn">import</span> <span class="n">corr_distance</span><span class="p">,</span> <span class="n">neighbors_knn</span><span class="p">,</span> <span class="n">neighbors_graph</span>
-<span class="kn">from</span> <span class="nn">._condense_diffuse_funcs</span> <span class="kn">import</span> <span class="n">__diffuse_subsample_labels</span>
-<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">maxsize</span>
-<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">cpu_count</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._SA_GS_subfunctions</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._SA_GS_subfunctions</span><span class="w"> </span><span class="kn">import</span> <span class="n">_cluster_adata</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._SA_GS_subfunctions</span><span class="w"> </span><span class="kn">import</span> <span class="n">__merge_subclusters_into_clusters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._dual_annealing_with_progress_bar</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._tl</span><span class="w"> </span><span class="kn">import</span> <span class="n">_cluster_final_internal</span><span class="p">,</span> <span class="n">_extract_clusters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.pp</span><span class="w"> </span><span class="kn">import</span> <span class="n">_corr_distance</span><span class="p">,</span> <span class="n">_neighbors_knn</span><span class="p">,</span> <span class="n">_neighbors_graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._condense_diffuse_funcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">__diffuse_subsample_labels</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sys</span><span class="w"> </span><span class="kn">import</span> <span class="n">maxsize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cpu_count</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
 
 <span class="c1">### ---------- EXPORT LIST ----------</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SA&#39;</span><span class="p">]</span>
@@ -89,7 +101,7 @@
 <span class="c1"># ------------------------- ** DUAL ANNEALING FUNCS ** -------------------------</span>
 <span class="c1"># ------------------------------------------------------------------------------</span>
 <span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
-<span class="k">def</span> <span class="nf">get_sa_results</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_sa_results</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
                    <span class="n">res_range</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">],</span>
                    <span class="n">NN_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span><span class="mi">101</span><span class="p">],</span>
                    <span class="n">dist_slot</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -113,6 +125,7 @@
                    <span class="n">maxfun</span> <span class="o">=</span> <span class="mf">1e7</span><span class="p">,</span>
                    <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                    <span class="n">key_added</span> <span class="o">=</span> <span class="s2">&quot;clusters&quot;</span><span class="p">,</span>
+                   <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
                    <span class="n">njobs</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
     <span class="c1"># par_init = NULL,</span>
     <span class="c1"># control = NULL,</span>
@@ -121,17 +134,26 @@
     <span class="k">if</span> <span class="n">dist_slot</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing distance object...&quot;</span><span class="p">)</span>
         <span class="n">dist_slot</span> <span class="o">=</span> <span class="s2">&quot;corr_dist&quot;</span>
-        <span class="n">corr_distance</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
-                      <span class="n">use_reduction</span><span class="p">,</span>
-                      <span class="n">reduction_slot</span><span class="p">,</span>
-                      <span class="n">key_added</span><span class="o">=</span><span class="n">dist_slot</span><span class="p">)</span>
+        <span class="n">_corr_distance</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
+                       <span class="n">use_reduction</span><span class="p">,</span>
+                       <span class="n">reduction_slot</span><span class="p">,</span>
+                       <span class="n">key_added</span><span class="o">=</span><span class="n">dist_slot</span><span class="p">,</span>
+                       <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                       <span class="n">dtype</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;corr_distance_dtype&#39;</span><span class="p">],</span>
+                       <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">use_reduction</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">n_pcs</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="n">reduction_slot</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">n_pcs</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing neighbors...&quot;</span><span class="p">)</span>
-    <span class="n">neighbors_knn</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">max_knn</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">NN_range</span><span class="p">),</span> <span class="n">dist_slot</span><span class="o">=</span><span class="n">dist_slot</span><span class="p">,</span> <span class="n">njobs</span> <span class="o">=</span> <span class="n">njobs</span><span class="p">)</span>
+    <span class="n">_neighbors_knn</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">max_knn</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">NN_range</span><span class="p">),</span>
+        <span class="n">dist_slot</span><span class="o">=</span><span class="n">dist_slot</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">njobs</span> <span class="o">=</span> <span class="n">njobs</span>
+    <span class="p">)</span>
 
     <span class="c1"># In order to use global inside a nested function, we have to declare a</span>
         <span class="c1"># variable with a global keyword inside a nested function</span>
@@ -141,14 +163,20 @@
     <span class="n">curr_iter</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">bounds</span> <span class="o">=</span> <span class="p">[</span><span class="n">res_range</span><span class="p">,</span> <span class="n">NN_range</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">adata</span><span class="p">,</span> <span class="n">n_subsamples</span><span class="p">,</span> <span class="n">subsamples_pct_cells</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">adata</span><span class="p">,</span> <span class="n">n_subsamples</span><span class="p">,</span> <span class="n">subsamples_pct_cells</span><span class="p">,</span>
                   <span class="n">n_pcs</span><span class="p">,</span> <span class="n">clust_alg</span><span class="p">,</span> <span class="n">SS_weights</span><span class="p">,</span> <span class="n">SS_exp_base</span><span class="p">,</span>
-                  <span class="n">metrics</span><span class="p">,</span> <span class="n">opt_metric</span><span class="p">,</span> <span class="n">opt_metric_dir</span><span class="p">,</span> <span class="n">dist_slot</span><span class="p">):</span>
+                  <span class="n">metrics</span><span class="p">,</span> <span class="n">opt_metric</span><span class="p">,</span> <span class="n">opt_metric_dir</span><span class="p">,</span> <span class="n">dist_slot</span><span class="p">,</span>
+                  <span class="n">batch_size</span><span class="p">):</span>
         <span class="n">a_res</span><span class="p">,</span> <span class="n">a_nn</span> <span class="o">=</span> <span class="n">v</span>
         <span class="n">a_nn</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">a_nn</span><span class="p">))</span>
         <span class="k">global</span> <span class="n">sil_df</span>
         <span class="k">global</span> <span class="n">curr_iter</span>
-        <span class="n">neighbors_graph</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">a_nn</span><span class="p">)</span>
+        <span class="n">_neighbors_graph</span><span class="p">(</span>
+            <span class="n">adata</span><span class="p">,</span>
+            <span class="n">n_neighbors</span> <span class="o">=</span> <span class="n">a_nn</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="p">)</span>
         <span class="n">adata</span> <span class="o">=</span> <span class="n">_cluster_adata</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
                                <span class="n">seed</span><span class="p">,</span><span class="c1">#my_random_seed,</span>
                                <span class="n">a_res</span><span class="p">,</span>
@@ -202,7 +230,8 @@
                                         <span class="n">metrics</span><span class="p">,</span>
                                         <span class="n">opt_metric</span><span class="p">,</span>
                                         <span class="n">opt_metric_dir</span><span class="p">,</span>
-                                        <span class="n">dist_slot</span><span class="p">),</span>
+                                        <span class="n">dist_slot</span><span class="p">,</span>
+                                        <span class="n">batch_size</span><span class="p">),</span>
                                 <span class="n">maxiter</span> <span class="o">=</span> <span class="n">maxiter</span><span class="p">,</span>
                                 <span class="n">initial_temp</span> <span class="o">=</span> <span class="n">initial_temp</span><span class="p">,</span>
                                 <span class="n">restart_temp_ratio</span> <span class="o">=</span> <span class="n">restart_temp_ratio</span><span class="p">,</span>
@@ -239,22 +268,24 @@
 
 <span class="c1"># -------------------------- ** MAIN RUN FUNCTION ** ---------------------------</span>
 <div class="viewcode-block" id="SA">
-<a class="viewcode-back" href="../../acdc_py.html#acdc_py.SA.SA">[docs]</a>
-<span class="k">def</span> <span class="nf">SA</span><span class="p">(</span>
+<a class="viewcode-back" href="../../modules.html#acdc_py.SA.SA">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">SA</span><span class="p">(</span>
     <span class="n">adata</span><span class="p">,</span>
     <span class="n">res_range</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">],</span>
     <span class="n">NN_range</span><span class="o">=</span><span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">101</span><span class="p">],</span>
     <span class="n">dist_slot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">use_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">reduction_slot</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">,</span>
-    <span class="n">clust_alg</span><span class="o">=</span><span class="s2">&quot;Leiden&quot;</span><span class="p">,</span>
+    <span class="c1"># clust_alg=&quot;Leiden&quot;,</span>
     <span class="n">metrics</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span> <span class="c1">#[&quot;sil_mean&quot;, &quot;sil_mean_median&quot;, &quot;tot_sil_neg&quot;, &quot;lowest_sil_clust&quot;,&quot;max_sil_clust&quot;]</span>
     <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
     <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
-    <span class="n">SS_weights</span><span class="o">=</span><span class="s2">&quot;unitary&quot;</span><span class="p">,</span>
-    <span class="n">SS_exp_base</span><span class="o">=</span><span class="mf">2.718282</span><span class="p">,</span>
-    <span class="n">n_subsamples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-    <span class="n">subsamples_pct_cells</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">cluster_labels</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cluster_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="c1"># SS_weights=&quot;unitary&quot;,</span>
+    <span class="c1"># SS_exp_base=2.718282,</span>
+    <span class="c1"># n_subsamples=1,</span>
+    <span class="c1"># subsamples_pct_cells=100,</span>
     <span class="n">maxiter</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="c1">#20,</span>
     <span class="n">initial_temp</span><span class="o">=</span><span class="mi">5230</span><span class="p">,</span>
     <span class="n">restart_temp_ratio</span><span class="o">=</span><span class="mf">2e-5</span><span class="p">,</span>
@@ -263,14 +294,10 @@
     <span class="n">maxfun</span><span class="o">=</span><span class="mf">1e7</span><span class="p">,</span>
     <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
     <span class="n">key_added</span> <span class="o">=</span> <span class="s2">&quot;clusters&quot;</span><span class="p">,</span>
-    <span class="n">approx</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;run&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span>
-        <span class="c1"># &quot;mode&quot;:&quot;subsample&quot;, #subsample, metacell_standard,</span>
-        <span class="s2">&quot;size&quot;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span>
-        <span class="s2">&quot;exact_size&quot;</span><span class="p">:</span><span class="kc">True</span>
-    <span class="p">},</span>
+    <span class="n">approx_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">show_progress_bar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
     <span class="n">njobs</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
@@ -286,42 +313,37 @@
 <span class="sd">    adata</span>
 <span class="sd">        An anndata object containing a gene expression signature in adata.X and</span>
 <span class="sd">        gene expression counts in adata.raw.X.</span>
-<span class="sd">    res_range (default: [0.1, 1.9])</span>
+<span class="sd">    res_range : default: [0.1, 1.9]</span>
 <span class="sd">         edge values of the search space for the resolution parameter.</span>
-<span class="sd">    NN_range (default: [11, 101])</span>
+<span class="sd">    NN_range : default: [11, 101]</span>
 <span class="sd">        edge values of the search space for the nearest neighbors parameter.</span>
-<span class="sd">    dist_slot (default: None)</span>
+<span class="sd">    dist_slot : default: None</span>
 <span class="sd">        Slot in adata.obsp where a pre-generated distance matrix computed across</span>
 <span class="sd">        all cells is stored in adata for use in construction of NN. (Default =</span>
 <span class="sd">        None, i.e. distance matrix will be automatically computed as a</span>
 <span class="sd">        correlation distance and stored in &quot;corr_dist&quot;).</span>
-<span class="sd">    use_reduction (default: True)</span>
+<span class="sd">    use_reduction : default: True</span>
 <span class="sd">        Whether to use a reduction (True) (highly recommended - accurate &amp; much faster)</span>
 <span class="sd">        or to use the direct matrix (False) for clustering.</span>
-<span class="sd">    reduction_slot (default: &quot;X_pca&quot;)</span>
+<span class="sd">    reduction_slot : default: &quot;X_pca&quot;</span>
 <span class="sd">        If reduction is TRUE, then specify which slot for the reduction to use.</span>
-<span class="sd">    clust_alg (default: &quot;Leiden&quot;)</span>
-<span class="sd">        Clustering algorithm. Choose among: &quot;Leiden&quot; (default) or  &quot;Louvain&quot;.</span>
-<span class="sd">    metrics (default: &quot;sil_mean&quot;)</span>
+<span class="sd">    metrics : default: &quot;sil_mean&quot;</span>
 <span class="sd">        A metric or a list of metrics to be computed at each iteration of the</span>
 <span class="sd">        GridSearch. Possible metrics to use include &quot;sil_mean&quot;, &quot;sil_mean_median&quot;,</span>
 <span class="sd">        &quot;tot_sil_neg&quot;, &quot;lowest_sil_clust&quot;, &quot;max_sil_clust&quot;, &quot;ch&quot; and &quot;db&quot;.</span>
-<span class="sd">    opt_metric (default: &quot;sil_mean&quot;)</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
 <span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
-<span class="sd">    opt_metric_dir (default: &quot;max&quot;)</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
 <span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
 <span class="sd">        by minimizing (&quot;min&quot;).</span>
-<span class="sd">    SS_weights (default: &quot;unitary&quot;)</span>
-<span class="sd">        Negative silhouette scores can be given more weight by exponentiation (&quot;exp&quot;).</span>
-<span class="sd">        Otherwise, leave SS_weights as &quot;unitary&quot;.</span>
-<span class="sd">    SS_exp_base (default: 2.718282.)</span>
-<span class="sd">        If SS_weights is set to &quot;exp&quot;, then set the base for exponentiation.</span>
-<span class="sd">    n_subsamples (default=1)</span>
-<span class="sd">        Number of subsamples per bootstrap.</span>
-<span class="sd">    subsamples_pct_cells (default: 100)</span>
-<span class="sd">        Percentage of cells sample at each bootstrap iteration.</span>
-<span class="sd">        i.e. when 100, 100%, all cells are used).</span>
-<span class="sd">    maxiter : (default: 20)</span>
+<span class="sd">    cluster_labels : default: None</span>
+<span class="sd">        A column in adata.obs with a set of cluster labels containing a</span>
+<span class="sd">        cluster to subcluster. Specify the cluster with the cluster_name</span>
+<span class="sd">        parameter.</span>
+<span class="sd">    cluster_name : default: None</span>
+<span class="sd">        A cluster from cluster_labels to subcluster. When None, cluster whole</span>
+<span class="sd">        dataset.</span>
+<span class="sd">    maxiter : : default: 20</span>
 <span class="sd">        The maximum number of global search iterations. If None, value is 1000.</span>
 <span class="sd">    minimizer_kwargs : dict, optional</span>
 <span class="sd">        Extra keyword arguments to be passed to the local minimizer</span>
@@ -351,21 +373,23 @@
 <span class="sd">        algorithm is in the middle of a local search, this number will be</span>
 <span class="sd">        exceeded, the algorithm will stop just after the local search is</span>
 <span class="sd">        done. Default value is 1e7.</span>
-<span class="sd">    seed (default: 0)</span>
+<span class="sd">    seed : default: 0</span>
 <span class="sd">        Random seed to use.</span>
-<span class="sd">    key_added (default: &quot;clusters&quot;)</span>
+<span class="sd">    key_added : default: &quot;clusters&quot;</span>
 <span class="sd">        Slot in obs to store the resulting clusters.</span>
-<span class="sd">    approx (default: {&quot;run&quot;:False, &quot;size&quot;:1000, &quot;exact_size&quot;:True})</span>
-<span class="sd">        A diciontary object containing three parameters to control subsampling and diffusion</span>
-<span class="sd">            &quot;run&quot;: True or False whether to use subsampling and diffusion. Default=False</span>
-<span class="sd">            &quot;size&quot;: the number of cells to use in the subsampling. Default=1000.</span>
-<span class="sd">            &quot;exact_size&quot;: whether to get the exact size &quot;size&quot; of subsampling (True) or</span>
-<span class="sd">            be more inclusive during the representative subsampling (False, recommended).</span>
-<span class="sd">    verbose (default: True)</span>
+<span class="sd">    approx_size : default: None</span>
+<span class="sd">        When set to a positive integer, instead of running GS on the entire</span>
+<span class="sd">        dataset, perform GS on a subsample and diffuse those results. This will</span>
+<span class="sd">        lead to an approximation of the optimal solution for cases where the</span>
+<span class="sd">        dataset is too large to perform GS on due to time or memory constraints.</span>
+<span class="sd">    verbose : default: True</span>
 <span class="sd">        Include additional output with True. Alternative = False.</span>
-<span class="sd">    show_progress_bar (default: True)</span>
+<span class="sd">    show_progress_bar : default: True</span>
 <span class="sd">        Show a progress bar to visualize the progress of the algorithm.</span>
-<span class="sd">    njobs (default: 1)</span>
+<span class="sd">    batch_size : default: 1000</span>
+<span class="sd">        The size of each batch. Larger batches result in more memory usage. If</span>
+<span class="sd">        None, use the whole dataset instead of batches.</span>
+<span class="sd">    njobs : default: 1</span>
 <span class="sd">        Paralleization option that allows users to speed up runtime.</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -380,12 +404,21 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;njobs (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">njobs</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;) is larger than the &#39;</span> <span class="o">+</span>
                          <span class="s1">&#39;number of CPU cores (&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">n_max_cores</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;).&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">approx</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span> <span class="n">approx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">}</span>
-    <span class="k">if</span> <span class="n">approx</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span> <span class="n">approx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">}</span>
-    <span class="k">if</span> <span class="s2">&quot;size&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">approx</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> <span class="n">approx</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
-    <span class="k">if</span> <span class="s2">&quot;exact_size&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">approx</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> <span class="n">approx</span><span class="p">[</span><span class="s2">&quot;exact_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">cluster_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">cluster_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cluster_name provided but not cluster_labels.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adata_original</span> <span class="o">=</span> <span class="n">adata</span>
+            <span class="n">adata</span> <span class="o">=</span> <span class="n">_extract_clusters</span><span class="p">(</span>
+                <span class="n">adata_original</span><span class="p">,</span> <span class="n">cluster_labels</span><span class="p">,</span> <span class="n">cluster_name</span>
+            <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">approx</span><span class="p">[</span><span class="s2">&quot;run&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span> <span class="n">adata</span> <span class="o">=</span> <span class="n">get_approx_anndata</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">approx</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">njobs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">approx_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">approx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">approx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">:</span><span class="n">approx_size</span><span class="p">,</span> <span class="s2">&quot;exact_size&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">}</span>
+        <span class="n">adata</span> <span class="o">=</span> <span class="n">get_approx_anndata</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">approx</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">njobs</span><span class="p">)</span>
+
 
     <span class="n">adata</span> <span class="o">=</span> <span class="n">get_sa_results</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span>
                            <span class="n">res_range</span><span class="p">,</span>
@@ -396,13 +429,13 @@
                            <span class="n">metrics</span><span class="p">,</span>
                            <span class="n">opt_metric</span><span class="p">,</span>
                            <span class="n">opt_metric_dir</span><span class="p">,</span>
-                           <span class="n">SS_weights</span><span class="p">,</span>
-                           <span class="n">SS_exp_base</span><span class="p">,</span>
+                           <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SS&#39;</span><span class="p">][</span><span class="s1">&#39;SS_weights&#39;</span><span class="p">],</span>
+                           <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SS&#39;</span><span class="p">][</span><span class="s1">&#39;SS_exp_base&#39;</span><span class="p">],</span>
                            <span class="n">verbose</span><span class="p">,</span>
                            <span class="n">show_progress_bar</span><span class="p">,</span>
-                           <span class="n">clust_alg</span><span class="p">,</span>
-                           <span class="n">n_subsamples</span><span class="p">,</span>
-                           <span class="n">subsamples_pct_cells</span><span class="p">,</span>
+                           <span class="n">config</span><span class="p">[</span><span class="s1">&#39;clust_alg&#39;</span><span class="p">],</span>
+                           <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SS&#39;</span><span class="p">][</span><span class="s1">&#39;n_subsamples&#39;</span><span class="p">],</span>
+                           <span class="n">config</span><span class="p">[</span><span class="s1">&#39;SS&#39;</span><span class="p">][</span><span class="s1">&#39;subsamples_pct_cells&#39;</span><span class="p">],</span>
                            <span class="n">maxiter</span><span class="p">,</span>
                            <span class="n">initial_temp</span><span class="p">,</span>
                            <span class="n">restart_temp_ratio</span><span class="p">,</span>
@@ -411,6 +444,7 @@
                            <span class="n">maxfun</span><span class="p">,</span>
                            <span class="n">seed</span><span class="p">,</span>
                            <span class="n">key_added</span><span class="p">,</span>
+                           <span class="n">batch_size</span><span class="p">,</span>
                            <span class="n">njobs</span><span class="p">)</span>
     <span class="n">sa_results</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;SA_results_dict&quot;</span><span class="p">]</span>
 
@@ -421,12 +455,13 @@
         <span class="n">opt_res</span><span class="p">,</span>
         <span class="n">opt_knn</span><span class="p">,</span>
         <span class="n">dist_slot</span><span class="p">,</span>
-        <span class="n">clust_alg</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;clust_alg&#39;</span><span class="p">],</span>
         <span class="n">seed</span><span class="p">,</span>
         <span class="n">approx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;run&quot;</span><span class="p">:</span><span class="kc">False</span><span class="p">},</span>
         <span class="n">key_added</span> <span class="o">=</span> <span class="n">key_added</span><span class="p">,</span>
         <span class="n">knn_slot</span> <span class="o">=</span> <span class="s2">&quot;knn&quot;</span><span class="p">,</span>
         <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span><span class="p">,</span>
         <span class="n">njobs</span> <span class="o">=</span> <span class="n">njobs</span>
     <span class="p">)</span>
 
@@ -446,7 +481,14 @@
             <span class="n">njobs</span> <span class="o">=</span> <span class="n">njobs</span>
         <span class="p">)</span>
 
-    <span class="k">return</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">cluster_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">merged_clusters</span> <span class="o">=</span> <span class="n">__merge_subclusters_into_clusters</span><span class="p">(</span>
+            <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">adata_original</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">cluster_labels</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">subcluster_labels</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_added</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+            <span class="n">subcluster_name</span> <span class="o">=</span> <span class="n">cluster_name</span>
+        <span class="p">)</span>
+        <span class="n">adata_original</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">key_added</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged_clusters</span>
+        <span class="n">adata_original</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s1">&#39;SA_results_dict&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s1">&#39;SA_results_dict&#39;</span><span class="p">]</span></div>
 
 </pre></div>
 
@@ -457,7 +499,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2024, Luca Zanella.</p>
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>acdc_py.get_opt &mdash; ACDC 1.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fc837d61"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ACDC
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ACDC in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-gs">acdc_py.GS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#acdc-py-sa">acdc_py.SA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.get_opt">acdc_py.get_opt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pp">acdc_py.pp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.pl">acdc_py.pl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.tl">acdc_py.tl</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html#module-acdc_py.config">acdc_py.config</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ACDC_ICS_Jupyter_Notebook_Tutorial.html">Clustering human single-cell RNA seq data with ACDC</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ACDC</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">acdc_py.get_opt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for acdc_py.get_opt</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">._get_opt</span><span class="w"> </span><span class="kn">import</span> <span class="n">_GS_clustering</span><span class="p">,</span> <span class="n">_GS_metric_search_data</span><span class="p">,</span> <span class="n">_GS_metric_value</span><span class="p">,</span> <span class="n">_GS_params</span><span class="p">,</span> <span class="n">_SA_clustering</span><span class="p">,</span> <span class="n">_SA_metric_search_data</span><span class="p">,</span> <span class="n">_SA_metric_value</span><span class="p">,</span> <span class="n">_SA_params</span>
+
+<span class="c1">### ---------- EXPORT LIST ----------</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># -------------------------- ** OPTIMMIZATION FUNCS ** -------------------------</span>
+<span class="c1"># ------------------------------------------------------------------------------</span>
+<span class="c1"># @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-</span>
+
+<div class="viewcode-block" id="SA_clustering">
+<a class="viewcode-back" href="../../modules.html#acdc_py.get_opt.SA_clustering">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">SA_clustering</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">dist_slot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">reduction_slot</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">cluster_labels</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cluster_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_clusts</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">approx_size</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">key_added</span> <span class="o">=</span> <span class="s2">&quot;clusters&quot;</span><span class="p">,</span>
+    <span class="n">knn_slot</span> <span class="o">=</span> <span class="s1">&#39;knn&#39;</span><span class="p">,</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">njobs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get the clustering using the parameters found by optimizing a particular</span>
+<span class="sd">    metric using the results produced by the SA function. Note that this</span>
+<span class="sd">    requires running the acdc.SA function first in order to produce</span>
+<span class="sd">    adata.uns[&#39;SA_results_dict&#39;].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing a distance object in adata.obsp.</span>
+<span class="sd">    dist_slot : default: None</span>
+<span class="sd">        Slot in adata.obsp where a pre-generated distance matrix computed across</span>
+<span class="sd">        all cells is stored in adata for use in construction of NN. (Default =</span>
+<span class="sd">        None, i.e. distance matrix will be automatically computed as a</span>
+<span class="sd">        correlation distance and stored in &quot;corr_dist&quot;).</span>
+<span class="sd">    use_reduction : default: True</span>
+<span class="sd">        Whether to use a reduction (True) (highly recommended - accurate &amp; much faster)</span>
+<span class="sd">        or to use the direct matrix (False) for clustering.</span>
+<span class="sd">    reduction_slot : default: &quot;X_pca&quot;</span>
+<span class="sd">        If reduction is TRUE, then specify which slot for the reduction to use.</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
+<span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
+<span class="sd">        by minimizing (&quot;min&quot;).</span>
+<span class="sd">    cluster_labels : default: None</span>
+<span class="sd">        A column in adata.obs with a set of cluster labels containing a</span>
+<span class="sd">        cluster to subcluster. Specify the cluster with the cluster_name</span>
+<span class="sd">        parameter.</span>
+<span class="sd">    cluster_name : default: None</span>
+<span class="sd">        A cluster from cluster_labels to subcluster. When None, cluster whole</span>
+<span class="sd">        dataset.</span>
+<span class="sd">    n_clusts : default: None</span>
+<span class="sd">        If not None, restrict the search space to the number of clusters equal</span>
+<span class="sd">        to n_clusts in order to compute the optimal clustering solution with</span>
+<span class="sd">        this many clusters.</span>
+<span class="sd">    seed : default: 0</span>
+<span class="sd">        Random seed to use.</span>
+<span class="sd">    approx_size : default: None</span>
+<span class="sd">        When set to a positive integer, instead of running GS on the entire</span>
+<span class="sd">        dataset, perform GS on a subsample and diffuse those results. This will</span>
+<span class="sd">        lead to an approximation of the optimal solution for cases where the</span>
+<span class="sd">        dataset is too large to perform GS on due to time or memory constraints.</span>
+<span class="sd">    key_added : default: &quot;clusters&quot;</span>
+<span class="sd">        Slot in obs to store the resulting clusters.</span>
+<span class="sd">    knn_slot : default: &quot;knn&quot;</span>
+<span class="sd">        Slot in uns that stores the KNN array used to compute a neighbors graph</span>
+<span class="sd">        (i.e. adata.obs[&#39;connectivities&#39;]).</span>
+<span class="sd">    verbose : default: True</span>
+<span class="sd">        Include additional output with True. Alternative = False.</span>
+<span class="sd">    njobs : default: 1</span>
+<span class="sd">        Paralleization option that allows users to speed up runtime.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Adds fields to the input adata, such that it contains the clustering stored</span>
+<span class="sd">    in adata.obs[key_added].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_SA_clustering</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">dist_slot</span><span class="p">,</span>
+        <span class="n">use_reduction</span><span class="p">,</span>
+        <span class="n">reduction_slot</span><span class="p">,</span>
+        <span class="n">opt_metric</span><span class="p">,</span>
+        <span class="n">opt_metric_dir</span><span class="p">,</span>
+        <span class="n">cluster_labels</span><span class="p">,</span>
+        <span class="n">cluster_name</span><span class="p">,</span>
+        <span class="n">n_clusts</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">,</span>
+        <span class="n">approx_size</span><span class="p">,</span>
+        <span class="n">key_added</span><span class="p">,</span>
+        <span class="n">knn_slot</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">,</span>
+        <span class="n">njobs</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SA_params">
+<a class="viewcode-back" href="../../modules.html#acdc_py.get_opt.SA_params">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">SA_params</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">n_clusts</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get the optimal parameters for clustering found by optimizing a particular</span>
+<span class="sd">    metric using the results produced by the SA function. Note that this</span>
+<span class="sd">    requires running the acdc.SA function first in order to produce</span>
+<span class="sd">    adata.uns[&#39;SA_results_dict&#39;].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing the results of the acdc.SA function in</span>
+<span class="sd">        adata.uns[&#39;SA_results_dict&#39;].</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
+<span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
+<span class="sd">        by minimizing (&quot;min&quot;).</span>
+<span class="sd">    n_clusts : default: None</span>
+<span class="sd">        If not None, restrict the search space to the number of clusters equal</span>
+<span class="sd">        to n_clusts in order to retrieve the parameters for optimal clustering</span>
+<span class="sd">        with this many clusters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A dictionary with keys opt_res and opt_knn and the corresponding values that</span>
+<span class="sd">    produce the requested clustering solution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_SA_params</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">opt_metric</span><span class="p">,</span>
+        <span class="n">opt_metric_dir</span><span class="p">,</span>
+        <span class="n">n_clusts</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SA_metric_value">
+<a class="viewcode-back" href="../../modules.html#acdc_py.get_opt.SA_metric_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">SA_metric_value</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">n_clusts</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get the optimal value for a particular metric found when using parameters</span>
+<span class="sd">    for clustering that optimize said metric. This will be identified in using</span>
+<span class="sd">    the results produced by the SA function. Note that this therefore requires</span>
+<span class="sd">    running acdc.GS first in order to produce adata.uns[&#39;SA_results_dict&#39;].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing the results of the acdc.SA function in</span>
+<span class="sd">        adata.uns[&#39;SA_results_dict&#39;].</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
+<span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
+<span class="sd">        by minimizing (&quot;min&quot;).</span>
+<span class="sd">    n_clusts : default: None</span>
+<span class="sd">        If not None, restrict the search space to the number of clusters equal</span>
+<span class="sd">        to n_clusts in order to retrieve the parameters for optimal clustering</span>
+<span class="sd">        with this many clusters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    The value of the metric when optimized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_SA_metric_value</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">opt_metric</span><span class="p">,</span>
+        <span class="n">opt_metric_dir</span><span class="p">,</span>
+        <span class="n">n_clusts</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SA_metric_search_data">
+<a class="viewcode-back" href="../../modules.html#acdc_py.get_opt.SA_metric_search_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">SA_metric_search_data</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">n_clusts</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get the optimal parameters for clustering along with all their associated</span>
+<span class="sd">    statistics. These will be found by optimizing a particular metric using the</span>
+<span class="sd">    results produced by the SA function. Note that this requires running the</span>
+<span class="sd">    acdc.SA function first in order to produce adata.uns[&#39;SA_results_dict&#39;].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing the results of the acdc.SA function in</span>
+<span class="sd">        adata.uns[&#39;SA_results_dict&#39;].</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
+<span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
+<span class="sd">        by minimizing (&quot;min&quot;).</span>
+<span class="sd">    n_clusts : default: None</span>
+<span class="sd">        If not None, restrict the search space to the number of clusters equal</span>
+<span class="sd">        to n_clusts in order to retrieve the parameters for optimal clustering</span>
+<span class="sd">        with this many clusters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A pandas series containing the resolution and knn that produce the requested</span>
+<span class="sd">    clustering solution along with all other metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_SA_metric_search_data</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">opt_metric</span><span class="p">,</span>
+        <span class="n">opt_metric_dir</span><span class="p">,</span>
+        <span class="n">n_clusts</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GS_clustering">
+<a class="viewcode-back" href="../../modules.html#acdc_py.get_opt.GS_clustering">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GS_clustering</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">dist_slot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">use_reduction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">reduction_slot</span><span class="o">=</span><span class="s2">&quot;X_pca&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">cluster_labels</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">cluster_name</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_clusts</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">approx_size</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">key_added</span> <span class="o">=</span> <span class="s2">&quot;clusters&quot;</span><span class="p">,</span>
+    <span class="n">knn_slot</span> <span class="o">=</span> <span class="s1">&#39;knn&#39;</span><span class="p">,</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">njobs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get the clustering using the parameters found by optimizing a particular</span>
+<span class="sd">    metric using the results produced by the GS function. Note that this</span>
+<span class="sd">    requires running the acdc.GS function first in order to produce</span>
+<span class="sd">    adata.uns[&#39;GS_results_dict&#39;].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing a distance object in adata.obsp.</span>
+<span class="sd">    dist_slot : default: None</span>
+<span class="sd">        Slot in adata.obsp where a pre-generated distance matrix computed across</span>
+<span class="sd">        all cells is stored in adata for use in construction of NN. (Default =</span>
+<span class="sd">        None, i.e. distance matrix will be automatically computed as a</span>
+<span class="sd">        correlation distance and stored in &quot;corr_dist&quot;).</span>
+<span class="sd">    use_reduction : default: True</span>
+<span class="sd">        Whether to use a reduction (True) (highly recommended - accurate &amp; much faster)</span>
+<span class="sd">        or to use the direct matrix (False) for clustering.</span>
+<span class="sd">    reduction_slot : default: &quot;X_pca&quot;</span>
+<span class="sd">        If reduction is TRUE, then specify which slot for the reduction to use.</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
+<span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
+<span class="sd">        by minimizing (&quot;min&quot;).</span>
+<span class="sd">    cluster_labels : default: None</span>
+<span class="sd">        A column in adata.obs with a set of cluster labels containing a</span>
+<span class="sd">        cluster to subcluster. Specify the cluster with the cluster_name</span>
+<span class="sd">        parameter.</span>
+<span class="sd">    cluster_name : default: None</span>
+<span class="sd">        A cluster from cluster_labels to subcluster. When None, cluster whole</span>
+<span class="sd">        dataset.</span>
+<span class="sd">    n_clusts : default: None</span>
+<span class="sd">        If not None, restrict the search space to the number of clusters equal</span>
+<span class="sd">        to n_clusts in order to compute the optimal clustering solution with</span>
+<span class="sd">        this many clusters.</span>
+<span class="sd">    seed : default: 0)</span>
+<span class="sd">        Random seed to use.</span>
+<span class="sd">    approx_size : default: None</span>
+<span class="sd">        When set to a positive integer, instead of running GS on the entire</span>
+<span class="sd">        dataset, perform GS on a subsample and diffuse those results. This will</span>
+<span class="sd">        lead to an approximation of the optimal solution for cases where the</span>
+<span class="sd">        dataset is too large to perform GS on due to time or memory constraints.</span>
+<span class="sd">    key_added : default: &quot;clusters&quot;</span>
+<span class="sd">        Slot in obs to store the resulting clusters.</span>
+<span class="sd">    knn_slot : default: &quot;knn&quot;</span>
+<span class="sd">        Slot in uns that stores the KNN array used to compute a neighbors graph</span>
+<span class="sd">        (i.e. adata.obs[&#39;connectivities&#39;]).</span>
+<span class="sd">    verbose : default: True</span>
+<span class="sd">        Include additional output with True. Alternative = False.</span>
+<span class="sd">    njobs : default: 1</span>
+<span class="sd">        Paralleization option that allows users to speed up runtime.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Adds fields to the input adata, such that it contains the clustering stored</span>
+<span class="sd">    in adata.obs[key_added].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_GS_clustering</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">dist_slot</span><span class="p">,</span>
+        <span class="n">use_reduction</span><span class="p">,</span>
+        <span class="n">reduction_slot</span><span class="p">,</span>
+        <span class="n">opt_metric</span><span class="p">,</span>
+        <span class="n">opt_metric_dir</span><span class="p">,</span>
+        <span class="n">cluster_labels</span><span class="p">,</span>
+        <span class="n">cluster_name</span><span class="p">,</span>
+        <span class="n">n_clusts</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">,</span>
+        <span class="n">approx_size</span><span class="p">,</span>
+        <span class="n">key_added</span><span class="p">,</span>
+        <span class="n">knn_slot</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">,</span>
+        <span class="n">njobs</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GS_params">
+<a class="viewcode-back" href="../../modules.html#acdc_py.get_opt.GS_params">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GS_params</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">n_clusts</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get the optimal parameters for clustering found by optimizing a particular</span>
+<span class="sd">    metric using the results produced by the GS function. Note that this</span>
+<span class="sd">    requires running the acdc.GS function first in order to produce</span>
+<span class="sd">    adata.uns[&#39;GS_results_dict&#39;].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing the results of the acdc.GS function in</span>
+<span class="sd">        adata.uns[&#39;GS_results_dict&#39;].</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
+<span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
+<span class="sd">        by minimizing (&quot;min&quot;).</span>
+<span class="sd">    n_clusts : default: None</span>
+<span class="sd">        If not None, restrict the search space to the number of clusters equal</span>
+<span class="sd">        to n_clusts in order to retrieve the parameters for optimal clustering</span>
+<span class="sd">        with this many clusters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A dictionary with keys opt_res and opt_knn and the corresponding values that</span>
+<span class="sd">    produce the requested clustering solution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_GS_params</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">opt_metric</span><span class="p">,</span>
+        <span class="n">opt_metric_dir</span><span class="p">,</span>
+        <span class="n">n_clusts</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GS_metric_value">
+<a class="viewcode-back" href="../../modules.html#acdc_py.get_opt.GS_metric_value">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GS_metric_value</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">n_clusts</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get the optimal value for a particular metric found when using parameters</span>
+<span class="sd">    for clustering that optimize said metric. This will be identified in using</span>
+<span class="sd">    the results produced by the GS function. Note that this therefore requires</span>
+<span class="sd">    running acdc.GS first in order to produce adata.uns[&#39;GS_results_dict&#39;].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing the results of the acdc.GS function in</span>
+<span class="sd">        adata.uns[&#39;GS_results_dict&#39;].</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
+<span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
+<span class="sd">        by minimizing (&quot;min&quot;).</span>
+<span class="sd">    n_clusts : default: None</span>
+<span class="sd">        If not None, restrict the search space to the number of clusters equal</span>
+<span class="sd">        to n_clusts in order to retrieve the parameters for optimal clustering</span>
+<span class="sd">        with this many clusters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    The value of the metric when optimized.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_GS_metric_value</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">opt_metric</span><span class="p">,</span>
+        <span class="n">opt_metric_dir</span><span class="p">,</span>
+        <span class="n">n_clusts</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GS_metric_search_data">
+<a class="viewcode-back" href="../../modules.html#acdc_py.get_opt.GS_metric_search_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">GS_metric_search_data</span><span class="p">(</span>
+    <span class="n">adata</span><span class="p">,</span>
+    <span class="n">opt_metric</span> <span class="o">=</span> <span class="s2">&quot;sil_mean&quot;</span><span class="p">,</span>
+    <span class="n">opt_metric_dir</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span>
+    <span class="n">n_clusts</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;\</span>
+<span class="sd">    Get the optimal parameters for clustering along with all their associated</span>
+<span class="sd">    statistics. These will be found by optimizing a particular metric using the</span>
+<span class="sd">    results produced by the GS function. Note that this requires running the</span>
+<span class="sd">    acdc.GS function first in order to produce adata.uns[&#39;GS_results_dict&#39;].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    adata</span>
+<span class="sd">        An anndata object containing the results of the acdc.SA function in</span>
+<span class="sd">        adata.uns[&#39;GS_results_dict&#39;].</span>
+<span class="sd">    opt_metric : default: &quot;sil_mean&quot;</span>
+<span class="sd">        A metric from metrics to use to optimize parameters for the clustering.</span>
+<span class="sd">    opt_metric_dir : default: &quot;max&quot;</span>
+<span class="sd">        Whether opt_metric is more optimal by maximizing (&quot;max&quot;) or</span>
+<span class="sd">        by minimizing (&quot;min&quot;).</span>
+<span class="sd">    n_clusts : default: None</span>
+<span class="sd">        If not None, restrict the search space to the number of clusters equal</span>
+<span class="sd">        to n_clusts in order to retrieve the parameters for optimal clustering</span>
+<span class="sd">        with this many clusters.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A pandas series containing the resolution and knn that produce the requested</span>
+<span class="sd">    clustering solution along with all other metrics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_GS_metric_search_data</span><span class="p">(</span>
+        <span class="n">adata</span><span class="p">,</span>
+        <span class="n">opt_metric</span><span class="p">,</span>
+        <span class="n">opt_metric_dir</span><span class="p">,</span>
+        <span class="n">n_clusts</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Luca Zanella, Alexander Lewis Wang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
