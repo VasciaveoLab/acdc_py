@@ -175,12 +175,13 @@ def run_diffusion_map(ref_adata, query_adata, embedding_key="X_diffmap",
     print("Extending to query via Nyström extension...")
     nys = nystrom_extension(query_data, diff_map, k=k)
 
-    if plot and neigen >= 2:
-        _plot_diffusion_map(diff_map['ref_diffusion'], nys['query_diffusion'])
-
     # Store the diffusion embeddings explicitly under 'X_diffmap'
     ref_adata.obsm['X_diffmap'] = diff_map['ref_diffusion']
     query_adata.obsm['X_diffmap'] = nys['query_diffusion']
+
+
+    if plot and neigen >= 2:
+        _plot_diffusion_map(ref_adata, query_adata)
 
     results = {
         'eigenvalues': diff_map['eigenvalues'],
