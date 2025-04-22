@@ -295,3 +295,22 @@ def _silhouette_scores(
         ylab,
         show
     )
+
+def _plot_diffusion_map(
+        ref_coords, 
+        query_coords):
+    
+    """
+    Plot the first two diffusion components for both reference and query data.
+    """
+
+    plt.figure(figsize=(8, 6))
+    plt.scatter(ref_coords[:, 0], ref_coords[:, 1], c='blue', label='Reference', alpha=0.6)
+    plt.scatter(query_coords[:, 0], query_coords[:, 1], c='orange', label='Query', alpha=0.6)
+    plt.xlabel('Diffusion Component 1')
+    plt.ylabel('Diffusion Component 2')
+    plt.title('Diffusion Map (2D Projection)')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()

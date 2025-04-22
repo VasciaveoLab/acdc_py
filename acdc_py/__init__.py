@@ -4,6 +4,8 @@ from .pl import *
 from .tl import *
 from .pp import *
 from .get_opt import *
+from .diffmap import *
+from .label_transf import *
 # from ._condense_diffuse_funcs import *
 
 # Want to appear as module - no direct functions

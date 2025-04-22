@@ -1,4 +1,4 @@
-from ._pl import _GS_search_space, _SA_search_space, _metric_vs_n_clusts, _silhouette_scores
+from ._pl import _GS_search_space, _SA_search_space, _metric_vs_n_clusts, _silhouette_scores, _plot_diffusion_map
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -119,3 +119,13 @@ def silhouette_scores(
         Whether to show the plot.
     """
     _silhouette_scores(adata, groupby, dist_slot, palette, ylab, show)
+
+
+def plot_diffusion_map(
+        ref_coords, 
+        query_coords):
+    """
+    Plot the first two diffusion components for both reference and query data.
+    """
+
+    _plot_diffusion_map(ref_coords, query_coords)
