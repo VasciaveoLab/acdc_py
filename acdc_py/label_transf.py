@@ -96,9 +96,26 @@ def transfer_labels_anndata(
 
         # Optionally plot predicted vs ground truth
         if plot_labels:
-            sc.pl.embedding(
+            # Generate the plot and get the figure
+            fig = sc.pl.embedding(
                 query_adata,
                 basis=embedding_key,
                 color=[label_key, ground_truth_label],
-                title=[f"Predicted {label_key}", f"{ground_truth_label}"]
+                title=[f"Predicted {label_key}", f"{ground_truth_label}"],
+                return_fig=True
+            )
+
+            # Access the axes of the figure
+            axs = fig.axes  # This gives you a list of AxesSubplot objects
+
+            # Add accuracy to the top right of the first subplot (predicted labels)
+            ax_pred = axs[0]
+            ax_pred.text(
+                0.95, 0.95,
+                f"Accuracy: {accuracy:.2f}",
+                transform=ax_pred.transAxes,
+                fontsize=12,
+                ha='right',
+                va='top',
+                bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=0.5)
             )
