@@ -295,3 +295,50 @@ def _silhouette_scores(
         ylab,
         show
     )
+
+def _plot_diffusion_map(
+    ref_adata, 
+    query_adata):
+    """
+    Plot diffusion maps for reference and query data.
+    First row: Two separate plots for reference and query.
+    Second row: Combined plot of reference and query.
+    """
+
+    ref_diffmap = ref_adata.obsm["X_diffmap"]
+    query_diffmap = query_adata.obsm["X_diffmap"]
+
+    # Create a figure with three subplots
+    fig, axes = plt.subplots(2, 2, figsize=(12, 12))
+    
+    # First row: Separate plots for reference and query
+    # Plot reference diffusion coordinates
+    axes[0, 0].scatter(ref_diffmap[:, 0], ref_diffmap[:, 1], s=10, alpha=0.7, label="Reference", color="blue")
+    axes[0, 0].set_title("Reference Diffusion Map")
+    axes[0, 0].set_xlabel("Diffusion Component 1")
+    axes[0, 0].set_ylabel("Diffusion Component 2")
+    axes[0, 0].legend()
+
+    # Plot query diffusion coordinates
+    axes[0, 1].scatter(query_diffmap[:, 0], query_diffmap[:, 1], s=10, alpha=0.7, label="Query", color="orange")
+    axes[0, 1].set_title("Query Diffusion Map")
+    axes[0, 1].set_xlabel("Diffusion Component 1")
+    axes[0, 1].set_ylabel("Diffusion Component 2")
+    axes[0, 1].legend()
+
+    # Second row: Combined plot of reference and query
+    axes[1, 0].scatter(ref_diffmap[:, 0], ref_diffmap[:, 1], c='blue', label='Reference', alpha=0.6)
+    axes[1, 0].scatter(query_diffmap[:, 0], query_diffmap[:, 1], c='orange', label='Query', alpha=0.6)
+    axes[1, 0].set_title("Combined Diffusion Map (Reference + Mapped Query)")
+    axes[1, 0].set_xlabel("Diffusion Component 1")
+    axes[1, 0].set_ylabel("Diffusion Component 2")
+    axes[1, 0].legend()
+    axes[1, 0].grid(True)
+
+    # Remove the unused subplot in the second row, second column
+    fig.delaxes(axes[1, 1])
+
+    # Adjust layout
+    plt.tight_layout()
+    plt.show()
+
