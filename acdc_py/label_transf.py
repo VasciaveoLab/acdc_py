@@ -4,7 +4,7 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
 
-def transfer_labels_anndata(
+def transfer_labels(
     ref_adata,
     query_adata,
     embedding_key='diffmap',
