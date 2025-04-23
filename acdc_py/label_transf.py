@@ -4,7 +4,7 @@ from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 import pandas as pd
 
-def transfer_labels_anndata(
+def transfer_labels(
     ref_adata,
     query_adata,
     embedding_key='diffmap',
@@ -12,7 +12,8 @@ def transfer_labels_anndata(
     n_neighbors=15,
     pca_comps=None,
     ground_truth_label=None,
-    plot_labels=False
+    plot_labels=False,
+    plot_embedding_key='X_umap'
 ):
     """
     Transfer cell-type labels from a reference AnnData to query AnnData using KNN.
@@ -36,6 +37,8 @@ def transfer_labels_anndata(
         If provided, key in query_adata.obs for true labels used to compute accuracy.
     plot_labels : bool, optional
         If True, generate an embedding plot colored by predicted and ground-truth labels.
+    plot_embedding_key : str, optional
+        Key in .obsm for the embedding to use for plotting. Default is 'X_umap'.
     """
     # Optional PCA preprocessing: compute and store PC scores in .obsm
     if pca_comps is not None:
@@ -99,7 +102,7 @@ def transfer_labels_anndata(
             # Generate the plot and get the figure
             fig = sc.pl.embedding(
                 query_adata,
-                basis=embedding_key,
+                basis=plot_embedding_key,
                 color=[label_key, ground_truth_label],
                 title=[f"Predicted {label_key}", f"{ground_truth_label}"],
                 return_fig=True
