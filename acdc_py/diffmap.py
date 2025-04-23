@@ -142,7 +142,7 @@ def nystrom_extension(query_data, diffusion_obj, k=None):
     }
 
 
-def run_diffusion_map(ref_adata, query_adata, embedding_key="X_diffmap",
+def run_diffusion_map(ref_adata, query_adata, embedding_key="X",
                       neigen=2, k=None, pca_comps=None, epsilon=None, plot=True):
     """
     Full workflow:
