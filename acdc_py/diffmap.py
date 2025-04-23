@@ -18,7 +18,10 @@ def compute_diffusion_map(reference_data, neigen=2, epsilon=None, pca_comps=None
       pca_comps : int or None
           If provided, apply PCA to reduce to this many dimensions before computing distances.
       k : int or None
-          If provided, build a k-NN sparse affinity matrix; otherwise compute full dense affinity.
+          Number of nearest neighbors to consider when building the affinity matrix.  
+          If provided, a sparse k-NN graph is used instead of the full pairwise 
+          distance matrix. Use together with a X_pca embedding key or other lower 
+          dimensional spaces to speed up computation on larger datasets.
 
     Returns:
       dict with keys:
