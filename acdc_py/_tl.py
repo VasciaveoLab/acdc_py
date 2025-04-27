@@ -1,14 +1,19 @@
 ### ---------- IMPORT DEPENDENCIES ----------
 import numpy as np
 import pandas as pd
-from ._pp import _corr_distance, _neighbors_knn, _neighbors_graph
+import scanpy as sc
+from ._pp import _corr_distance, _neighbors_knn, _neighbors_graph, _compute_diffusion_map, _nystrom_extension
 from ._SA_GS_subfunctions import _cluster_adata
 from ._condense_diffuse_funcs import __diffuse_subsample_labels
 from .config import config
+from .pl import plot_diffusion_map
+from scipy import sparse
+from sklearn.decomposition import PCA
+from sklearn.neighbors import KNeighborsClassifier
+
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
-
 
 def _cluster_final_internal(adata,
                             res,
@@ -287,3 +292,148 @@ def _merge(
         return pd.Series(cluster_labels, index = adata.obs_names)
 
     adata.obs[key_added] = cluster_labels
+
+
+def _run_diffusion_map(ref_adata, query_adata, embedding_key="X",
+                      neigen=2, k=None, pca_comps=None, epsilon=None, plot=True):
+    # Handle raw X conversion only if using 'X' representation
+    if embedding_key == "X":
+        if k is not None:
+            if not sparse.issparse(ref_adata.X):
+                ref_adata.X = sparse.csr_matrix(ref_adata.X)
+            if not sparse.issparse(query_adata.X):
+                query_adata.X = sparse.csr_matrix(query_adata.X)
+        else:
+            if sparse.issparse(ref_adata.X):
+                ref_adata.X = ref_adata.X.toarray()
+            if sparse.issparse(query_adata.X):
+                query_adata.X = query_adata.X.toarray()
+
+    reference_data = ref_adata.obsm.get(embedding_key, ref_adata.X)
+    query_data = query_adata.obsm.get(embedding_key, query_adata.X)
+
+    print(f"Computing diffusion map ({neigen} components) on reference...")
+    diff_map = _compute_diffusion_map(reference_data, neigen=neigen,
+                                     epsilon=epsilon, pca_comps=pca_comps, k=k)
+
+    print("Extending to query via Nyström extension...")
+    nys = _nystrom_extension(query_data, diff_map, k=k)
+
+    # Store the diffusion embeddings explicitly under 'X_diffmap'
+    ref_adata.obsm['X_diffmap'] = diff_map['ref_diffusion']
+    query_adata.obsm['X_diffmap'] = nys['query_diffusion']
+
+
+    if plot and neigen >= 2:
+        plot_diffusion_map(ref_adata, query_adata)
+
+    results = {
+        'eigenvalues': diff_map['eigenvalues'],
+        'ref_proc':    diff_map['ref_proc'],
+        'epsilon':     diff_map['epsilon'],
+        'pca':         diff_map['pca'],
+        'distance_matrix_ref':   diff_map['distance_matrix_ref'],
+        'neighbors_matrix_ref':  diff_map['neighbors_matrix_ref'],
+        'distance_matrix_query': nys['distance_matrix_query'],
+        'neighbors_matrix_query':nys['neighbors_matrix_query']
+    }
+    # Store all intermediate results for reproducibility and diagnostics
+    ref_adata.uns['diffusion_results'] = results
+
+    print("Stored embeddings in .obsm['X_diffmap'] and details in .uns['diffusion_results'].")
+
+
+
+def _transfer_labels(
+    ref_adata,
+    query_adata,
+    embedding_key='diffmap',
+    label_key='cell_type',
+    n_neighbors=15,
+    pca_comps=None,
+    ground_truth_label=None,
+    plot_labels=False,
+    plot_embedding_key='X_umap'
+):
+    # Optional PCA preprocessing: compute and store PC scores in .obsm
+    if pca_comps is not None:
+        pca = PCA(n_components=pca_comps)
+        # Fit PCA on reference X and transform both datasets
+        ref_adata.obsm['X_pca'] = pca.fit_transform(ref_adata.X)
+        query_adata.obsm['X_pca'] = pca.transform(query_adata.X)
+
+    # Ensure raw X is dense matrix if using 'X' embedding
+    if embedding_key == 'X':
+        # Convert sparse X to dense arrays for both AnnData objects
+        if hasattr(ref_adata.X, 'toarray'):
+            ref_adata.obsm['X'] = ref_adata.X.toarray()
+        else:
+            ref_adata.obsm['X'] = ref_adata.X
+        if hasattr(query_adata.X, 'toarray'):
+            query_adata.obsm['X'] = query_adata.X.toarray()
+        else:
+            query_adata.obsm['X'] = query_adata.X
+
+    # Extract feature matrices for KNN
+    X_ref = ref_adata.obsm.get(embedding_key)
+    X_query = query_adata.obsm.get(embedding_key)
+    # Validate embeddings are present
+    if X_ref is None or X_query is None:
+        raise ValueError(f"Embedding '{embedding_key}' not found in .obsm of one or both AnnData objects.")
+
+    # Train KNN classifier on reference embedding and labels
+    knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+    knn.fit(X_ref, ref_adata.obs[label_key].astype(str).values)
+
+    # Predict query labels and store as categorical
+    predicted = knn.predict(X_query)
+    query_adata.obs[label_key] = pd.Categorical(predicted)
+
+    # Annotate dataset origin for combined plotting or inspection
+    ref_adata.obs['dataset'] = 'reference'
+    query_adata.obs['dataset'] = 'query'
+
+    # Align category ordering consistently
+    def reorder(obs_df, key):
+        cats = sorted(obs_df.obs[key].cat.categories)
+        obs_df.obs[key] = obs_df.obs[key].cat.reorder_categories(cats)
+
+    reorder(ref_adata, label_key)
+    reorder(query_adata, label_key)
+    reorder(query_adata, ground_truth_label)
+
+
+    print(f"Labels transferred to query .obs['{label_key}'] using {embedding_key} embedding.")
+
+    # Compute and print accuracy if ground truth provided
+    if ground_truth_label is not None:
+        true = query_adata.obs[ground_truth_label].astype(str)
+        pred = query_adata.obs[label_key].astype(str)
+        accuracy = (true.values == pred.values).mean()
+        print(f"Accuracy against '{ground_truth_label}': {accuracy:.2f}")
+
+        # Optionally plot predicted vs ground truth
+        if plot_labels:
+            # Generate the plot and get the figure
+            fig = sc.pl.embedding(
+                query_adata,
+                basis=plot_embedding_key,
+                color=[label_key, ground_truth_label],
+                title=[f"Predicted {label_key}", f"{ground_truth_label}"],
+                return_fig=True
+            )
+
+            # Access the axes of the figure
+            axs = fig.axes  # This gives you a list of AxesSubplot objects
+
+            # Add accuracy to the top right of the first subplot (predicted labels)
+            ax_pred = axs[0]
+            ax_pred.text(
+                0.95, 0.95,
+                f"Accuracy: {accuracy:.2f}",
+                transform=ax_pred.transAxes,
+                fontsize=12,
+                ha='right',
+                va='top',
+                bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=0.5)
+            )
