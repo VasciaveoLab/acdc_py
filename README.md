@@ -62,7 +62,9 @@ pip install -e .
 # Contacts
 
 Alessandro Vasciaveo - avasciaveo@sbpdiscovery.org
+
 Alexander Wang - aw3436@cumc.columbia.edu  
+
 Luca Zanella - lz2841@cumc.columbia.edu  
 
 
