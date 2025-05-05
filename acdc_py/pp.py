@@ -1,5 +1,5 @@
 ### ---------- IMPORT DEPENDENCIES ----------
-from ._pp import _corr_distance, _neighbors_knn, _neighbors_graph
+from ._pp import _corr_distance, _neighbors_knn, _neighbors_graph, _compute_diffusion_map, _nystrom_extension
 import numpy as np
 
 ### ---------- EXPORT LIST ----------
@@ -154,3 +154,57 @@ def neighbors_graph(adata,
         batch_size,
         verbose
     )
+
+
+def compute_diffusion_map(reference_data, 
+                          neigen=2, 
+                          epsilon=None, 
+                          pca_comps=None, 
+                          k=None):
+    """
+    Compute a diffusion map embedding from reference (training) data.
+
+    Parameters:
+      reference_data : np.ndarray, shape (n_samples_ref, n_features)
+          Input training data.
+      neigen : int
+          Number of non-trivial diffusion components to return.
+      epsilon : float or None
+          Gaussian kernel width parameter. If None, set to the square of the median of non-zero pairwise distances.
+      pca_comps : int or None
+          If provided, apply PCA to reduce to this many dimensions before computing distances.
+      k : int or None
+          Number of nearest neighbors to consider when building the affinity matrix.  
+          If provided, a sparse k-NN graph is used instead of the full pairwise 
+          distance matrix. Use together with a X_pca embedding key or other lower 
+          dimensional spaces to speed up computation on larger datasets.
+
+    Returns:
+      dict with keys:
+        'ref_diffusion'        : Diffusion coordinates (n_samples_ref x neigen).
+        'eigenvalues'          : Selected eigenvalues (length neigen).
+        'distance_matrix_ref'  : Pairwise reference distance matrix (dense array).
+        'neighbors_matrix_ref' : k-NN sparse graph (if k specified), else None.
+        'ref_proc'             : Processed reference data after optional PCA.
+        'epsilon'              : Kernel width used.
+        'pca'                  : PCA object if used, else None.
+    """
+    
+    _compute_diffusion_map(reference_data, neigen, epsilon, pca_comps, k)
+    
+
+def nystrom_extension(query_data, 
+                      diffusion_obj, 
+                      k=None):
+    """
+    Extend diffusion map to new query points using the Nyström method.
+
+    Returns:
+      dict with keys:
+        'query_diffusion'         : Diffusion coordinates of query (samples_query x neigen).
+        'distance_matrix_query'   : Query vs reference distance matrix.
+        'neighbors_matrix_query'  : Query vs reference neighbors matrix.
+    """
+    _nystrom_extension(query_data, diffusion_obj, k=None)
+
+

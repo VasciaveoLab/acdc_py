@@ -1,4 +1,4 @@
-from ._tl import _cluster_final, _extract_clusters, _merge
+from ._tl import _cluster_final, _extract_clusters, _merge, _run_diffusion_map, _transfer_labels
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -150,3 +150,73 @@ def rename(adata, groupby, name_dict):
 
     # Get the current column values
     adata.obs[groupby] = adata.obs[groupby].replace(name_dict)
+
+
+def run_diffusion_map(ref_adata, 
+                      query_adata, 
+                      embedding_key="X",
+                      neigen=2, 
+                      k=None, 
+                      pca_comps=None, 
+                      epsilon=None, 
+                      plot=True):
+    
+    """
+    Full workflow:
+      1. Compute and store diffusion map for reference.
+      2. Extend mapping to query via Nyström.
+      3. Store both embeddings under .obsm['X_diffmap'].
+
+    The .uns['diffusion_results'] in ref_adata holds intermediate outputs.
+    """
+    
+    _run_diffusion_map(ref_adata, query_adata, embedding_key,
+                      neigen, k, pca_comps, epsilon, plot)
+    
+
+
+def transfer_labels(ref_adata,
+                    query_adata,
+                    embedding_key='diffmap',
+                    label_key='cell_type',
+                    n_neighbors=15,
+                    pca_comps=None,
+                    ground_truth_label=None,
+                    plot_labels=False,
+                    plot_embedding_key='X_umap'
+):  
+    """
+    Transfer cell-type labels from a reference AnnData to query AnnData using KNN.
+
+    Parameters
+    ----------
+    ref_adata : AnnData
+        Annotated data with known labels in .obs[label_key]. For 'diffmap', expects
+        the diffusion map in .obsm[embedding_key]; for 'pca' or 'X', uses .X.
+    query_adata : AnnData
+        Annotated data to annotate; should have the same representation available.
+    embedding_key : str, optional
+        Which embedding to use: 'diffmap', 'pca', or 'X'. Default is 'diffmap'.
+    label_key : str, optional
+        Key in .obs for storing predicted labels. Default is 'cell_type'.
+    n_neighbors : int, optional
+        Number of neighbors for the KNN classifier. Default is 15.
+    pca_comps : int or None, optional
+        If specified and embedding_key=='pca', number of PCA components to compute.
+    ground_truth_label : str or None, optional
+        If provided, key in query_adata.obs for true labels used to compute accuracy.
+    plot_labels : bool, optional
+        If True, generate an embedding plot colored by predicted and ground-truth labels.
+    plot_embedding_key : str, optional
+        Key in .obsm for the embedding to use for plotting. Default is 'X_umap'.
+    """
+    
+    _transfer_labels(ref_adata,
+                    query_adata,
+                    embedding_key,
+                    label_key,
+                    n_neighbors,
+                    pca_comps,
+                    ground_truth_label,
+                    plot_labels,
+                    plot_embedding_key)

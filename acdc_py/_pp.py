@@ -3,8 +3,10 @@ import numpy as np
 import pandas as pd
 from scipy.stats import rankdata
 import scipy.sparse as sp
+from scipy.spatial.distance import pdist, squareform, cdist
 from joblib import Parallel, delayed
 from tqdm import tqdm
+
 
 
 ### ---------- EXPORT LIST ----------
@@ -388,4 +390,113 @@ def _neighbors_graph(adata,
     adata.uns["neighbors"] = {
         'connectivities_key': 'connectivities',
         'params': {'n_neighbors': n_neighbors}
+    }
+
+
+def _compute_diffusion_map(reference_data, neigen=2, epsilon=None, pca_comps=None, k=None):
+    # Step 1: Optional PCA dimensionality reduction
+    if pca_comps is not None:
+        from sklearn.decomposition import PCA
+        pca_obj = PCA(n_components=pca_comps)
+        ref_proc = pca_obj.fit_transform(reference_data)
+    else:
+        ref_proc = reference_data
+        pca_obj = None
+
+    # Step 2: Build Gaussian affinity and symmetric normalization
+    if k is None:
+        D_ref = squareform(pdist(ref_proc, metric='euclidean'))  # full dense distances
+        if epsilon is None:
+            nonzero = D_ref[D_ref > 0]
+            epsilon = np.median(nonzero) ** 2
+        K = np.exp(-np.square(D_ref) / epsilon)
+        row_sums = np.sum(K, axis=1)
+        D_inv_sqrt = np.diag(1.0 / np.sqrt(row_sums))  # density normalization
+        A = D_inv_sqrt @ K @ D_inv_sqrt
+        eigenvals, eigenvecs = np.linalg.eigh(A)
+        idx = np.argsort(eigenvals)[::-1]
+        eigenvals = eigenvals[idx]
+        eigenvecs = eigenvecs[:, idx]
+        phi = D_inv_sqrt @ eigenvecs
+        distance_matrix_ref = D_ref
+        neighbors_matrix_ref = None
+    else:
+        from sklearn.neighbors import kneighbors_graph
+        from scipy.sparse import diags
+        from scipy.sparse.linalg import eigsh
+        D_sparse = kneighbors_graph(ref_proc, n_neighbors=k+1, mode='distance', metric='euclidean')
+        if epsilon is None:
+            nonzero = D_sparse.data[D_sparse.data > 0]
+            epsilon = np.median(nonzero) ** 2
+        K_sparse = D_sparse.copy()
+        K_sparse.data = np.exp(-np.square(K_sparse.data) / epsilon)
+        K_sparse = 0.5 * (K_sparse + K_sparse.T)
+        p_vals = np.array(K_sparse.sum(axis=1)).flatten()
+        D_inv_sqrt = diags(1.0 / np.sqrt(p_vals))
+        A_sparse = D_inv_sqrt @ K_sparse @ D_inv_sqrt
+        n_eigs = neigen + 1
+        eigenvals, eigenvecs = eigsh(A_sparse, k=n_eigs, which='LM')
+        idx = np.argsort(eigenvals)[::-1]
+        eigenvals = eigenvals[idx]
+        eigenvecs = eigenvecs[:, idx]
+        phi = D_inv_sqrt.dot(eigenvecs)
+        distance_matrix_ref = D_sparse.toarray()
+        neighbors_matrix_ref = D_sparse
+
+    # Step 3: Select diffusion coordinates (drop trivial first mode if necessary)
+    if np.var(phi[:, 0]) < 1e-10:
+        ref_coords = phi[:, 1:neigen+1]
+        chosen_eigenvals = eigenvals[1:neigen+1]
+    else:
+        ref_coords = phi[:, :neigen]
+        chosen_eigenvals = eigenvals[:neigen]
+
+    return {
+        'ref_diffusion': ref_coords,
+        'eigenvalues': chosen_eigenvals,
+        'distance_matrix_ref': distance_matrix_ref,
+        'neighbors_matrix_ref': neighbors_matrix_ref,
+        'ref_proc': ref_proc,
+        'epsilon': epsilon,
+        'pca': pca_obj
+    }
+
+def _nystrom_extension(query_data, diffusion_obj, k=None):
+    ref_proc = diffusion_obj['ref_proc']
+    epsilon = diffusion_obj['epsilon']
+    ref_diffusion = diffusion_obj['ref_diffusion']
+    eigenvalues = diffusion_obj['eigenvalues']
+
+    if diffusion_obj.get('pca') is not None:
+        query_proc = diffusion_obj['pca'].transform(query_data)
+    else:
+        query_proc = query_data
+
+    if k is None:
+        D_new = cdist(query_proc, ref_proc, metric='euclidean')
+        K_new = np.exp(-np.square(D_new) / epsilon)
+        K_new_norm = K_new / np.sum(K_new, axis=1, keepdims=True)
+        distance_matrix_query = D_new
+        neighbors_matrix_query = None
+    else:
+        from sklearn.neighbors import NearestNeighbors
+        from scipy.sparse import diags
+        nbrs = NearestNeighbors(n_neighbors=k+1, metric='euclidean').fit(ref_proc)
+        D_sparse = nbrs.kneighbors_graph(query_proc, mode='distance')
+        K_sparse = D_sparse.copy().tocsr()
+        K_sparse.data = np.exp(-np.square(K_sparse.data) / epsilon)
+        row_sums = np.array(K_sparse.sum(axis=1)).flatten()
+        row_sums[row_sums == 0] = 1.0
+        D_inv = diags(1.0 / row_sums)
+        K_new_norm = (D_inv @ K_sparse).toarray()
+        distance_matrix_query = D_sparse.toarray()
+        neighbors_matrix_query = D_sparse
+
+    inv_eigs = np.diag(1.0 / eigenvalues)
+    query_diffusion = K_new_norm.dot(ref_diffusion).dot(inv_eigs)
+
+    return {
+        'query_diffusion': query_diffusion,
+        'distance_matrix_query': distance_matrix_query,
+        'neighbors_matrix_query': neighbors_matrix_query
     }
