@@ -294,7 +294,7 @@ def _merge(
     adata.obs[key_added] = cluster_labels
 
 
-def _run_diffusion_map(ref_adata, query_adata, embedding_key="X",
+def _diffusion_reference_mapping(ref_adata, query_adata, embedding_key="X",
                       neigen=2, k=None, pca_comps=None, epsilon=None, plot=True):
     # Handle raw X conversion only if using 'X' representation
     if embedding_key == "X":
@@ -343,7 +343,6 @@ def _run_diffusion_map(ref_adata, query_adata, embedding_key="X",
     print("Stored embeddings in .obsm['X_diffmap'] and details in .uns['diffusion_results'].")
 
 
-
 def _transfer_labels(
     ref_adata,
     query_adata,
@@ -385,9 +384,10 @@ def _transfer_labels(
     knn = KNeighborsClassifier(n_neighbors=n_neighbors)
     knn.fit(X_ref, ref_adata.obs[label_key].astype(str).values)
 
-    # Predict query labels and store as categorical
+    transf_key = "transf_" + label_key
+
     predicted = knn.predict(X_query)
-    query_adata.obs[label_key] = pd.Categorical(predicted)
+    query_adata.obs[transf_key] = pd.Categorical(predicted)
 
     # Annotate dataset origin for combined plotting or inspection
     ref_adata.obs['dataset'] = 'reference'
@@ -399,16 +399,15 @@ def _transfer_labels(
         obs_df.obs[key] = obs_df.obs[key].cat.reorder_categories(cats)
 
     reorder(ref_adata, label_key)
-    reorder(query_adata, label_key)
+    reorder(query_adata, transf_key)
     reorder(query_adata, ground_truth_label)
-
 
     print(f"Labels transferred to query .obs['{label_key}'] using {embedding_key} embedding.")
 
     # Compute and print accuracy if ground truth provided
     if ground_truth_label is not None:
         true = query_adata.obs[ground_truth_label].astype(str)
-        pred = query_adata.obs[label_key].astype(str)
+        pred = query_adata.obs[transf_key].astype(str)
         accuracy = (true.values == pred.values).mean()
         print(f"Accuracy against '{ground_truth_label}': {accuracy:.2f}")
 
@@ -418,7 +417,7 @@ def _transfer_labels(
             fig = sc.pl.embedding(
                 query_adata,
                 basis=plot_embedding_key,
-                color=[label_key, ground_truth_label],
+                color=[transf_key, ground_truth_label],
                 title=[f"Predicted {label_key}", f"{ground_truth_label}"],
                 return_fig=True
             )
@@ -437,3 +436,4 @@ def _transfer_labels(
                 va='top',
                 bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=0.5)
             )
+
