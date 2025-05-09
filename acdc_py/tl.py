@@ -1,4 +1,4 @@
-from ._tl import _cluster_final, _extract_clusters, _merge, _run_diffusion_map, _transfer_labels
+from ._tl import _cluster_final, _extract_clusters, _merge, _diffusion_reference_mapping, _transfer_labels
 
 ### ---------- EXPORT LIST ----------
 __all__ = []
@@ -152,7 +152,7 @@ def rename(adata, groupby, name_dict):
     adata.obs[groupby] = adata.obs[groupby].replace(name_dict)
 
 
-def run_diffusion_map(ref_adata, 
+def diffusion_reference_mapping(ref_adata, 
                       query_adata, 
                       embedding_key="X",
                       neigen=2, 
@@ -170,7 +170,7 @@ def run_diffusion_map(ref_adata,
     The .uns['diffusion_results'] in ref_adata holds intermediate outputs.
     """
     
-    _run_diffusion_map(ref_adata, query_adata, embedding_key,
+    _diffusion_reference_mapping(ref_adata, query_adata, embedding_key,
                       neigen, k, pca_comps, epsilon, plot)
     
 
