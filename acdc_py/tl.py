@@ -161,7 +161,7 @@ def diffusion_reference_mapping(ref_adata,
                       epsilon=None, 
                       plot=True):
     
-    """
+    """\
     Full workflow:
       1. Compute and store diffusion map for reference.
       2. Extend mapping to query via Nyström.
@@ -185,7 +185,7 @@ def transfer_labels(ref_adata,
                     plot_labels=False,
                     plot_embedding_key='X_umap'
 ):  
-    """
+    """\
     Transfer cell-type labels from a reference AnnData to query AnnData using KNN.
 
     Parameters

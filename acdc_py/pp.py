@@ -161,10 +161,11 @@ def compute_diffusion_map(reference_data,
                           epsilon=None, 
                           pca_comps=None, 
                           k=None):
-    """
+    """\
     Compute a diffusion map embedding from reference (training) data.
 
-    Parameters:
+    Parameters
+    ----------
       reference_data : np.ndarray, shape (n_samples_ref, n_features)
           Input training data.
       neigen : int
@@ -179,7 +180,8 @@ def compute_diffusion_map(reference_data,
           distance matrix. Use together with a X_pca embedding key or other lower 
           dimensional spaces to speed up computation on larger datasets.
 
-    Returns:
+    Returns
+    -------
       dict with keys:
         'ref_diffusion'        : Diffusion coordinates (n_samples_ref x neigen).
         'eigenvalues'          : Selected eigenvalues (length neigen).
@@ -196,10 +198,11 @@ def compute_diffusion_map(reference_data,
 def nystrom_extension(query_data, 
                       diffusion_obj, 
                       k=None):
-    """
+    """\
     Extend diffusion map to new query points using the Nyström method.
 
-    Returns:
+    Returns
+    -------
       dict with keys:
         'query_diffusion'         : Diffusion coordinates of query (samples_query x neigen).
         'distance_matrix_query'   : Query vs reference distance matrix.

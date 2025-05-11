@@ -124,7 +124,7 @@ def silhouette_scores(
 def plot_diffusion_map(
         ref_adata, 
         query_adata):
-    """
+    """\
     Plot the first two diffusion components for both reference and query data.
     """
 
