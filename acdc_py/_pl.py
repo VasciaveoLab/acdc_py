@@ -299,11 +299,6 @@ def _silhouette_scores(
 def _plot_diffusion_map(
     ref_adata, 
     query_adata):
-    """
-    Plot diffusion maps for reference and query data.
-    First row: Two separate plots for reference and query.
-    Second row: Combined plot of reference and query.
-    """
 
     ref_diffmap = ref_adata.obsm["X_diffmap"]
     query_diffmap = query_adata.obsm["X_diffmap"]
