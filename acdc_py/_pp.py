@@ -449,13 +449,26 @@ def _nystrom_extension(query_data, diffusion_obj, k):
     else:
         query_proc = query_data
 
-    D_new = cdist(query_proc, ref_proc, metric='euclidean')
-    K_new = np.exp(-np.square(D_new) / epsilon)
-    K_new_norm = K_new / np.sum(K_new, axis=1, keepdims=True)
-    distance_matrix_query = D_new
-    neighbors_matrix_query = None
+    if k is None:
+        D_new = cdist(query_proc, ref_proc, metric='euclidean')
+        K_new = np.exp(-np.square(D_new) / epsilon)
+        K_new_norm = K_new / np.sum(K_new, axis=1, keepdims=True)
+        distance_matrix_query = D_new
+        neighbors_matrix_query = None
+    else:
+        from sklearn.neighbors import NearestNeighbors
+        from scipy.sparse import diags
+        nbrs = NearestNeighbors(n_neighbors=k+1, metric='euclidean').fit(ref_proc)
+        D_sparse = nbrs.kneighbors_graph(query_proc, mode='distance')
+        K_sparse = D_sparse.copy().tocsr()
+        K_sparse.data = np.exp(-np.square(K_sparse.data) / epsilon)
+        row_sums = np.array(K_sparse.sum(axis=1)).flatten()
+        row_sums[row_sums == 0] = 1.0
+        D_inv = diags(1.0 / row_sums)
+        K_new_norm = (D_inv @ K_sparse).toarray()
+        distance_matrix_query = D_sparse.toarray()
+        neighbors_matrix_query = D_sparse
 
-    
     inv_eigs = np.diag(1.0 / eigenvalues)
     query_diffusion = K_new_norm.dot(ref_diffusion).dot(inv_eigs)
 

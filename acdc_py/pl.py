@@ -121,11 +121,26 @@ def silhouette_scores(
     _silhouette_scores(adata, groupby, dist_slot, palette, ylab, show)
 
 
-def plot_diffusion_map(
-        ref_adata, 
-        query_adata):
+def plot_diffusion_map(ref_adata, query_adata):
     """\
-    Plot the first two diffusion components for both reference and query data.
-    """
+    Visualize reference and query diffusion embeddings on a 2D scatter plot grid.
 
+    Generates a 2x2 grid of plots displaying the first two diffusion components:
+    - Top-left: reference dataset alone.
+    - Top-right: query dataset alone.
+    - Bottom-left: combined reference and query datasets.
+    - Bottom-right: unused (blank).
+
+    Parameters
+    ----------
+    ref_adata : AnnData
+        Annotated data containing diffusion coordinates in `ref_adata.obsm['X_diffmap']`.
+    query_adata : AnnData
+        Annotated data containing diffusion coordinates in `query_adata.obsm['X_diffmap']`.
+
+    Returns
+    -------
+    None
+        Displays the matplotlib figure with diffusion map plots.
+    """
     _plot_diffusion_map(ref_adata, query_adata)

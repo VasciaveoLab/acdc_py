@@ -199,14 +199,44 @@ def nystrom_extension(query_data,
                       diffusion_obj, 
                       k=None):
     """\
-    Extend diffusion map to new query points using the Nyström method.
+    Extend a reference diffusion map to new query data using the Nyström method.
+
+    This function computes pairwise affinities between query samples and the reference,
+    normalizes the kernel, and projects the query data into the reference diffusion space
+    using the computed eigenvectors and eigenvalues.
+
+    Parameters
+    ----------
+    query_data : array-like of shape (n_query, n_features)
+        Feature matrix for query samples, preprocessed to match the reference processing
+        (e.g., PCA-transformed if used).
+    diffusion_obj : dict
+        Dictionary of diffusion map outputs from `_compute_diffusion_map` containing:
+        - 'ref_proc': ndarray of shape (n_ref, n_features_proc)
+            Reference features after optional PCA.
+        - 'epsilon': float
+            Bandwidth parameter used for the Gaussian kernel.
+        - 'ref_diffusion': ndarray of shape (n_ref, neigen)
+            Reference diffusion map coordinates.
+        - 'eigenvalues': ndarray of length neigen
+            Selected diffusion eigenvalues.
+        - optionally 'pca': a fitted PCA instance, if PCA was applied.
+    k : int or None
+        If an integer, number of nearest neighbors to use when building a sparse
+        k-NN distance graph; if `None`, computes a full dense affinity matrix.
 
     Returns
     -------
-      dict with keys:
-        'query_diffusion'         : Diffusion coordinates of query (samples_query x neigen).
-        'distance_matrix_query'   : Query vs reference distance matrix.
-        'neighbors_matrix_query'  : Query vs reference neighbors matrix.
+    result : dict
+        A dictionary with the following entries:
+        - 'query_diffusion': ndarray of shape (n_query, neigen)
+            Mapped diffusion coordinates for the query samples.
+        - 'distance_matrix_query': ndarray of shape (n_query, n_ref)
+            Pairwise Euclidean distances (dense) when `k=None`, or the full distance
+            matrix after converting the sparse k-NN distances to dense.
+        - 'neighbors_matrix_query': sparse matrix or None
+            When `k` is an integer, a (n_query × n_ref) sparse matrix of k-NN distances;
+            otherwise `None`.
     """
     _nystrom_extension(query_data, diffusion_obj, k=None)
 

@@ -162,18 +162,57 @@ def diffusion_reference_mapping(ref_adata,
                       plot=True):
     
     """\
-    Full workflow:
-      1. Compute and store diffusion map for reference.
-      2. Extend mapping to query via Nyström.
-      3. Store both embeddings under .obsm['X_diffmap'].
+    Compute diffusion map embedding on reference data and project query data via Nyström extension.
 
-    The .uns['diffusion_results'] in ref_adata holds intermediate outputs.
+    This function orchestrates a complete workflow to compute a diffusion map for a reference AnnData
+    object and extend the embedding to a query AnnData using the Nyström method. The resulting embeddings
+    are stored in the `.obsm['X_diffmap']` attribute of each AnnData, and intermediate results are
+    saved under `ref_adata.uns['diffusion_results']` for reproducibility and diagnostics.
+
+    Parameters
+    ----------
+    ref_adata : AnnData
+        Reference single-cell dataset with features in `.X` or in the representation specified by
+        `embedding_key` in `.obsm`.
+    query_adata : AnnData
+        Query single-cell dataset to be mapped into the reference diffusion space.
+    embedding_key : str, optional
+        Key for the input data representation. If "X", uses `ref_adata.X` (dense or sparse); otherwise,
+        uses `ref_adata.obsm[embedding_key]` and `query_adata.obsm[embedding_key]`. Default is "X".
+    neigen : int, optional
+        Number of diffusion components (dimensions) to compute and retain. Default is 2.
+    k : int or None, optional
+        Number of nearest neighbors to build a sparse affinity graph. If None, constructs a full affinity
+        matrix. Default is None.
+    pca_comps : int or None, optional
+        Number of principal components for preprocessing before diffusion map construction. If None,
+        skips PCA. Default is None.
+    epsilon : float or None, optional
+        Bandwidth parameter for the Gaussian affinity kernel. If None, set to the median squared distance
+        between reference samples. Default is None.
+    plot : bool, optional
+        If True and `neigen` >= 2, generates scatter plots of the first two diffusion components for both
+        datasets. Default is True.
+
+    Returns
+    -------
+    None
+        Side effects:
+        - Stores reference diffusion coordinates in `ref_adata.obsm['X_diffmap']`.
+        - Stores query diffusion coordinates in `query_adata.obsm['X_diffmap']`.
+        - Saves intermediate results (eigenvalues, PCA object, distance matrices, etc.) in
+          `ref_adata.uns['diffusion_results']`.
+
+    Notes
+    -----
+    1. Computes the reference diffusion map via `_compute_diffusion_map`.
+    2. Extends the mapping to query data via `_nystrom_extension`.
+    3. Optionally plots the embeddings with `plot_diffusion_map` if `plot=True` and `neigen` >= 2.
     """
     
     _diffusion_reference_mapping(ref_adata, query_adata, embedding_key,
                       neigen, k, pca_comps, epsilon, plot)
     
-
 
 def transfer_labels(ref_adata,
                     query_adata,
@@ -186,29 +225,49 @@ def transfer_labels(ref_adata,
                     plot_embedding_key='X_umap'
 ):  
     """\
-    Transfer cell-type labels from a reference AnnData to query AnnData using KNN.
+    Transfer cluster (or other) labels from a reference AnnData to a query AnnData via K-nearest neighbours.
+
+    This function fits a KNN classifier on the chosen embedding of `ref_adata`, predicts labels
+    for `query_adata`, and stores them under `query_adata.obs["transf_" + label_key]`.  Optionally,
+    it computes accuracy against known query labels and plots a comparison.
 
     Parameters
     ----------
     ref_adata : AnnData
-        Annotated data with known labels in .obs[label_key]. For 'diffmap', expects
-        the diffusion map in .obsm[embedding_key]; for 'pca' or 'X', uses .X.
+        Reference dataset. Must contain true labels in `ref_adata.obs[label_key]`.
     query_adata : AnnData
-        Annotated data to annotate; should have the same representation available.
-    embedding_key : str, optional
-        Which embedding to use: 'diffmap', 'pca', or 'X'. Default is 'diffmap'.
-    label_key : str, optional
-        Key in .obs for storing predicted labels. Default is 'cell_type'.
-    n_neighbors : int, optional
-        Number of neighbors for the KNN classifier. Default is 15.
-    pca_comps : int or None, optional
-        If specified and embedding_key=='pca', number of PCA components to compute.
-    ground_truth_label : str or None, optional
-        If provided, key in query_adata.obs for true labels used to compute accuracy.
-    plot_labels : bool, optional
-        If True, generate an embedding plot colored by predicted and ground-truth labels.
-    plot_embedding_key : str, optional
-        Key in .obsm for the embedding to use for plotting. Default is 'X_umap'.
+        Query dataset to be annotated. Will be modified in place.
+    embedding_key : str, optional (default: 'X_diffmap')
+        Key in `.obsm` to use for KNN. Common choices:
+        - 'X_diffmap': diffusion map coordinates  
+        - 'X_pca': PCA coordinates (see `pca_comps`)  
+        - 'X': data from AnnData.X
+    label_key : str, optional (default: 'cell_type')
+        Key in `ref_adata.obs` containing training labels. Predicted labels for query
+        will be stored in `query_adata.obs["transf_" + label_key]`.
+    n_neighbors : int, optional (default: 15)
+        Number of neighbours for the KNN classifier.
+    pca_comps : int or None, optional (default: None)
+        If not `None`, perform PCA with this many components on `.X` and store results
+        under `.obsm['X_pca']` in both datasets (regardless of `embedding_key`).
+    ground_truth_label : str or None, optional (default: None)
+        If provided, key in `query_adata.obs` with known labels. Accuracy will be
+        computed and printed.
+    plot_labels : bool, optional (default: False)
+        If `True` *and* `ground_truth_label` is not `None`, generate an embedding plot
+        (using `plot_embedding_key`) colored by predicted vs. true labels.
+    plot_embedding_key : str, optional (default: 'X_umap')
+        Key in `.obsm` to use for plotting when `plot_labels=True`.
+
+    Side Effects
+    ------------
+    - Adds `query_adata.obs["transf_" + label_key]`.
+    - Sets `ref_adata.obs["dataset"] = 'reference'` and `query_adata.obs["dataset"] = 'query'`.
+    - Optionally adds `.obsm['X_pca']` if `pca_comps` is specified.
+
+    Returns
+    -------
+    None
     """
     
     _transfer_labels(ref_adata,

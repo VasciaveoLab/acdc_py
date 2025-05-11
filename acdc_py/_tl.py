@@ -296,6 +296,7 @@ def _merge(
 
 def _diffusion_reference_mapping(ref_adata, query_adata, embedding_key="X",
                       neigen=2, k=None, pca_comps=None, epsilon=None, plot=True):
+
     # Handle raw X conversion only if using 'X' representation
     if embedding_key == "X":
         if k is not None:
@@ -323,7 +324,6 @@ def _diffusion_reference_mapping(ref_adata, query_adata, embedding_key="X",
     ref_adata.obsm['X_diffmap'] = diff_map['ref_diffusion']
     query_adata.obsm['X_diffmap'] = nys['query_diffusion']
 
-
     if plot and neigen >= 2:
         plot_diffusion_map(ref_adata, query_adata)
 
@@ -341,7 +341,6 @@ def _diffusion_reference_mapping(ref_adata, query_adata, embedding_key="X",
     ref_adata.uns['diffusion_results'] = results
 
     print("Stored embeddings in .obsm['X_diffmap'] and details in .uns['diffusion_results'].")
-
 
 def _transfer_labels(
     ref_adata,
