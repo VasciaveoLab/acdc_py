@@ -1,6 +1,6 @@
 # acdc_py 🤘
 [![pipy](https://img.shields.io/pypi/v/acdc-py?color=informational)](https://pypi.org/project/acdc-py/1.1.0/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15099171.svg)](https://doi.org/10.5281/zenodo.15099171)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15099170.svg)](https://doi.org/10.5281/zenodo.15099170)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Downloads](https://static.pepy.tech/badge/acdc-py)](https://pepy.tech/project/acdc-py)
 [![Documentation Status](https://readthedocs.org/projects/acdc/badge/?version=latest)](https://acdc.readthedocs.io/en/latest/?badge=latest)
