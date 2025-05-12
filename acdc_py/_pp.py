@@ -393,7 +393,12 @@ def _neighbors_graph(adata,
     }
 
 
-def _compute_diffusion_map(reference_data, neigen=2, k=None, epsilon=None, pca_comps=None):
+def _compute_diffusion_map(reference_data, neigen=2, epsilon=None, pca_comps=None):
+    # Densify if sparse
+    import scipy.sparse as sparse
+    if sparse.issparse(reference_data):
+        reference_data = reference_data.toarray()
+
     # Step 1: Optional PCA dimensionality reduction
     if pca_comps is not None:
         from sklearn.decomposition import PCA
@@ -403,24 +408,25 @@ def _compute_diffusion_map(reference_data, neigen=2, k=None, epsilon=None, pca_c
         ref_proc = reference_data
         pca_obj = None
 
-    # Step 2: Build Gaussian affinity and symmetric normalization
-    D_ref = squareform(pdist(ref_proc, metric='euclidean'))  # full dense distances
+    # Step 2: Build Gaussian affinity on full dense distances
+    D_ref = squareform(pdist(ref_proc, metric='euclidean'))
     if epsilon is None:
         nonzero = D_ref[D_ref > 0]
         epsilon = np.median(nonzero) ** 2
+
     K = np.exp(-np.square(D_ref) / epsilon)
     row_sums = np.sum(K, axis=1)
-    D_inv_sqrt = np.diag(1.0 / np.sqrt(row_sums))  # density normalization
+    D_inv_sqrt = np.diag(1.0 / np.sqrt(row_sums))
     A = D_inv_sqrt @ K @ D_inv_sqrt
+
+    # Eigen-decomposition
     eigenvals, eigenvecs = np.linalg.eigh(A)
     idx = np.argsort(eigenvals)[::-1]
     eigenvals = eigenvals[idx]
     eigenvecs = eigenvecs[:, idx]
     phi = D_inv_sqrt @ eigenvecs
-    distance_matrix_ref = D_ref
-    neighbors_matrix_ref = None
 
-    # Step 3: Select diffusion coordinates (drop trivial first mode if necessary)
+    # Step 3: Select diffusion coordinates
     if np.var(phi[:, 0]) < 1e-10:
         ref_coords = phi[:, 1:neigen+1]
         chosen_eigenvals = eigenvals[1:neigen+1]
@@ -431,49 +437,29 @@ def _compute_diffusion_map(reference_data, neigen=2, k=None, epsilon=None, pca_c
     return {
         'ref_diffusion': ref_coords,
         'eigenvalues': chosen_eigenvals,
-        'distance_matrix_ref': distance_matrix_ref,
-        'neighbors_matrix_ref': neighbors_matrix_ref,
+        'distance_matrix_ref': D_ref,
         'ref_proc': ref_proc,
         'epsilon': epsilon,
         'pca': pca_obj
     }
 
-def _nystrom_extension(query_data, diffusion_obj, k):
-    ref_proc = diffusion_obj['ref_proc']
-    epsilon = diffusion_obj['epsilon']
-    ref_diffusion = diffusion_obj['ref_diffusion']
-    eigenvalues = diffusion_obj['eigenvalues']
 
+def _nystrom_extension(query_data, diffusion_obj):
+    # Apply PCA transform if present
     if diffusion_obj.get('pca') is not None:
         query_proc = diffusion_obj['pca'].transform(query_data)
     else:
         query_proc = query_data
 
-    if k is None:
-        D_new = cdist(query_proc, ref_proc, metric='euclidean')
-        K_new = np.exp(-np.square(D_new) / epsilon)
-        K_new_norm = K_new / np.sum(K_new, axis=1, keepdims=True)
-        distance_matrix_query = D_new
-        neighbors_matrix_query = None
-    else:
-        from sklearn.neighbors import NearestNeighbors
-        from scipy.sparse import diags
-        nbrs = NearestNeighbors(n_neighbors=k+1, metric='euclidean').fit(ref_proc)
-        D_sparse = nbrs.kneighbors_graph(query_proc, mode='distance')
-        K_sparse = D_sparse.copy().tocsr()
-        K_sparse.data = np.exp(-np.square(K_sparse.data) / epsilon)
-        row_sums = np.array(K_sparse.sum(axis=1)).flatten()
-        row_sums[row_sums == 0] = 1.0
-        D_inv = diags(1.0 / row_sums)
-        K_new_norm = (D_inv @ K_sparse).toarray()
-        distance_matrix_query = D_sparse.toarray()
-        neighbors_matrix_query = D_sparse
+    # Full dense affinity
+    D_new = cdist(query_proc, diffusion_obj['ref_proc'], metric='euclidean')
+    K_new = np.exp(-np.square(D_new) / diffusion_obj['epsilon'])
+    K_new_norm = K_new / np.sum(K_new, axis=1, keepdims=True)
 
-    inv_eigs = np.diag(1.0 / eigenvalues)
-    query_diffusion = K_new_norm.dot(ref_diffusion).dot(inv_eigs)
+    inv_eigs = np.diag(1.0 / diffusion_obj['eigenvalues'])
+    query_diffusion = K_new_norm.dot(diffusion_obj['ref_diffusion']).dot(inv_eigs)
 
     return {
         'query_diffusion': query_diffusion,
-        'distance_matrix_query': distance_matrix_query,
-        'neighbors_matrix_query': neighbors_matrix_query
+        'distance_matrix_query': D_new,
     }

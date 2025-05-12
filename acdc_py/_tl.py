@@ -293,55 +293,51 @@ def _merge(
 
     adata.obs[key_added] = cluster_labels
 
+def _diffusion_reference_mapping(ref_adata, query_adata,
+                                 embedding_key="X",
+                                 neigen=2,
+                                 pca_comps=None,
+                                 epsilon=None,
+                                 plot=True):
+    # Always densify AnnData.X if sparse
+    if embedding_key == "X" and sparse.issparse(ref_adata.X):
+        ref_adata.X = ref_adata.X.toarray()
+    if embedding_key == "X" and sparse.issparse(query_adata.X):
+        query_adata.X = query_adata.X.toarray()
 
-def _diffusion_reference_mapping(ref_adata, query_adata, embedding_key="X",
-                      neigen=2, k=None, pca_comps=None, epsilon=None, plot=True):
-
-    # Handle raw X conversion only if using 'X' representation
-    if embedding_key == "X":
-        if k is not None:
-            if not sparse.issparse(ref_adata.X):
-                ref_adata.X = sparse.csr_matrix(ref_adata.X)
-            if not sparse.issparse(query_adata.X):
-                query_adata.X = sparse.csr_matrix(query_adata.X)
-        else:
-            if sparse.issparse(ref_adata.X):
-                ref_adata.X = ref_adata.X.toarray()
-            if sparse.issparse(query_adata.X):
-                query_adata.X = query_adata.X.toarray()
-
+    # Extract matrices
     reference_data = ref_adata.obsm.get(embedding_key, ref_adata.X)
     query_data = query_adata.obsm.get(embedding_key, query_adata.X)
 
     print(f"Computing diffusion map ({neigen} components) on reference...")
-    diff_map = _compute_diffusion_map(reference_data, neigen=neigen,
-                                     epsilon=epsilon, pca_comps=pca_comps, k=k)
+    diff_map = _compute_diffusion_map(reference_data,
+                                      neigen=neigen,
+                                      epsilon=epsilon,
+                                      pca_comps=pca_comps)
 
     print("Extending to query via Nyström extension...")
-    nys = _nystrom_extension(query_data, diff_map, k=k)
+    nys = _nystrom_extension(query_data, diff_map)
 
-    # Store the diffusion embeddings explicitly under 'X_diffmap'
+    # Store embeddings
     ref_adata.obsm['X_diffmap'] = diff_map['ref_diffusion']
     query_adata.obsm['X_diffmap'] = nys['query_diffusion']
 
     if plot and neigen >= 2:
         plot_diffusion_map(ref_adata, query_adata)
 
+    # Save diagnostics
     results = {
         'eigenvalues': diff_map['eigenvalues'],
-        'ref_proc':    diff_map['ref_proc'],
-        'epsilon':     diff_map['epsilon'],
-        'pca':         diff_map['pca'],
-        'distance_matrix_ref':   diff_map['distance_matrix_ref'],
-        'neighbors_matrix_ref':  diff_map['neighbors_matrix_ref'],
+        'ref_proc': diff_map['ref_proc'],
+        'epsilon': diff_map['epsilon'],
+        'pca': diff_map['pca'],
+        'distance_matrix_ref': diff_map['distance_matrix_ref'],
         'distance_matrix_query': nys['distance_matrix_query'],
-        'neighbors_matrix_query':nys['neighbors_matrix_query']
     }
-    # Store all intermediate results for reproducibility and diagnostics
     ref_adata.uns['diffusion_results'] = results
-
     print("Stored embeddings in .obsm['X_diffmap'] and details in .uns['diffusion_results'].")
 
+    
 def _transfer_labels(
     ref_adata,
     query_adata,
@@ -401,7 +397,7 @@ def _transfer_labels(
     reorder(query_adata, transf_key)
     reorder(query_adata, ground_truth_label)
 
-    print(f"Labels transferred to query .obs['{label_key}'] using {embedding_key} embedding.")
+    print(f"Labels transferred to query .obs['{transf_key}'] using {embedding_key} embedding.")
 
     # Compute and print accuracy if ground truth provided
     if ground_truth_label is not None:

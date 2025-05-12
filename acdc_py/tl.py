@@ -152,67 +152,46 @@ def rename(adata, groupby, name_dict):
     adata.obs[groupby] = adata.obs[groupby].replace(name_dict)
 
 
-def diffusion_reference_mapping(ref_adata, 
-                      query_adata, 
-                      embedding_key="X",
-                      neigen=2, 
-                      k=None, 
-                      pca_comps=None, 
-                      epsilon=None, 
-                      plot=True):
-    
-    """\
+def diffusion_reference_mapping(ref_adata,
+                                query_adata,
+                                embedding_key="X",
+                                neigen=2,
+                                pca_comps=None,
+                                epsilon=None,
+                                plot=True):
+    """
     Compute diffusion map embedding on reference data and project query data via Nyström extension.
-
-    This function orchestrates a complete workflow to compute a diffusion map for a reference AnnData
-    object and extend the embedding to a query AnnData using the Nyström method. The resulting embeddings
-    are stored in the `.obsm['X_diffmap']` attribute of each AnnData, and intermediate results are
-    saved under `ref_adata.uns['diffusion_results']` for reproducibility and diagnostics.
 
     Parameters
     ----------
     ref_adata : AnnData
-        Reference single-cell dataset with features in `.X` or in the representation specified by
-        `embedding_key` in `.obsm`.
+        Reference single-cell dataset.
     query_adata : AnnData
-        Query single-cell dataset to be mapped into the reference diffusion space.
+        Query single-cell dataset.
     embedding_key : str, optional
-        Key for the input data representation. If "X", uses `ref_adata.X` (dense or sparse); otherwise,
-        uses `ref_adata.obsm[embedding_key]` and `query_adata.obsm[embedding_key]`. Default is "X".
+        Key for the input data representation in .obsm or "X". Default is "X".
     neigen : int, optional
-        Number of diffusion components (dimensions) to compute and retain. Default is 2.
-    k : int or None, optional
-        Number of nearest neighbors to build a sparse affinity graph. If None, constructs a full affinity
-        matrix. Default is None.
+        Number of diffusion components to compute and retain. Default is 2.
     pca_comps : int or None, optional
-        Number of principal components for preprocessing before diffusion map construction. If None,
-        skips PCA. Default is None.
+        Number of PCA components for preprocessing. Default is None.
     epsilon : float or None, optional
-        Bandwidth parameter for the Gaussian affinity kernel. If None, set to the median squared distance
-        between reference samples. Default is None.
+        Bandwidth for the Gaussian kernel. Default is None.
     plot : bool, optional
-        If True and `neigen` >= 2, generates scatter plots of the first two diffusion components for both
-        datasets. Default is True.
+        If True and neigen >= 2, generates scatter plots. Default is True.
 
     Returns
     -------
     None
         Side effects:
-        - Stores reference diffusion coordinates in `ref_adata.obsm['X_diffmap']`.
-        - Stores query diffusion coordinates in `query_adata.obsm['X_diffmap']`.
-        - Saves intermediate results (eigenvalues, PCA object, distance matrices, etc.) in
-          `ref_adata.uns['diffusion_results']`.
-
-    Notes
-    -----
-    1. Computes the reference diffusion map via `_compute_diffusion_map`.
-    2. Extends the mapping to query data via `_nystrom_extension`.
-    3. Optionally plots the embeddings with `plot_diffusion_map` if `plot=True` and `neigen` >= 2.
+        - ref_adata.obsm['X_diffmap'], query_adata.obsm['X_diffmap']
+        - ref_adata.uns['diffusion_results']
     """
-    
-    _diffusion_reference_mapping(ref_adata, query_adata, embedding_key,
-                      neigen, k, pca_comps, epsilon, plot)
-    
+    _diffusion_reference_mapping(ref_adata, query_adata,
+                                 embedding_key=embedding_key,
+                                 neigen=neigen,
+                                 pca_comps=pca_comps,
+                                 epsilon=epsilon,
+                                 plot=plot)
 
 def transfer_labels(ref_adata,
                     query_adata,
