@@ -23,6 +23,7 @@ Welcome to the ACDC documentation. This includes API references, tutorials, and 
    :caption: Tutorials:
 
    ACDC_ICS_Jupyter_Notebook_Tutorial.ipynb
+   ACDC_Label_Transfer_Jupyter_Notebook_Tutorial.ipynb   
 
 Indices and tables
 ==================

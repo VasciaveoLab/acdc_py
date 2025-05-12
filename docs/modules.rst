@@ -49,7 +49,8 @@ acdc_py.pp
 .. autofunction:: acdc_py.pp.corr_distance
 .. autofunction:: acdc_py.pp.neighbors_knn
 .. autofunction:: acdc_py.pp.neighbors_graph
-
+.. autofunction:: acdc_py.pp.compute_diffusion_map
+.. autofunction:: acdc_py.pp.nystrom_extension
 
 
 acdc_py.pl
@@ -63,6 +64,7 @@ acdc_py.pl
 .. autofunction:: acdc_py.pl.SA_search_space
 .. autofunction:: acdc_py.pl.metric_vs_n_clusts
 .. autofunction:: acdc_py.pl.silhouette_scores
+.. autofunction:: acdc_py.pl.plot_diffusion_map
 
 
 acdc_py.tl
@@ -76,6 +78,8 @@ acdc_py.tl
 .. autofunction:: acdc_py.tl.extract
 .. autofunction:: acdc_py.tl.merge
 .. autofunction:: acdc_py.tl.rename
+.. autofunction:: acdc_py.tl.diffusion_reference_mapping
+.. autofunction:: acdc_py.tl.transfer_labels
 
 
 
