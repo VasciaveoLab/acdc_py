@@ -159,7 +159,7 @@ def diffusion_reference_mapping(ref_adata,
                                 pca_comps=None,
                                 epsilon=None,
                                 plot=True):
-    """
+    """\
     Compute diffusion map embedding on reference data and project query data via Nyström extension.
 
     Parameters

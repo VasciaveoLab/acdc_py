@@ -157,7 +157,7 @@ def neighbors_graph(adata,
 
 
 def compute_diffusion_map(reference_data, neigen=2, epsilon=None, pca_comps=None):
-    """
+    """\
     Compute a diffusion map embedding from reference (training) data.
 
     Parameters
@@ -189,7 +189,7 @@ def compute_diffusion_map(reference_data, neigen=2, epsilon=None, pca_comps=None
     
 
 def nystrom_extension(query_data, diffusion_obj):
-    """
+    """\
     Extend a reference diffusion map to new query data using the Nyström method.
 
     Parameters
