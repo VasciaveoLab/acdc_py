@@ -238,15 +238,13 @@ def transfer_labels(ref_adata,
     plot_embedding_key : str, optional (default: 'X_umap')
         Key in `.obsm` to use for plotting when `plot_labels=True`.
 
-    Side Effects
-    ------------
-    - Adds `query_adata.obs["transf_" + label_key]`.
-    - Sets `ref_adata.obs["dataset"] = 'reference'` and `query_adata.obs["dataset"] = 'query'`.
-    - Optionally adds `.obsm['X_pca']` if `pca_comps` is specified.
-
     Returns
     -------
     None
+        Side effects:
+        - Adds `query_adata.obs["transf_" + label_key]`.
+        - Sets `ref_adata.obs["dataset"] = 'reference'` and `query_adata.obs["dataset"] = 'query'`.
+        - Optionally adds `.obsm['X_pca']` if `pca_comps` is specified.
     """
     
     _transfer_labels(ref_adata,
