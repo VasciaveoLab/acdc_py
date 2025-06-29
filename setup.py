@@ -10,7 +10,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="acdc_py",
-    version="1.1.0",
+    version="1.1.3",
     author="Alexander L.E. Wang & Luca Zanella & Alessandro Vasciaveo",
     author_email="aw3436@cumc.columbia.edu",
     packages=["acdc_py"],
