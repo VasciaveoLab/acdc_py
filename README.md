@@ -12,14 +12,18 @@ This repo contains the current Python implementation of ACDC, an optimization-ba
 ```acdc_py``` is deployed as a Python package and fully compatible with ```Scanpy```.
 
 Why you may find this package useful:
+
 • Easy computation of optimal clustering solutions via unbiased parameter tuning
+
 • Scanpy-compatible framework
+
 • Built for speed, memory efficiency, and scalability with large scRNAseq datasets
+
 • Straightforward subclustering for working with broad and distinct lineages simultaneously 
 
 # Features
 <div align="center">
-  <img width="480" alt="image" src="https://github.com/VasciaveoLab/acdc_py/assets/acdc_readme_features_2.jpg">
+  <img width="480" alt="image" src="https://raw.githubusercontent.com/VasciaveoLab/acdc_py/main/assets/acdc_readme_features.jpg">
 </div>
 
 Conceptual details of this procedure are available in the Methods section of Malagola, Vasciaveo, et al. Cell 2024
