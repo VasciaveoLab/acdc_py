@@ -30,6 +30,7 @@ Conceptual details of this procedure are available in the Methods section of Mal
 
 # Tutorials
 [Tutorial 1: Clustering human single-cell RNA seq data with ACDC](https://github.com/VasciaveoLab/acdc_py/blob/main/Tutorials/ACDC_ICS_Jupyter_Notebook_Tutorial.ipynb)
+
 [Tutorial 2: Diffusion Map Embedding & Label Transfer with acdc_py](https://github.com/VasciaveoLab/acdc_py/blob/main/Tutorials/ACDC_Label_Transfer_Jupyter_Notebook_Tutorial.ipynb)
 
 # Installation 
