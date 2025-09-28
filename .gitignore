@@ -7,3 +7,4 @@ dist/
 docs/.DS_Store
 acdc_py/.DS_Store
 output
+build/
