@@ -114,7 +114,7 @@ def add_clustering_results_to_sil_df_using_subsampling(dist_mat,
                                                        key_added = "clusters"):
     cluster_labels = adata.obs[key_added]
     if(len(adata.obs[key_added].unique())==1):
-        metrics_i = {key: np.NaN for key in metrics}
+        metrics_i = {key: np.nan for key in metrics}
     else:
         metrics_i = {}
         if np.any(np.isin(["sil_mean", "sil_mean_median", "tot_sil_neg", "lowest_sil_clust", "max_sil_clust"], metrics)):
